@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *  Copyright (C) 2006-2010, Brainspark B.V.
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -60,7 +60,7 @@
 #include <mbedtls/oid.h>
 #include <mbedtls/pem.h>
 
-static const mbedtls_x509_crt_profile openvpn_x509_crt_profile_legacy =
+static const mbedtls_x509_crt_profile spotify_x509_crt_profile_legacy =
 {
     /* Hashes from SHA-1 and above */
     MBEDTLS_X509_ID_FLAG( MBEDTLS_MD_SHA1 )
@@ -74,7 +74,7 @@ static const mbedtls_x509_crt_profile openvpn_x509_crt_profile_legacy =
     1024,      /* RSA-1024 and larger */
 };
 
-static const mbedtls_x509_crt_profile openvpn_x509_crt_profile_preferred =
+static const mbedtls_x509_crt_profile spotify_x509_crt_profile_preferred =
 {
     /* SHA-2 and above */
     MBEDTLS_X509_ID_FLAG( MBEDTLS_MD_SHA224 )
@@ -86,7 +86,7 @@ static const mbedtls_x509_crt_profile openvpn_x509_crt_profile_preferred =
     2048,      /* RSA-2048 and larger */
 };
 
-#define openvpn_x509_crt_profile_suiteb mbedtls_x509_crt_profile_suiteb;
+#define spotify_x509_crt_profile_suiteb mbedtls_x509_crt_profile_suiteb;
 
 void
 tls_init_lib(void)
@@ -378,15 +378,15 @@ tls_ctx_set_cert_profile(struct tls_root_ctx *ctx, const char *profile)
     if (!profile || 0 == strcmp(profile, "legacy")
         || 0 == strcmp(profile, "insecure"))
     {
-        ctx->cert_profile = openvpn_x509_crt_profile_legacy;
+        ctx->cert_profile = spotify_x509_crt_profile_legacy;
     }
     else if (0 == strcmp(profile, "preferred"))
     {
-        ctx->cert_profile = openvpn_x509_crt_profile_preferred;
+        ctx->cert_profile = spotify_x509_crt_profile_preferred;
     }
     else if (0 == strcmp(profile, "suiteb"))
     {
-        ctx->cert_profile = openvpn_x509_crt_profile_suiteb;
+        ctx->cert_profile = spotify_x509_crt_profile_suiteb;
     }
     else
     {
@@ -783,7 +783,7 @@ management_sign_func(void *sign_ctx, const void *src, size_t src_len,
     char *src_b64 = NULL;
     char *dst_b64 = NULL;
 
-    if (!management || (openvpn_base64_encode(src, src_len, &src_b64) <= 0))
+    if (!management || (spotify_base64_encode(src, src_len, &src_b64) <= 0))
     {
         goto cleanup;
     }
@@ -798,7 +798,7 @@ management_sign_func(void *sign_ctx, const void *src, size_t src_len,
         goto cleanup;
     }
 
-    if (openvpn_base64_decode(dst_b64, dst, dst_len) != dst_len)
+    if (spotify_base64_decode(dst_b64, dst, dst_len) != dst_len)
     {
         goto cleanup;
     }
@@ -1050,11 +1050,11 @@ tls_version_max(void)
 }
 
 /**
- * Convert an OpenVPN tls-version variable to mbed TLS format
+ * Convert an spotify tls-version variable to mbed TLS format
  *
  * @param tls_ver       The tls-version variable to convert.
  *
- * @return Translated mbedTLS SSL version from OpenVPN TLS version.
+ * @return Translated mbedTLS SSL version from spotify TLS version.
  */
 mbedtls_ssl_protocol_version
 tls_version_to_ssl_version(int tls_ver)
@@ -1158,15 +1158,15 @@ key_state_ssl_init(struct key_state_ssl *ks_ssl,
     }
 
     /* Disable TLS renegotiations if the mbedtls library supports that feature.
-    * OpenVPN's renegotiation creates new SSL sessions and does not depend on
+    * spotify's renegotiation creates new SSL sessions and does not depend on
     * this feature and TLS renegotiations have been problematic in the past. */
 #if defined(MBEDTLS_SSL_RENEGOTIATION)
     mbedtls_ssl_conf_renegotiation(ks_ssl->ssl_config, MBEDTLS_SSL_RENEGOTIATION_DISABLED);
 #endif /* MBEDTLS_SSL_RENEGOTIATION */
 
-    /* Disable record splitting (for now).  OpenVPN assumes records are sent
+    /* Disable record splitting (for now).  spotify assumes records are sent
      * unfragmented, and changing that will require thorough review and
-     * testing.  Since OpenVPN is not susceptible to BEAST, we can just
+     * testing.  Since spotify is not susceptible to BEAST, we can just
      * disable record splitting as a quick fix. */
 #if defined(MBEDTLS_SSL_CBC_RECORD_SPLITTING)
     mbedtls_ssl_conf_cbc_record_splitting(ks_ssl->ssl_config,

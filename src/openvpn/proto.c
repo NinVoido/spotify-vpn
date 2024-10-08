@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -41,12 +41,12 @@ is_ipv_X(int tunnel_type, struct buffer *buf, int ip_ver)
 {
     int offset;
     uint16_t proto;
-    const struct openvpn_iphdr *ih;
+    const struct spotify_iphdr *ih;
 
     verify_align_4(buf);
     if (tunnel_type == DEV_TYPE_TUN)
     {
-        if (BLEN(buf) < sizeof(struct openvpn_iphdr))
+        if (BLEN(buf) < sizeof(struct spotify_iphdr))
         {
             return false;
         }
@@ -54,37 +54,37 @@ is_ipv_X(int tunnel_type, struct buffer *buf, int ip_ver)
     }
     else if (tunnel_type == DEV_TYPE_TAP)
     {
-        const struct openvpn_ethhdr *eh;
-        if (BLEN(buf) < (sizeof(struct openvpn_ethhdr)
-                         + sizeof(struct openvpn_iphdr)))
+        const struct spotify_ethhdr *eh;
+        if (BLEN(buf) < (sizeof(struct spotify_ethhdr)
+                         + sizeof(struct spotify_iphdr)))
         {
             return false;
         }
-        eh = (const struct openvpn_ethhdr *)BPTR(buf);
+        eh = (const struct spotify_ethhdr *)BPTR(buf);
 
         /* start by assuming this is a standard Eth fram */
         proto = eh->proto;
-        offset = sizeof(struct openvpn_ethhdr);
+        offset = sizeof(struct spotify_ethhdr);
 
         /* if this is a 802.1q frame, parse the header using the according
          * format
          */
-        if (proto == htons(OPENVPN_ETH_P_8021Q))
+        if (proto == htons(spotify_ETH_P_8021Q))
         {
-            const struct openvpn_8021qhdr *evh;
-            if (BLEN(buf) < (sizeof(struct openvpn_ethhdr)
-                             + sizeof(struct openvpn_iphdr)))
+            const struct spotify_8021qhdr *evh;
+            if (BLEN(buf) < (sizeof(struct spotify_ethhdr)
+                             + sizeof(struct spotify_iphdr)))
             {
                 return false;
             }
 
-            evh = (const struct openvpn_8021qhdr *)BPTR(buf);
+            evh = (const struct spotify_8021qhdr *)BPTR(buf);
 
             proto = evh->proto;
-            offset = sizeof(struct openvpn_8021qhdr);
+            offset = sizeof(struct spotify_8021qhdr);
         }
 
-        if (ntohs(proto) != (ip_ver == 6 ? OPENVPN_ETH_P_IPV6 : OPENVPN_ETH_P_IPV4))
+        if (ntohs(proto) != (ip_ver == 6 ? spotify_ETH_P_IPV6 : spotify_ETH_P_IPV4))
         {
             return false;
         }
@@ -94,10 +94,10 @@ is_ipv_X(int tunnel_type, struct buffer *buf, int ip_ver)
         return false;
     }
 
-    ih = (const struct openvpn_iphdr *)(BPTR(buf) + offset);
+    ih = (const struct spotify_iphdr *)(BPTR(buf) + offset);
 
     /* IP version is stored in the same bits for IPv4 or IPv6 header */
-    if (OPENVPN_IPH_GET_VER(ih->version_len) == ip_ver)
+    if (spotify_IPH_GET_VER(ih->version_len) == ip_ver)
     {
         return buf_advance(buf, offset);
     }
@@ -187,21 +187,21 @@ ipv4_packet_size_verify(const uint8_t *data,
 
         if (is_ipv4(tunnel_type, &buf))
         {
-            const struct openvpn_iphdr *pip;
+            const struct spotify_iphdr *pip;
             int hlen;
             int totlen;
             const char *msgstr = "PACKET SIZE INFO";
             unsigned int msglevel = D_PACKET_TRUNC_DEBUG;
 
-            if (BLEN(&buf) < (int) sizeof(struct openvpn_iphdr))
+            if (BLEN(&buf) < (int) sizeof(struct spotify_iphdr))
             {
                 return;
             }
 
             verify_align_4(&buf);
-            pip = (struct openvpn_iphdr *) BPTR(&buf);
+            pip = (struct spotify_iphdr *) BPTR(&buf);
 
-            hlen = OPENVPN_IPH_GET_LEN(pip->version_len);
+            hlen = spotify_IPH_GET_LEN(pip->version_len);
             totlen = ntohs(pip->tot_len);
 
             if (BLEN(&buf) != totlen)

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -160,7 +160,7 @@ run_up_down(const char *command,
                     "%s %d 0 %s %s %s",
                     arg, tun_mtu, ifconfig_local, ifconfig_remote, context);
 
-        if (plugin_call(plugins, plugin_type, &argv, NULL, es) != OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (plugin_call(plugins, plugin_type, &argv, NULL, es) != spotify_PLUGIN_FUNC_SUCCESS)
         {
             msg(M_FATAL, "ERROR: up/down plugin call failed");
         }
@@ -177,7 +177,7 @@ run_up_down(const char *command,
         argv_printf_cat(&argv, "%s %d 0 %s %s %s", arg, tun_mtu,
                         ifconfig_local, ifconfig_remote, context);
         argv_msg(M_INFO, &argv);
-        openvpn_run_script(&argv, es, S_FATAL, "--up/--down");
+        spotify_run_script(&argv, es, S_FATAL, "--up/--down");
         argv_free(&argv);
     }
 
@@ -578,7 +578,7 @@ next_connection_entry(struct context *c)
                 /*
                  * Increase the number of connection attempts
                  * If this is connect-retry-max * size(l)
-                 * OpenVPN will quit
+                 * spotify will quit
                  */
 
                 c->options.unsuccessful_attempts += advance_count;
@@ -764,7 +764,7 @@ context_init_1(struct context *c)
 #endif
 
 #ifdef ENABLE_SYSTEMD
-    /* We can report the PID via getpid() to systemd here as OpenVPN will not
+    /* We can report the PID via getpid() to systemd here as spotify will not
      * do any fork due to daemon() a future call.
      * See possibly_become_daemon() [init.c] for more details.
      */
@@ -843,7 +843,7 @@ init_static(void)
     init_win32();
 #endif
 
-#ifdef OPENVPN_DEBUG_COMMAND_LINE
+#ifdef spotify_DEBUG_COMMAND_LINE
     {
         int i;
         for (i = 0; i < argc; ++i)
@@ -1093,7 +1093,7 @@ do_genkey(const struct options *options)
  * Persistent TUN/TAP device management mode?
  */
 bool
-do_persist_tuntap(struct options *options, openvpn_net_ctx_t *ctx)
+do_persist_tuntap(struct options *options, spotify_net_ctx_t *ctx)
 {
     if (!options->persist_config)
     {
@@ -1241,7 +1241,7 @@ do_uid_gid_chroot(struct context *c, bool no_delay)
 #endif
 
 #ifdef ENABLE_SELINUX
-        /* Apply a SELinux context in order to restrict what OpenVPN can do
+        /* Apply a SELinux context in order to restrict what spotify can do
          * to _only_ what it is supposed to do after initialization is complete
          * (basically just network I/O operations). Doing it after chroot
          * requires /proc to be mounted in the chroot (which is annoying indeed
@@ -1443,7 +1443,7 @@ do_init_traffic_shaper(struct context *c)
 /*
  * Allocate route list structures for IPv4 and IPv6
  * (we do this for IPv4 even if no --route option has been seen, as other
- * parts of OpenVPN might want to fill the route-list with info, e.g. DHCP)
+ * parts of spotify might want to fill the route-list with info, e.g. DHCP)
  */
 static void
 do_alloc_route_list(struct context *c)
@@ -1468,7 +1468,7 @@ do_init_route_list(const struct options *options,
                    struct route_list *route_list,
                    const struct link_socket_info *link_socket_info,
                    struct env_set *es,
-                   openvpn_net_ctx_t *ctx)
+                   spotify_net_ctx_t *ctx)
 {
     const char *gw = NULL;
     int dev = dev_type_enum(options->dev, options->dev_type);
@@ -1514,7 +1514,7 @@ do_init_route_ipv6_list(const struct options *options,
                         struct route_ipv6_list *route_ipv6_list,
                         const struct link_socket_info *link_socket_info,
                         struct env_set *es,
-                        openvpn_net_ctx_t *ctx)
+                        spotify_net_ctx_t *ctx)
 {
     const char *gw = NULL;
     int metric = -1;            /* no metric set */
@@ -1585,7 +1585,7 @@ initialization_sequence_completed(struct context *c, const unsigned int flags)
 #ifdef _WIN32
         show_routes(M_INFO|M_NOPREFIX);
         show_adapters(M_INFO|M_NOPREFIX);
-        msg(M_INFO, "%s With Errors ( see http://openvpn.net/faq.html#dhcpclientserv )", message);
+        msg(M_INFO, "%s With Errors ( see http://spotify.net/faq.html#dhcpclientserv )", message);
 #else
 #ifdef ENABLE_SYSTEMD
         sd_notifyf(0, "STATUS=Failed to start up: %s With Errors\nERRNO=1", message);
@@ -1617,7 +1617,7 @@ initialization_sequence_completed(struct context *c, const unsigned int flags)
     {
         in_addr_t *tun_local = NULL;
         struct in6_addr *tun_local6 = NULL;
-        struct openvpn_sockaddr local, remote;
+        struct spotify_sockaddr local, remote;
         struct link_socket_actual *actual;
         socklen_t sa_len = sizeof(local);
         const char *detail = "SUCCESS";
@@ -1665,7 +1665,7 @@ initialization_sequence_completed(struct context *c, const unsigned int flags)
             tun_local6 = &c->c1.tuntap->local_ipv6;
         }
         management_set_state(management,
-                             OPENVPN_STATE_CONNECTED,
+                             spotify_STATE_CONNECTED,
                              detail,
                              tun_local,
                              tun_local6,
@@ -1702,7 +1702,7 @@ do_route(const struct options *options,
          const struct tuntap *tt,
          const struct plugin_list *plugins,
          struct env_set *es,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     bool ret = true;
     if (!route_noexec_enabled(options, tt) && ( route_list || route_ipv6_list ) )
@@ -1718,9 +1718,9 @@ do_route(const struct options *options,
     }
 #endif
 
-    if (plugin_defined(plugins, OPENVPN_PLUGIN_ROUTE_UP))
+    if (plugin_defined(plugins, spotify_PLUGIN_ROUTE_UP))
     {
-        if (plugin_call(plugins, OPENVPN_PLUGIN_ROUTE_UP, NULL, NULL, es) != OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (plugin_call(plugins, spotify_PLUGIN_ROUTE_UP, NULL, NULL, es) != spotify_PLUGIN_FUNC_SUCCESS)
         {
             msg(M_WARN, "WARNING: route-up plugin call failed");
         }
@@ -1731,7 +1731,7 @@ do_route(const struct options *options,
         struct argv argv = argv_new();
         setenv_str(es, "script_type", "route-up");
         argv_parse_cmd(&argv, options->route_script);
-        openvpn_run_script(&argv, es, 0, "--route-up");
+        spotify_run_script(&argv, es, 0, "--route-up");
         argv_free(&argv);
     }
 
@@ -2013,7 +2013,7 @@ do_open_tun(struct context *c, int *error_flags)
         /* run the up script */
         run_up_down(c->options.up_script,
                     c->plugins,
-                    OPENVPN_PLUGIN_UP,
+                    spotify_PLUGIN_UP,
                     c->c1.tuntap->actual_name,
 #ifdef _WIN32
                     c->c1.tuntap->adapter_index,
@@ -2053,7 +2053,7 @@ do_open_tun(struct context *c, int *error_flags)
         {
             run_up_down(c->options.up_script,
                         c->plugins,
-                        OPENVPN_PLUGIN_UP,
+                        spotify_PLUGIN_UP,
                         c->c1.tuntap->actual_name,
 #ifdef _WIN32
                         c->c1.tuntap->adapter_index,
@@ -2154,7 +2154,7 @@ do_close_tun(struct context *c, bool force)
         {
             run_up_down(c->options.route_predown_script,
                         c->plugins,
-                        OPENVPN_PLUGIN_ROUTE_PREDOWN,
+                        spotify_PLUGIN_ROUTE_PREDOWN,
                         tuntap_actual,
 #ifdef _WIN32
                         adapter_index,
@@ -2184,7 +2184,7 @@ do_close_tun(struct context *c, bool force)
          * privilege if, for example, "--user" was used. */
         run_up_down(c->options.down_script,
                     c->plugins,
-                    OPENVPN_PLUGIN_DOWN,
+                    spotify_PLUGIN_DOWN,
                     tuntap_actual,
 #ifdef _WIN32
                     adapter_index,
@@ -2214,7 +2214,7 @@ do_close_tun(struct context *c, bool force)
         {
             run_up_down(c->options.down_script,
                         c->plugins,
-                        OPENVPN_PLUGIN_DOWN,
+                        spotify_PLUGIN_DOWN,
                         tuntap_actual,
 #ifdef _WIN32
                         adapter_index,
@@ -2785,7 +2785,7 @@ do_deferred_options(struct context *c, const unsigned int found)
 
 /*
  * Possible hold on initialization, holdtime is the
- * time OpenVPN would wait without management
+ * time spotify would wait without management
  */
 static bool
 do_hold(int holdtime)
@@ -3080,7 +3080,7 @@ do_init_crypto_static(struct context *c, const unsigned int flags)
                       options->test_crypto, true);
 
         /* Read cipher and hmac keys from shared secret file */
-        crypto_read_openvpn_key(&c->c1.ks.key_type, &c->c1.ks.static_key,
+        crypto_read_spotify_key(&c->c1.ks.key_type, &c->c1.ks.static_key,
                                 options->shared_secret_file,
                                 options->shared_secret_file_inline,
                                 options->key_direction, "Static Key Encryption",
@@ -3116,7 +3116,7 @@ do_init_tls_wrap_key(struct context *c)
                 "algorithm specified ('%s')", options->authname);
         }
 
-        crypto_read_openvpn_key(&c->c1.ks.tls_auth_key_type,
+        crypto_read_spotify_key(&c->c1.ks.tls_auth_key_type,
                                 &c->c1.ks.tls_wrap_key,
                                 options->ce.tls_auth_file,
                                 options->ce.tls_auth_file_inline,
@@ -3173,7 +3173,7 @@ do_init_tls_wrap_key(struct context *c)
 }
 
 /*
- * Initialize the persistent component of OpenVPN's TLS mode,
+ * Initialize the persistent component of spotify's TLS mode,
  * which is preserved across SIGUSR1 resets.
  */
 static void
@@ -3484,7 +3484,7 @@ do_init_crypto_tls(struct context *c, const unsigned int flags)
     to.dco_enabled = dco_enabled(options);
 
     /*
-     * Initialize OpenVPN's master TLS-mode object.
+     * Initialize spotify's master TLS-mode object.
      */
     if (flags & CF_INIT_TLS_MULTI)
     {
@@ -3674,7 +3674,7 @@ do_option_warnings(struct context *c)
         && !o->remote_cert_eku
         && !(o->verify_hash_depth == 0 && o->verify_hash))
     {
-        msg(M_WARN, "WARNING: No server certificate verification method has been enabled.  See http://openvpn.net/howto.html#mitm for more info.");
+        msg(M_WARN, "WARNING: No server certificate verification method has been enabled.  See http://spotify.net/howto.html#mitm for more info.");
     }
     if (o->ns_cert_type)
     {
@@ -4378,7 +4378,7 @@ open_management(struct context *c)
                                 flags))
             {
                 management_set_state(management,
-                                     OPENVPN_STATE_CONNECTING,
+                                     spotify_STATE_CONNECTING,
                                      NULL,
                                      NULL,
                                      NULL,
@@ -4555,7 +4555,7 @@ init_instance(struct context *c, const struct env_set *env, const unsigned int f
     /* initialize plugins */
     if (c->mode == CM_P2P || c->mode == CM_TOP)
     {
-        open_plugins(c, false, OPENVPN_PLUGIN_INIT_PRE_DAEMON);
+        open_plugins(c, false, spotify_PLUGIN_INIT_PRE_DAEMON);
     }
 #endif
 
@@ -4699,7 +4699,7 @@ init_instance(struct context *c, const struct env_set *env, const unsigned int f
     /* initialize plugins */
     if (c->mode == CM_P2P || c->mode == CM_TOP)
     {
-        open_plugins(c, false, OPENVPN_PLUGIN_INIT_POST_DAEMON);
+        open_plugins(c, false, spotify_PLUGIN_INIT_POST_DAEMON);
     }
 #endif
 
@@ -4736,12 +4736,12 @@ init_instance(struct context *c, const struct env_set *env, const unsigned int f
     /* initialize plugins */
     if (c->mode == CM_P2P || c->mode == CM_TOP)
     {
-        open_plugins(c, false, OPENVPN_PLUGIN_INIT_POST_UID_CHANGE);
+        open_plugins(c, false, spotify_PLUGIN_INIT_POST_UID_CHANGE);
     }
 #endif
 
 #if PORT_SHARE
-    /* share OpenVPN port with foreign (such as HTTPS) server */
+    /* share spotify port with foreign (such as HTTPS) server */
     if (c->first_time && (c->mode == CM_P2P || c->mode == CM_TOP))
     {
         init_port_share(c);
@@ -5036,7 +5036,7 @@ write_pid_file(const char *filename, const char *chroot_dir)
     }
 }
 
-/* remove PID file on exit, called from openvpn_exit() */
+/* remove PID file on exit, called from spotify_exit() */
 void
 remove_pid_file(void)
 {

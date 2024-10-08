@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -55,7 +55,7 @@
 #endif
 
 #ifdef _WIN32
-#include "openvpn-msg.h"
+#include "spotify-msg.h"
 
 #define METRIC_NOT_USED ((DWORD)-1)
 static int add_route_service(const struct route_ipv4 *, const struct tuntap *);
@@ -77,7 +77,7 @@ static bool del_route_ipapi(const struct route_ipv4 *r, const struct tuntap *tt)
 
 static void delete_route(struct route_ipv4 *r, const struct tuntap *tt, unsigned int flags,
                          const struct route_gateway_info *rgi, const struct env_set *es,
-                         openvpn_net_ctx_t *ctx);
+                         spotify_net_ctx_t *ctx);
 
 static void get_bypass_addresses(struct route_bypass *rb, const unsigned int flags);
 
@@ -349,12 +349,12 @@ init_route(struct route_ipv4 *r,
         special.s_addr = htonl(special.s_addr);
         char buf[INET_ADDRSTRLEN];
         inet_ntop(AF_INET, &special, buf, sizeof(buf));
-        ret = openvpn_getaddrinfo(0, buf, NULL, 0, NULL,
+        ret = spotify_getaddrinfo(0, buf, NULL, 0, NULL,
                                   AF_INET, network_list);
     }
     else
     {
-        ret = openvpn_getaddrinfo(GETADDR_RESOLVE | GETADDR_WARN_ON_SIGNAL,
+        ret = spotify_getaddrinfo(GETADDR_RESOLVE | GETADDR_WARN_ON_SIGNAL,
                                   ro->network, NULL, 0, NULL, AF_INET, network_list);
     }
 
@@ -634,7 +634,7 @@ init_route_list(struct route_list *rl,
                 int default_metric,
                 in_addr_t remote_host,
                 struct env_set *es,
-                openvpn_net_ctx_t *ctx)
+                spotify_net_ctx_t *ctx)
 {
     struct gc_arena gc = gc_new();
     bool ret = true;
@@ -793,7 +793,7 @@ init_route_ipv6_list(struct route_ipv6_list *rl6,
                      int default_metric,
                      const struct in6_addr *remote_host_ipv6,
                      struct env_set *es,
-                     openvpn_net_ctx_t *ctx)
+                     spotify_net_ctx_t *ctx)
 {
     struct gc_arena gc = gc_new();
     bool ret = true;
@@ -927,7 +927,7 @@ add_route3(in_addr_t network,
            unsigned int flags,
            const struct route_gateway_info *rgi,
            const struct env_set *es,
-           openvpn_net_ctx_t *ctx)
+           spotify_net_ctx_t *ctx)
 {
     struct route_ipv4 r;
     CLEAR(r);
@@ -946,7 +946,7 @@ del_route3(in_addr_t network,
            unsigned int flags,
            const struct route_gateway_info *rgi,
            const struct env_set *es,
-           openvpn_net_ctx_t *ctx)
+           spotify_net_ctx_t *ctx)
 {
     struct route_ipv4 r;
     CLEAR(r);
@@ -964,7 +964,7 @@ add_bypass_routes(struct route_bypass *rb,
                   unsigned int flags,
                   const struct route_gateway_info *rgi,
                   const struct env_set *es,
-                  openvpn_net_ctx_t *ctx)
+                  spotify_net_ctx_t *ctx)
 {
     int ret = true;
     for (int i = 0; i < rb->n_bypass; ++i)
@@ -985,7 +985,7 @@ del_bypass_routes(struct route_bypass *rb,
                   unsigned int flags,
                   const struct route_gateway_info *rgi,
                   const struct env_set *es,
-                  openvpn_net_ctx_t *ctx)
+                  spotify_net_ctx_t *ctx)
 {
     int i;
     for (i = 0; i < rb->n_bypass; ++i)
@@ -1007,7 +1007,7 @@ del_bypass_routes(struct route_bypass *rb,
 static bool
 redirect_default_route_to_vpn(struct route_list *rl, const struct tuntap *tt,
                               unsigned int flags, const struct env_set *es,
-                              openvpn_net_ctx_t *ctx)
+                              spotify_net_ctx_t *ctx)
 {
     const char err[] = "NOTE: unable to redirect IPv4 default gateway --";
     bool ret = true;
@@ -1115,7 +1115,7 @@ static void
 undo_redirect_default_route_to_vpn(struct route_list *rl,
                                    const struct tuntap *tt, unsigned int flags,
                                    const struct env_set *es,
-                                   openvpn_net_ctx_t *ctx)
+                                   spotify_net_ctx_t *ctx)
 {
     if (rl && rl->iflags & RL_DID_REDIRECT_DEFAULT_GATEWAY)
     {
@@ -1188,7 +1188,7 @@ undo_redirect_default_route_to_vpn(struct route_list *rl,
 bool
 add_routes(struct route_list *rl, struct route_ipv6_list *rl6,
            const struct tuntap *tt, unsigned int flags,
-           const struct env_set *es, openvpn_net_ctx_t *ctx)
+           const struct env_set *es, spotify_net_ctx_t *ctx)
 {
     bool ret = redirect_default_route_to_vpn(rl, tt, flags, es, ctx);
     if (rl && !(rl->iflags & RL_ROUTES_ADDED) )
@@ -1197,7 +1197,7 @@ add_routes(struct route_list *rl, struct route_ipv6_list *rl6,
 
         if (rl->routes && !tt->did_ifconfig_setup)
         {
-            msg(M_INFO, "WARNING: OpenVPN was configured to add an IPv4 "
+            msg(M_INFO, "WARNING: spotify was configured to add an IPv4 "
                 "route. However, no IPv4 has been configured for %s, "
                 "therefore the route installation may fail or may not work "
                 "as expected.", tt->actual_name);
@@ -1207,7 +1207,7 @@ add_routes(struct route_list *rl, struct route_ipv6_list *rl6,
         if (management && rl->routes)
         {
             management_set_state(management,
-                                 OPENVPN_STATE_ADD_ROUTES,
+                                 spotify_STATE_ADD_ROUTES,
                                  NULL,
                                  NULL,
                                  NULL,
@@ -1233,7 +1233,7 @@ add_routes(struct route_list *rl, struct route_ipv6_list *rl6,
 
         if (!tt->did_ifconfig_ipv6_setup)
         {
-            msg(M_INFO, "WARNING: OpenVPN was configured to add an IPv6 "
+            msg(M_INFO, "WARNING: spotify was configured to add an IPv6 "
                 "route. However, no IPv6 has been configured for %s, "
                 "therefore the route installation may fail or may not work "
                 "as expected.", tt->actual_name);
@@ -1256,7 +1256,7 @@ add_routes(struct route_list *rl, struct route_ipv6_list *rl6,
 void
 delete_routes(struct route_list *rl, struct route_ipv6_list *rl6,
               const struct tuntap *tt, unsigned int flags,
-              const struct env_set *es, openvpn_net_ctx_t *ctx)
+              const struct env_set *es, spotify_net_ctx_t *ctx)
 {
     if (rl && rl->iflags & RL_ROUTES_ADDED)
     {
@@ -1570,7 +1570,7 @@ add_route(struct route_ipv4 *r,
           unsigned int flags,
           const struct route_gateway_info *rgi,  /* may be NULL */
           const struct env_set *es,
-          openvpn_net_ctx_t *ctx)
+          spotify_net_ctx_t *ctx)
 {
     int status = 0;
     int is_local_route;
@@ -1673,7 +1673,7 @@ add_route(struct route_ipv4 *r,
         else if ((flags & ROUTE_METHOD_MASK) == ROUTE_METHOD_EXE)
         {
             netcmd_semaphore_lock();
-            bool ret = openvpn_execve_check(&argv, es, 0,
+            bool ret = spotify_execve_check(&argv, es, 0,
                                             "ERROR: Windows route add command failed");
             status = ret ? RTA_SUCCESS : RTA_ERROR;
             netcmd_semaphore_release();
@@ -1687,7 +1687,7 @@ add_route(struct route_ipv4 *r,
             {
                 msg(D_ROUTE, "Route addition fallback to route.exe");
                 netcmd_semaphore_lock();
-                bool ret = openvpn_execve_check(&argv, es, 0,
+                bool ret = spotify_execve_check(&argv, es, 0,
                                                 "ERROR: Windows route add command failed [adaptive]");
                 status = ret ? RTA_SUCCESS : RTA_ERROR;
                 netcmd_semaphore_release();
@@ -1730,7 +1730,7 @@ add_route(struct route_ipv4 *r,
     }
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: Solaris route add command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -1754,7 +1754,7 @@ add_route(struct route_ipv4 *r,
     /* FIXME -- add on-link support for FreeBSD */
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: FreeBSD route add command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -1778,7 +1778,7 @@ add_route(struct route_ipv4 *r,
     /* FIXME -- add on-link support for Dragonfly */
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: DragonFly route add command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -1812,7 +1812,7 @@ add_route(struct route_ipv4 *r,
     }
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: OS X route add command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -1836,7 +1836,7 @@ add_route(struct route_ipv4 *r,
     /* FIXME -- add on-link support for OpenBSD/NetBSD */
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: OpenBSD/NetBSD route add command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -1848,7 +1848,7 @@ add_route(struct route_ipv4 *r,
                     ROUTE_PATH,
                     network, netbits, gateway);
         argv_msg(D_ROUTE, &argv);
-        bool ret = openvpn_execve_check(&argv, es, 0,
+        bool ret = spotify_execve_check(&argv, es, 0,
                                         "ERROR: AIX route add command failed");
         status = ret ? RTA_SUCCESS : RTA_ERROR;
     }
@@ -1901,7 +1901,7 @@ route_ipv6_clear_host_bits( struct route_ipv6 *r6 )
 bool
 add_route_ipv6(struct route_ipv6 *r6, const struct tuntap *tt,
                unsigned int flags, const struct env_set *es,
-               openvpn_net_ctx_t *ctx)
+               spotify_net_ctx_t *ctx)
 {
     int status = 0;
     bool gateway_needed = false;
@@ -2049,7 +2049,7 @@ add_route_ipv6(struct route_ipv6 *r6, const struct tuntap *tt,
     }
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: Solaris route add -inet6 command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -2070,7 +2070,7 @@ add_route_ipv6(struct route_ipv6 *r6, const struct tuntap *tt,
     }
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: *BSD route add -inet6 command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -2090,7 +2090,7 @@ add_route_ipv6(struct route_ipv6 *r6, const struct tuntap *tt,
     }
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: MacOS X route add -inet6 command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -2101,7 +2101,7 @@ add_route_ipv6(struct route_ipv6 *r6, const struct tuntap *tt,
                 network, r6->netbits, gateway );
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: OpenBSD route add -inet6 command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -2112,7 +2112,7 @@ add_route_ipv6(struct route_ipv6 *r6, const struct tuntap *tt,
                 network, r6->netbits, gateway );
 
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: NetBSD route add -inet6 command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -2122,7 +2122,7 @@ add_route_ipv6(struct route_ipv6 *r6, const struct tuntap *tt,
                 ROUTE_PATH,
                 network, r6->netbits, gateway);
     argv_msg(D_ROUTE, &argv);
-    bool ret = openvpn_execve_check(&argv, es, 0,
+    bool ret = spotify_execve_check(&argv, es, 0,
                                     "ERROR: AIX route add command failed");
     status = ret ? RTA_SUCCESS : RTA_ERROR;
 
@@ -2153,7 +2153,7 @@ delete_route(struct route_ipv4 *r,
              unsigned int flags,
              const struct route_gateway_info *rgi,
              const struct env_set *es,
-             openvpn_net_ctx_t *ctx)
+             spotify_net_ctx_t *ctx)
 {
 #if !defined(TARGET_LINUX)
     const char *network;
@@ -2228,7 +2228,7 @@ delete_route(struct route_ipv4 *r,
     else if ((flags & ROUTE_METHOD_MASK) == ROUTE_METHOD_EXE)
     {
         netcmd_semaphore_lock();
-        openvpn_execve_check(&argv, es, 0, "ERROR: Windows route delete command failed");
+        spotify_execve_check(&argv, es, 0, "ERROR: Windows route delete command failed");
         netcmd_semaphore_release();
     }
     else if ((flags & ROUTE_METHOD_MASK) == ROUTE_METHOD_ADAPTIVE)
@@ -2239,7 +2239,7 @@ delete_route(struct route_ipv4 *r,
         {
             msg(D_ROUTE, "Route deletion fallback to route.exe");
             netcmd_semaphore_lock();
-            openvpn_execve_check(&argv, es, 0, "ERROR: Windows route delete command failed [adaptive]");
+            spotify_execve_check(&argv, es, 0, "ERROR: Windows route delete command failed [adaptive]");
             netcmd_semaphore_release();
         }
     }
@@ -2257,7 +2257,7 @@ delete_route(struct route_ipv4 *r,
                 gateway);
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: Solaris route delete command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: Solaris route delete command failed");
 
 #elif defined(TARGET_FREEBSD)
 
@@ -2268,7 +2268,7 @@ delete_route(struct route_ipv4 *r,
                 netmask);
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: FreeBSD route delete command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: FreeBSD route delete command failed");
 
 #elif defined(TARGET_DRAGONFLY)
 
@@ -2279,7 +2279,7 @@ delete_route(struct route_ipv4 *r,
                 netmask);
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: DragonFly route delete command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: DragonFly route delete command failed");
 
 #elif defined(TARGET_DARWIN)
 
@@ -2301,7 +2301,7 @@ delete_route(struct route_ipv4 *r,
     }
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: OS X route delete command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: OS X route delete command failed");
 
 #elif defined(TARGET_OPENBSD) || defined(TARGET_NETBSD)
 
@@ -2312,7 +2312,7 @@ delete_route(struct route_ipv4 *r,
                 netmask);
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: OpenBSD/NetBSD route delete command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: OpenBSD/NetBSD route delete command failed");
 
 #elif defined(TARGET_ANDROID)
     msg(D_ROUTE_DEBUG, "Deleting routes on Android is not possible/not "
@@ -2326,7 +2326,7 @@ delete_route(struct route_ipv4 *r,
                     ROUTE_PATH,
                     network, netbits, gateway);
         argv_msg(D_ROUTE, &argv);
-        openvpn_execve_check(&argv, es, 0, "ERROR: AIX route delete command failed");
+        spotify_execve_check(&argv, es, 0, "ERROR: AIX route delete command failed");
     }
 
 #else  /* if defined(TARGET_LINUX) */
@@ -2344,7 +2344,7 @@ done:
 void
 delete_route_ipv6(const struct route_ipv6 *r6, const struct tuntap *tt,
                   unsigned int flags, const struct env_set *es,
-                  openvpn_net_ctx_t *ctx)
+                  spotify_net_ctx_t *ctx)
 {
     const char *network;
 
@@ -2440,7 +2440,7 @@ delete_route_ipv6(const struct route_ipv6 *r6, const struct tuntap *tt,
                 gateway );
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: Solaris route delete -inet6 command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: Solaris route delete -inet6 command failed");
 
 #elif defined(TARGET_FREEBSD) || defined(TARGET_DRAGONFLY)
 
@@ -2459,7 +2459,7 @@ delete_route_ipv6(const struct route_ipv6 *r6, const struct tuntap *tt,
     }
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: *BSD route delete -inet6 command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: *BSD route delete -inet6 command failed");
 
 #elif defined(TARGET_DARWIN)
 
@@ -2477,7 +2477,7 @@ delete_route_ipv6(const struct route_ipv6 *r6, const struct tuntap *tt,
     }
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: MacOS X route delete -inet6 command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: MacOS X route delete -inet6 command failed");
 
 #elif defined(TARGET_OPENBSD)
 
@@ -2486,7 +2486,7 @@ delete_route_ipv6(const struct route_ipv6 *r6, const struct tuntap *tt,
                 network, r6->netbits, gateway );
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: OpenBSD route delete -inet6 command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: OpenBSD route delete -inet6 command failed");
 
 #elif defined(TARGET_NETBSD)
 
@@ -2495,7 +2495,7 @@ delete_route_ipv6(const struct route_ipv6 *r6, const struct tuntap *tt,
                 network, r6->netbits, gateway );
 
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: NetBSD route delete -inet6 command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: NetBSD route delete -inet6 command failed");
 
 #elif defined(TARGET_AIX)
 
@@ -2503,7 +2503,7 @@ delete_route_ipv6(const struct route_ipv6 *r6, const struct tuntap *tt,
                 ROUTE_PATH,
                 network, r6->netbits, gateway);
     argv_msg(D_ROUTE, &argv);
-    openvpn_execve_check(&argv, es, 0, "ERROR: AIX route add command failed");
+    spotify_execve_check(&argv, es, 0, "ERROR: AIX route add command failed");
 #elif defined(TARGET_ANDROID)
     msg(D_ROUTE_DEBUG, "Deleting routes on Android is not possible/not "
         "needed. The VpnService API allows routes to be set "
@@ -2680,7 +2680,7 @@ get_default_gateway_row(const MIB_IPFORWARDTABLE *routes)
 }
 
 void
-get_default_gateway(struct route_gateway_info *rgi, openvpn_net_ctx_t *ctx)
+get_default_gateway(struct route_gateway_info *rgi, spotify_net_ctx_t *ctx)
 {
     struct gc_arena gc = gc_new();
 
@@ -2767,7 +2767,7 @@ windows_route_find_if_index(const struct route_ipv4 *r, const struct tuntap *tt)
  */
 void
 get_default_gateway_ipv6(struct route_ipv6_gateway_info *rgi6,
-                         const struct in6_addr *dest, openvpn_net_ctx_t *ctx)
+                         const struct in6_addr *dest, spotify_net_ctx_t *ctx)
 {
     struct gc_arena gc = gc_new();
     MIB_IPFORWARD_ROW2 BestRoute;
@@ -3229,11 +3229,11 @@ show_routes(int msglev)
 #elif defined(TARGET_ANDROID)
 
 void
-get_default_gateway(struct route_gateway_info *rgi, openvpn_net_ctx_t *ctx)
+get_default_gateway(struct route_gateway_info *rgi, spotify_net_ctx_t *ctx)
 {
     /* Android, set some pseudo GW, addr is in host byte order,
      * Determining the default GW on Android 5.0+ is non trivial
-     * and serves almost no purpose since OpenVPN only uses the
+     * and serves almost no purpose since spotify only uses the
      * default GW address to add routes for networks that should
      * NOT be routed over the VPN. Using a well known address
      * (127.'d'.'g'.'w') for the default GW make detecting
@@ -3254,7 +3254,7 @@ get_default_gateway(struct route_gateway_info *rgi, openvpn_net_ctx_t *ctx)
 
 void
 get_default_gateway_ipv6(struct route_ipv6_gateway_info *rgi6,
-                         const struct in6_addr *dest, openvpn_net_ctx_t *ctx)
+                         const struct in6_addr *dest, spotify_net_ctx_t *ctx)
 {
     /* Same for ipv6 */
 
@@ -3270,7 +3270,7 @@ get_default_gateway_ipv6(struct route_ipv6_gateway_info *rgi6,
 #elif defined(TARGET_LINUX)
 
 void
-get_default_gateway(struct route_gateway_info *rgi, openvpn_net_ctx_t *ctx)
+get_default_gateway(struct route_gateway_info *rgi, spotify_net_ctx_t *ctx)
 {
     struct gc_arena gc = gc_new();
     int sd = -1;
@@ -3413,7 +3413,7 @@ struct rtreq {
 
 void
 get_default_gateway_ipv6(struct route_ipv6_gateway_info *rgi6,
-                         const struct in6_addr *dest, openvpn_net_ctx_t *ctx)
+                         const struct in6_addr *dest, spotify_net_ctx_t *ctx)
 {
     int flags;
 
@@ -3508,7 +3508,7 @@ struct rtmsg {
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
 void
-get_default_gateway(struct route_gateway_info *rgi, openvpn_net_ctx_t *ctx)
+get_default_gateway(struct route_gateway_info *rgi, spotify_net_ctx_t *ctx)
 {
     struct gc_arena gc = gc_new();
     struct rtmsg m_rtmsg;
@@ -3729,7 +3729,7 @@ done:
 
 void
 get_default_gateway_ipv6(struct route_ipv6_gateway_info *rgi6,
-                         const struct in6_addr *dest, openvpn_net_ctx_t *ctx)
+                         const struct in6_addr *dest, spotify_net_ctx_t *ctx)
 {
 
     struct rtmsg m_rtmsg;
@@ -3909,17 +3909,17 @@ done:
  *
  * The flags RGI_x_DEFINED may be used to indicate which of the data
  * members were successfully returned (set in rgi->flags).  All of
- * the data members are optional, however certain OpenVPN functionality
+ * the data members are optional, however certain spotify functionality
  * may be disabled by missing items.
  */
 void
-get_default_gateway(struct route_gateway_info *rgi, openvpn_net_ctx_t *ctx)
+get_default_gateway(struct route_gateway_info *rgi, spotify_net_ctx_t *ctx)
 {
     CLEAR(*rgi);
 }
 void
 get_default_gateway_ipv6(struct route_ipv6_gateway_info *rgi6,
-                         const struct in6_addr *dest, openvpn_net_ctx_t *ctx)
+                         const struct in6_addr *dest, spotify_net_ctx_t *ctx)
 {
     msg(D_ROUTE, "no support for get_default_gateway_ipv6() on this system");
     CLEAR(*rgi6);

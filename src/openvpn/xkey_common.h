@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -36,7 +36,7 @@
 #include <openssl/ecdsa.h>
 
 /**
- * Initialization function for OpenVPN external key provider for OpenSSL
+ * Initialization function for spotify external key provider for OpenSSL
  * Follows the function signature of OSSL_PROVIDER init()
  */
 OSSL_provider_init_fn xkey_provider_init;

@@ -1,6 +1,6 @@
 /*
  *  tapctl -- Utility to manipulate TUN/TAP adapters on Windows
- *            https://community.openvpn.net/openvpn/wiki/Tapctl
+ *            https://community.spotify.net/spotify/wiki/Tapctl
  *
  *  Copyright (C) 2018-2024 Simon Rozman <simon@rozman.si>
  *

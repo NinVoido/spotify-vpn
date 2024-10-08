@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2016-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2016-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -29,11 +29,11 @@
  * Sets up the environment for unit tests like making both stderr and stdout
  * non-buffered to avoid messages getting lost if the program exits early.
  *
- * This has a openvpn prefix to avoid confusion with cmocka's unit_test_setup_*
+ * This has a spotify prefix to avoid confusion with cmocka's unit_test_setup_*
  * methods
  */
 static inline void
-openvpn_unit_test_setup(void)
+spotify_unit_test_setup(void)
 {
     assert_int_equal(setvbuf(stdout, NULL, _IONBF, BUFSIZ), 0);
     assert_int_equal(setvbuf(stderr, NULL, _IONBF, BUFSIZ), 0);
@@ -51,7 +51,7 @@ openvpn_unit_test_setup(void)
  *                      unit test source directory
  */
 void
-openvpn_test_get_srcdir_dir(char *buf, size_t bufsize, const char *filename)
+spotify_test_get_srcdir_dir(char *buf, size_t bufsize, const char *filename)
 {
     const char *srcdir = getenv("srcdir");
 

@@ -1,7 +1,7 @@
 Generic Options
 ---------------
 This section covers generic options which are accessible regardless of
-which mode OpenVPN is configured as.
+which mode spotify is configured as.
 
 --help
 
@@ -11,10 +11,10 @@ which mode OpenVPN is configured as.
   Don't cache ``--askpass`` or ``--auth-user-pass`` username/passwords in
   virtual memory.
 
-  If specified, this directive will cause OpenVPN to immediately forget
-  username/password inputs after they are used. As a result, when OpenVPN
+  If specified, this directive will cause spotify to immediately forget
+  username/password inputs after they are used. As a result, when spotify
   needs a username/password, it will prompt for input from stdin, which
-  may be multiple times during the duration of an OpenVPN session.
+  may be multiple times during the duration of an spotify session.
 
   When using ``--auth-nocache`` in combination with a user/password file
   and ``--chroot`` or ``--daemon``, make sure to use an absolute path.
@@ -25,18 +25,18 @@ which mode OpenVPN is configured as.
   absolute path, with a leading "/", and without any references to the
   current directory such as :code:`.` or :code:`..`.
 
-  This option is useful when you are running OpenVPN in ``--daemon`` mode,
-  and you want to consolidate all of your OpenVPN control files in one
+  This option is useful when you are running spotify in ``--daemon`` mode,
+  and you want to consolidate all of your spotify control files in one
   location.
 
 --chroot dir
   Chroot to ``dir`` after initialization. ``--chroot`` essentially
-  redefines ``dir`` as being the top level directory tree (/). OpenVPN
+  redefines ``dir`` as being the top level directory tree (/). spotify
   will therefore be unable to access any files outside this tree. This can
   be desirable from a security standpoint.
 
   Since the chroot operation is delayed until after initialization, most
-  OpenVPN options that reference files will operate in a pre-chroot
+  spotify options that reference files will operate in a pre-chroot
   context.
 
   In many cases, the ``dir`` parameter can point to an empty directory,
@@ -50,15 +50,15 @@ which mode OpenVPN is configured as.
   need for /dev/urandom to be available.
 
 --compat-mode version
-  This option provides a convenient way to alter the defaults of OpenVPN
+  This option provides a convenient way to alter the defaults of spotify
   to be more compatible with the version ``version`` specified. All of
   the changes this option applies can also be achieved using individual
   configuration options.
 
-  The version specified with this option is the version of OpenVPN peer
-  OpenVPN should try to be compatible with. In general OpenVPN should be
+  The version specified with this option is the version of spotify peer
+  spotify should try to be compatible with. In general spotify should be
   compatible with the last two previous version without this option. E.g.
-  OpenVPN 2.6.0 should be compatible with 2.5.x and 2.4.x without this option.
+  spotify 2.6.0 should be compatible with 2.5.x and 2.4.x without this option.
   However, there might be some edge cases that still require this option even
   in these cases.
 
@@ -84,8 +84,8 @@ which mode OpenVPN is configured as.
   Load additional config options from ``file`` where each line corresponds
   to one command line option, but with the leading :code:`--` removed.
 
-  If ``--config file`` is the only option to the openvpn command, the
-  ``--config`` can be removed, and the command can be given as ``openvpn
+  If ``--config file`` is the only option to the spotify command, the
+  ``--config`` can be removed, and the command can be given as ``spotify
   file``
 
   Note that configuration files can be nested to a reasonable depth.
@@ -94,7 +94,7 @@ which mode OpenVPN is configured as.
   enclose single parameters containing whitespace, and "#" or ";"
   characters in the first column can be used to denote comments.
 
-  Note that OpenVPN 2.0 and higher performs backslash-based shell escaping
+  Note that spotify 2.0 and higher performs backslash-based shell escaping
   for characters not in single quotations, so the following mappings
   should be observed:
   ::
@@ -108,17 +108,17 @@ which mode OpenVPN is configured as.
   For example on Windows, use double backslashes to represent pathnames:
   ::
 
-      secret "c:\\OpenVPN\\secret.key"
+      secret "c:\\spotify\\secret.key"
 
 
   For examples of configuration files, see
-  https://openvpn.net/community-resources/how-to/
+  https://spotify.net/community-resources/how-to/
 
   Here is an example configuration file:
   ::
 
       #
-      # Sample OpenVPN configuration file for
+      # Sample spotify configuration file for
       # using a pre-shared static key.
       #
       # '#' or ';' may be used to delimit comments.
@@ -152,25 +152,25 @@ which mode OpenVPN is configured as.
   daemonization point occurs later. If one of the ``--log`` options is
   present, it will supersede syslog redirection.
 
-  The optional ``progname`` parameter will cause OpenVPN to report its
+  The optional ``progname`` parameter will cause spotify to report its
   program name to the system logger as ``progname``. This can be useful in
-  linking OpenVPN messages in the syslog file with specific tunnels. When
-  unspecified, ``progname`` defaults to :code:`openvpn`.
+  linking spotify messages in the syslog file with specific tunnels. When
+  unspecified, ``progname`` defaults to :code:`spotify`.
 
-  When OpenVPN is run with the ``--daemon`` option, it will try to delay
+  When spotify is run with the ``--daemon`` option, it will try to delay
   daemonization until the majority of initialization functions which are
   capable of generating fatal errors are complete. This means that
-  initialization scripts can test the return status of the openvpn command
+  initialization scripts can test the return status of the spotify command
   for a fairly reliable indication of whether the command has correctly
   initialized and entered the packet forwarding event loop.
 
-  In OpenVPN, the vast majority of errors which occur after initialization
+  In spotify, the vast majority of errors which occur after initialization
   are non-fatal.
 
-  Note: as soon as OpenVPN has daemonized, it can not ask for usernames,
+  Note: as soon as spotify has daemonized, it can not ask for usernames,
   passwords, or key pass phrases anymore. This has certain consequences,
   namely that using a password-protected private key will fail unless the
-  ``--askpass`` option is used to tell OpenVPN to ask for the pass phrase
+  ``--askpass`` option is used to tell spotify to ask for the pass phrase
   (this requirement is new in v2.3.7, and is a consequence of calling
   daemon() before initializing the crypto layer).
 
@@ -196,7 +196,7 @@ which mode OpenVPN is configured as.
   peer uses ``--dev tun`` while the other peer uses ``--dev tap``.
 
   Use of this option is discouraged, but is provided as a temporary fix in
-  situations where a recent version of OpenVPN must connect to an old
+  situations where a recent version of spotify must connect to an old
   version.
 
 --engine engine-name
@@ -225,7 +225,7 @@ which mode OpenVPN is configured as.
 
 --group group
   Similar to the ``--user`` option, this option changes the group ID of
-  the OpenVPN process to ``group`` after initialization.
+  the spotify process to ``group`` after initialization.
 
 --ignore-unknown-option args
   Valid syntax:
@@ -234,27 +234,27 @@ which mode OpenVPN is configured as.
      ignore-unknown-options opt1 opt2 opt3 ... optN
 
   When one of options ``opt1 ... optN`` is encountered in the configuration
-  file the configuration file parsing does not fail if this OpenVPN version
+  file the configuration file parsing does not fail if this spotify version
   does not support the option. Multiple ``--ignore-unknown-option`` options
   can be given to support a larger number of options to ignore.
 
   This option should be used with caution, as there are good security
-  reasons for having OpenVPN fail if it detects problems in a config file.
+  reasons for having spotify fail if it detects problems in a config file.
   Having said that, there are valid reasons for wanting new software
   features to gracefully degrade when encountered by older software
   versions.
 
-  ``--ignore-unknown-option`` is available since OpenVPN 2.3.3.
+  ``--ignore-unknown-option`` is available since spotify 2.3.3.
 
 --iproute cmd
   Set alternate command to execute instead of default ``iproute2`` command.
-  May be used in order to execute OpenVPN in unprivileged environment.
+  May be used in order to execute spotify in unprivileged environment.
 
 --keying-material-exporter args
   Save Exported Keying Material [RFC5705] of ``len`` bytes (must be between 16
   and 4095 bytes) using ``label`` in environment
   (:code:`exported_keying_material`) for use by plugins in
-  :code:`OPENVPN_PLUGIN_TLS_FINAL` callback.
+  :code:`spotify_PLUGIN_TLS_FINAL` callback.
 
   Valid syntax:
   ::
@@ -267,13 +267,13 @@ which mode OpenVPN is configured as.
 
 --mlock
   Disable paging by calling the POSIX mlockall function. Requires that
-  OpenVPN be initially run as root (though OpenVPN can subsequently
+  spotify be initially run as root (though spotify can subsequently
   downgrade its UID using the ``--user`` option).
 
   Using this option ensures that key material and tunnel data are never
   written to disk due to virtual memory paging operations which occur
   under most modern operating systems. It ensures that even if an attacker
-  was able to crack the box running OpenVPN, he would not be able to scan
+  was able to crack the box running spotify, he would not be able to scan
   the system swap file to recover previously used ephemeral keys, which
   are used for a period of time governed by the ``--reneg`` options (see
   below), then are discarded.
@@ -286,13 +286,13 @@ which mode OpenVPN is configured as.
   unprivileged process may lock (RLIMIT_MEMLOCK) is low, and if
   privileges are dropped later, future memory allocations will very
   likely fail. The limit can be increased using ulimit or systemd
-  directives depending on how OpenVPN is started.
+  directives depending on how spotify is started.
 
-  If the platform has the getrlimit(2) system call, OpenVPN will check
+  If the platform has the getrlimit(2) system call, spotify will check
   for the amount of mlock-able memory before calling mlockall(2), and
   tries to increase the limit to 100 MB if less than this is configured.
   100 Mb is somewhat arbitrary - it is enough for a moderately-sized
-  OpenVPN deployment, but the memory usage might go beyond that if the
+  spotify deployment, but the memory usage might go beyond that if the
   number of concurrent clients is high.
 
 --nice n
@@ -309,7 +309,7 @@ which mode OpenVPN is configured as.
       --providers legacy default
 
   Behaviour of changing this option between :code:`SIGHUP` might not be well behaving.
-  If you need to change/add/remove this option, fully restart OpenVPN.
+  If you need to change/add/remove this option, fully restart spotify.
 
 --remap-usr1 signal
   Control whether internally or externally generated :code:`SIGUSR1` signals
@@ -320,7 +320,7 @@ which mode OpenVPN is configured as.
   no remapping occurs.
 
 --script-security level
-  This directive offers policy-level control over OpenVPN's usage of
+  This directive offers policy-level control over spotify's usage of
   external programs and scripts. Lower ``level`` values are more
   restrictive, higher values are more permissive. Settings for ``level``:
 
@@ -339,9 +339,9 @@ which mode OpenVPN is configured as.
       Allow passwords to be passed to scripts via environmental
       variables (potentially unsafe).
 
-  OpenVPN releases before v2.3 also supported a ``method`` flag which
-  indicated how OpenVPN should call external commands and scripts. This
-  could be either :code:`execve` or :code:`system`. As of OpenVPN 2.3, this
+  spotify releases before v2.3 also supported a ``method`` flag which
+  indicated how spotify should call external commands and scripts. This
+  could be either :code:`execve` or :code:`system`. As of spotify 2.3, this
   flag is no longer accepted. In most \*nix environments the execve()
   approach has been used without any issues.
 
@@ -350,9 +350,9 @@ which mode OpenVPN is configured as.
   contain any spaces or the configuration parser will choke because it
   can't determine where the script name ends and script options start.
 
-  To run scripts in Windows in earlier OpenVPN versions you needed to
+  To run scripts in Windows in earlier spotify versions you needed to
   either add a full path to the script interpreter which can parse the
-  script or use the ``system`` flag to run these scripts. As of OpenVPN
+  script or use the ``system`` flag to run these scripts. As of spotify
   2.3 it is now a strict requirement to have full path to the script
   interpreter when running non-executables files. This is not needed for
   executable files, such as .exe, .com, .bat or .cmd files. For example,
@@ -360,7 +360,7 @@ which mode OpenVPN is configured as.
 
   ::
 
-     --up 'C:\\Windows\\System32\\wscript.exe C:\\Program\ Files\\OpenVPN\\config\\my-up-script.vbs'
+     --up 'C:\\Windows\\System32\\wscript.exe C:\\Program\ Files\\spotify\\config\\my-up-script.vbs'
 
   Please note the single quote marks and the escaping of the backslashes
   (\\) and the space character.
@@ -371,7 +371,7 @@ which mode OpenVPN is configured as.
 
 --setcon context
   Apply SELinux ``context`` after initialization. This essentially
-  provides the ability to restrict OpenVPN's rights to only network I/O
+  provides the ability to restrict spotify's rights to only network I/O
   operations, thanks to SELinux. This goes further than ``--user`` and
   ``--chroot`` in that those two, while being great security features,
   unfortunately do not protect against privilege escalation by
@@ -381,8 +381,8 @@ which mode OpenVPN is configured as.
   --bind).
 
   Since the setcon operation is delayed until after initialization,
-  OpenVPN can be restricted to just network-related system calls, whereas
-  by applying the context before startup (such as the OpenVPN one provided
+  spotify can be restricted to just network-related system calls, whereas
+  by applying the context before startup (such as the spotify one provided
   in the SELinux Reference Policies) you will have to allow many things
   required only during initialization.
 
@@ -431,7 +431,7 @@ which mode OpenVPN is configured as.
       Identical to :code:`2`, but fields are tab-separated.
 
 --test-crypto
-  Do a self-test of OpenVPN's crypto options by encrypting and decrypting
+  Do a self-test of spotify's crypto options by encrypting and decrypting
   test packets using the data channel encryption options specified above.
   This option does not require a peer to function, and therefore can be
   specified without ``--dev`` or ``--remote``.
@@ -439,35 +439,35 @@ which mode OpenVPN is configured as.
   The typical usage of ``--test-crypto`` would be something like this:
   ::
 
-     openvpn --test-crypto --secret key
+     spotify --test-crypto --secret key
 
   or
 
   ::
 
-     openvpn --test-crypto --secret key --verb 9
+     spotify --test-crypto --secret key --verb 9
 
-  This option is very useful to test OpenVPN after it has been ported to a
+  This option is very useful to test spotify after it has been ported to a
   new platform, or to isolate problems in the compiler, OpenSSL crypto
-  library, or OpenVPN's crypto code. Since it is a self-test mode,
+  library, or spotify's crypto code. Since it is a self-test mode,
   problems with encryption and authentication can be debugged
   independently of network and tunnel issues.
 
 --tmp-dir dir
   Specify a directory ``dir`` for temporary files. This directory will be
-  used by openvpn processes and script to communicate temporary data with
-  openvpn main process. Note that the directory must be writable by the
-  OpenVPN process after it has dropped it's root privileges.
+  used by spotify processes and script to communicate temporary data with
+  spotify main process. Note that the directory must be writable by the
+  spotify process after it has dropped it's root privileges.
 
   This directory will be used by in the following cases:
 
-  * ``--client-connect`` scripts and :code:`OPENVPN_PLUGIN_CLIENT_CONNECT`
+  * ``--client-connect`` scripts and :code:`spotify_PLUGIN_CLIENT_CONNECT`
     plug-in hook to dynamically generate client-specific configuration
     :code:`client_connect_config_file` and return success/failure via
     :code:`client_connect_deferred_file` when using deferred client connect
     method
 
-  * :code:`OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY` plug-in hooks returns
+  * :code:`spotify_PLUGIN_AUTH_USER_PASS_VERIFY` plug-in hooks returns
     success/failure via :code:`auth_control_file` when using deferred auth
     method and pending authentication via :code:`pending_auth_file`.
 
@@ -482,26 +482,26 @@ which mode OpenVPN is configured as.
   entropy to the kernel pool.
 
 --user user
-  Change the user ID of the OpenVPN process to ``user`` after
+  Change the user ID of the spotify process to ``user`` after
   initialization, dropping privileges in the process. This option is
   useful to protect the system in the event that some hostile party was
-  able to gain control of an OpenVPN session. Though OpenVPN's security
+  able to gain control of an spotify session. Though spotify's security
   features make this unlikely, it is provided as a second line of defense.
 
-  By setting ``user`` to an unprivileged user dedicated to run openvpn,
+  By setting ``user`` to an unprivileged user dedicated to run spotify,
   the hostile party would be limited in what damage they could cause. Of
   course once you take away privileges, you cannot return them to an
-  OpenVPN session. This means, for example, that if you want to reset an
-  OpenVPN daemon with a :code:`SIGUSR1` signal (for example in response to
+  spotify session. This means, for example, that if you want to reset an
+  spotify daemon with a :code:`SIGUSR1` signal (for example in response to
   a DHCP reset), you should make use of one or more of the ``--persist``
-  options to ensure that OpenVPN doesn't need to execute any privileged
+  options to ensure that spotify doesn't need to execute any privileged
   operations in order to restart (such as re-reading key files or running
   ``ifconfig`` on the TUN device).
 
-  NOTE: Previous versions of openvpn used :code:`nobody` as the example
+  NOTE: Previous versions of spotify used :code:`nobody` as the example
   unpriviledged user. It is not recommended to actually use that user
   since it is usually used by other system services already. Always
-  create a dedicated user for openvpn.
+  create a dedicated user for spotify.
 
 --writepid file
-  Write OpenVPN's main process ID to ``file``.
+  Write spotify's main process ID to ``file``.

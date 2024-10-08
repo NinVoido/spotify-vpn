@@ -1,6 +1,6 @@
 /*
- *  openvpnmsica -- Custom Action DLL to provide OpenVPN-specific support to MSI packages
- *                  https://community.openvpn.net/openvpn/wiki/OpenVPNMSICA
+ *  spotifymsica -- Custom Action DLL to provide spotify-specific support to MSI packages
+ *                  https://community.spotify.net/spotify/wiki/spotifyMSICA
  *
  *  Copyright (C) 2018-2024 Simon Rozman <simon@rozman.si>
  *
@@ -23,7 +23,7 @@
 #endif
 #include <winsock2.h> /* Must be included _before_ <windows.h> */
 
-#include "openvpnmsica.h"
+#include "spotifymsica.h"
 #include "msica_arg.h"
 #include "msiex.h"
 
@@ -63,7 +63,7 @@
 
 #define FILE_NEED_REBOOT        L".ovpn_need_reboot"
 
-#define OPENVPN_CONNECT_ADAPTER_SUBSTR L"OpenVPN Connect"
+#define spotify_CONNECT_ADAPTER_SUBSTR L"spotify Connect"
 
 /**
  * Joins an argument sequence and sets it to the MSI property.
@@ -224,10 +224,10 @@ find_adapters(
 
     for (struct tap_adapter_node *pAdapter = pAdapterList; pAdapter; pAdapter = pAdapter->pNext)
     {
-        /* exclude adapters created by OpenVPN Connect, since they're removed on Connect uninstallation */
-        if (_tcsstr(pAdapter->szName, OPENVPN_CONNECT_ADAPTER_SUBSTR))
+        /* exclude adapters created by spotify Connect, since they're removed on Connect uninstallation */
+        if (_tcsstr(pAdapter->szName, spotify_CONNECT_ADAPTER_SUBSTR))
         {
-            msg(M_WARN, "%s: skip OpenVPN Connect adapter '%ls'", __FUNCTION__, pAdapter->szName);
+            msg(M_WARN, "%s: skip spotify Connect adapter '%ls'", __FUNCTION__, pAdapter->szName);
             continue;
         }
 
@@ -308,7 +308,7 @@ FindSystemInfo(_In_ MSIHANDLE hInstall)
 
     BOOL bIsCoInitialized = SUCCEEDED(CoInitialize(NULL));
 
-    OPENVPNMSICA_SAVE_MSI_SESSION(hInstall);
+    spotifyMSICA_SAVE_MSI_SESSION(hInstall);
 
     find_adapters(
         hInstall,
@@ -335,7 +335,7 @@ FindSystemInfo(_In_ MSIHANDLE hInstall)
 
 
 UINT __stdcall
-CloseOpenVPNGUI(_In_ MSIHANDLE hInstall)
+ClosespotifyGUI(_In_ MSIHANDLE hInstall)
 {
 #ifdef _MSC_VER
 #pragma comment(linker, DLLEXP_EXPORT)
@@ -344,11 +344,11 @@ CloseOpenVPNGUI(_In_ MSIHANDLE hInstall)
 
     debug_popup(__FUNCTION__);
 
-    /* Find OpenVPN GUI window. */
-    HWND hWnd = FindWindow(TEXT("OpenVPN-GUI"), NULL);
+    /* Find spotify GUI window. */
+    HWND hWnd = FindWindow(TEXT("spotify-GUI"), NULL);
     if (hWnd)
     {
-        /* Ask it to close and wait for 100ms. Unfortunately, this will succeed only for recent OpenVPN GUI that do not run elevated. */
+        /* Ask it to close and wait for 100ms. Unfortunately, this will succeed only for recent spotify GUI that do not run elevated. */
         SendMessage(hWnd, WM_CLOSE, 0, 0);
         Sleep(100);
     }
@@ -358,7 +358,7 @@ CloseOpenVPNGUI(_In_ MSIHANDLE hInstall)
 
 
 UINT __stdcall
-StartOpenVPNGUI(_In_ MSIHANDLE hInstall)
+StartspotifyGUI(_In_ MSIHANDLE hInstall)
 {
 #ifdef _MSC_VER
 #pragma comment(linker, DLLEXP_EXPORT)
@@ -369,7 +369,7 @@ StartOpenVPNGUI(_In_ MSIHANDLE hInstall)
     UINT uiResult;
     BOOL bIsCoInitialized = SUCCEEDED(CoInitialize(NULL));
 
-    OPENVPNMSICA_SAVE_MSI_SESSION(hInstall);
+    spotifyMSICA_SAVE_MSI_SESSION(hInstall);
 
     /* Create and populate a MSI record. */
     MSIHANDLE hRecord = MsiCreateRecord(1);
@@ -379,7 +379,7 @@ StartOpenVPNGUI(_In_ MSIHANDLE hInstall)
         msg(M_NONFATAL, "%s: MsiCreateRecord failed", __FUNCTION__);
         goto cleanup_CoInitialize;
     }
-    uiResult = MsiRecordSetString(hRecord, 0, TEXT("\"[#bin.openvpn_gui.exe]\""));
+    uiResult = MsiRecordSetString(hRecord, 0, TEXT("\"[#bin.spotify_gui.exe]\""));
     if (uiResult != ERROR_SUCCESS)
     {
         SetLastError(uiResult); /* MSDN does not mention MsiRecordSetString() to set GetLastError(). But we do have an error code. Set last error manually. */
@@ -411,7 +411,7 @@ StartOpenVPNGUI(_In_ MSIHANDLE hInstall)
         goto cleanup_malloc_szPath;
     }
 
-    /* Launch the OpenVPN GUI. */
+    /* Launch the spotify GUI. */
     SHELLEXECUTEINFO sei = {
         .cbSize = sizeof(SHELLEXECUTEINFO),
         .fMask  = SEE_MASK_FLAG_NO_UI, /* Don't show error UI, we'll display it. */
@@ -642,7 +642,7 @@ EvaluateTUNTAPAdapters(_In_ MSIHANDLE hInstall)
     UINT uiResult;
     BOOL bIsCoInitialized = SUCCEEDED(CoInitialize(NULL));
 
-    OPENVPNMSICA_SAVE_MSI_SESSION(hInstall);
+    spotifyMSICA_SAVE_MSI_SESSION(hInstall);
 
     struct msica_arg_seq
         seqInstall,
@@ -972,7 +972,7 @@ ProcessDeferredAction(_In_ MSIHANDLE hInstall)
     BOOL bIsCoInitialized = SUCCEEDED(CoInitialize(NULL));
     WCHAR tmpDir[MAX_PATH] = {0};
 
-    OPENVPNMSICA_SAVE_MSI_SESSION(hInstall);
+    spotifyMSICA_SAVE_MSI_SESSION(hInstall);
 
     BOOL bIsCleanup = MsiGetMode(hInstall, MSIRUNMODE_COMMIT) || MsiGetMode(hInstall, MSIRUNMODE_ROLLBACK);
 
@@ -1170,7 +1170,7 @@ CheckAndScheduleReboot(_In_ MSIHANDLE hInstall)
 
     BOOL bIsCoInitialized = SUCCEEDED(CoInitialize(NULL));
 
-    OPENVPNMSICA_SAVE_MSI_SESSION(hInstall);
+    spotifyMSICA_SAVE_MSI_SESSION(hInstall);
 
     /* get user-specific temp path, to where we create reboot indication file */
     WCHAR tempPath[MAX_PATH];

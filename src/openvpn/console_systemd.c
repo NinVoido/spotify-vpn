@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -73,7 +73,7 @@ get_console_input_systemd(const char *prompt, const bool echo, char *input, cons
     argv_printf_cat(&argv, "--icon network-vpn");
     argv_printf_cat(&argv, "%s", prompt);
 
-    if ((std_out = openvpn_popen(&argv, NULL)) < 0)
+    if ((std_out = spotify_popen(&argv, NULL)) < 0)
     {
         return false;
     }

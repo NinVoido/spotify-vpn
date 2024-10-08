@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -97,7 +97,7 @@ fragment_init(struct frame *frame)
     /*
      * Outgoing sequence ID is randomized to reduce
      * the probability of sequence number collisions
-     * when openvpn sessions are restarted.  This is
+     * when spotify sessions are restarted.  This is
      * not done out of any need for security, as all
      * fragmentation control information resides
      * inside of the encrypted/authenticated envelope.

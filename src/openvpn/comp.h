@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -25,8 +25,8 @@
  * Generic compression support.  Currently we support
  * LZO 2 and LZ4.
  */
-#ifndef OPENVPN_COMP_H
-#define OPENVPN_COMP_H
+#ifndef spotify_COMP_H
+#define spotify_COMP_H
 
 /* We always parse all compression options, so we include these defines/struct
  * outside of the USE_COMP define */
@@ -206,4 +206,4 @@ comp_enabled(const struct compress_options *info)
     return info->alg != COMP_ALG_UNDEF;
 }
 #endif /* USE_COMP */
-#endif /* ifndef OPENVPN_COMP_H */
+#endif /* ifndef spotify_COMP_H */

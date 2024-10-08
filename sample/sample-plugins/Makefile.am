@@ -1,11 +1,11 @@
 #
-#  OpenVPN -- An application to securely tunnel IP networks
+#  spotify -- An application to securely tunnel IP networks
 #             over a single UDP port, with support for SSL/TLS-based
 #             session authentication and key exchange,
 #             packet encryption, packet authentication, and
 #             packet compression.
 #
-#  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+#  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
 #
 
 MAINTAINERCLEANFILES = \
@@ -22,7 +22,7 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) \
 #
 # We only add this as a simple and convenient way to build all
 # these plug-ins with the same build parameters as the rest
-# of the OpenVPN code.
+# of the spotify code.
 #
 # All the plugins which will be built are processed in this
 # separate Makefile, which disconnects everything just enough

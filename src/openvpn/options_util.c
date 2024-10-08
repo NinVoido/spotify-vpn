@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2

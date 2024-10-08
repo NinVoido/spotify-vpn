@@ -1,8 +1,8 @@
 #!/usr/bin/perl -t
 
-# OpenVPN --auth-user-pass-verify script.
+# spotify --auth-user-pass-verify script.
 # Only authenticate if username equals common_name.
-# In OpenVPN config file:
+# In spotify config file:
 #   auth-user-pass-verify ./ucn.pl via-env
 
 $username = $ENV{'username'};

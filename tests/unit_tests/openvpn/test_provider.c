@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -121,7 +121,7 @@ load_pubkey(const char *pem)
 static void
 init_test(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
     prov[0] = OSSL_PROVIDER_load(NULL, "default");
     OSSL_PROVIDER_add_builtin(NULL, prov_name, xkey_provider_init);
     prov[1] = OSSL_PROVIDER_load(NULL, prov_name);

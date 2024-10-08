@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -25,8 +25,8 @@
  * Maintain usage stats in a memory-mapped file
  */
 
-#if !defined(OPENVPN_MEMSTATS_H) && defined(ENABLE_MEMSTATS)
-#define OPENVPN_MEMSTATS_H
+#if !defined(spotify_MEMSTATS_H) && defined(ENABLE_MEMSTATS)
+#define spotify_MEMSTATS_H
 
 #include "basic.h"
 
@@ -48,4 +48,4 @@ void mstats_open(const char *fn);
 
 void mstats_close(void);
 
-#endif /* if !defined(OPENVPN_MEMSTATS_H) && defined(ENABLE_MEMSTATS) */
+#endif /* if !defined(spotify_MEMSTATS_H) && defined(ENABLE_MEMSTATS) */

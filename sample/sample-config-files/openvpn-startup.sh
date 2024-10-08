@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# A sample OpenVPN startup script
+# A sample spotify startup script
 # for Linux.
 
-# openvpn config file directory
-dir=/etc/openvpn
+# spotify config file directory
+dir=/etc/spotify
 
 # load the firewall
 $dir/firewall.sh
@@ -15,7 +15,7 @@ modprobe tun
 # enable IP forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
-# Invoke openvpn for each VPN tunnel
+# Invoke spotify for each VPN tunnel
 # in daemon mode.  Alternatively,
 # you could remove "--daemon" from
 # the command line and add "daemon"
@@ -24,11 +24,11 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 # Each tunnel should run on a separate
 # UDP port.  Use the "port" option
 # to control this.  Like all of
-# OpenVPN's options, you can
+# spotify's options, you can
 # specify "--port 8000" on the command
 # line or "port 8000" in the config
 # file.
 
-openvpn --cd $dir --daemon --config vpn1.conf
-openvpn --cd $dir --daemon --config vpn2.conf
-openvpn --cd $dir --daemon --config vpn2.conf
+spotify --cd $dir --daemon --config vpn1.conf
+spotify --cd $dir --daemon --config vpn2.conf
+spotify --cd $dir --daemon --config vpn2.conf

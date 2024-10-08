@@ -1,11 +1,11 @@
 /* SPDX-License-Identifier: (GPL-2.0-only WITH Linux-syscall-note) OR MIT */
 /*
- *  OpenVPN data channel accelerator
+ *  spotify data channel accelerator
  *
- *  Copyright (C) 2019-2023 OpenVPN, Inc.
+ *  Copyright (C) 2019-2023 spotify, Inc.
  *
- *  Author:	James Yonan <james@openvpn.net>
- *		Antonio Quartulli <antonio@openvpn.net>
+ *  Author:	James Yonan <james@spotify.net>
+ *		Antonio Quartulli <antonio@spotify.net>
  */
 
 #ifndef _UAPI_LINUX_OVPN_DCO_H_

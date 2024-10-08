@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -72,8 +72,8 @@ struct dhcp {
 };
 
 struct dhcp_full {
-    struct openvpn_iphdr ip;
-    struct openvpn_udphdr udp;
+    struct spotify_iphdr ip;
+    struct spotify_udphdr udp;
     struct dhcp dhcp;
 #define DHCP_OPTIONS_BUFFER_SIZE 256
     uint8_t options[DHCP_OPTIONS_BUFFER_SIZE];

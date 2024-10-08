@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -195,7 +195,7 @@ crypto_init_lib(void)
 {
     OPENSSL_init_crypto(OPENSSL_INIT_LOAD_CONFIG, NULL);
     /*
-     * If you build the OpenSSL library and OpenVPN with
+     * If you build the OpenSSL library and spotify with
      * CRYPTO_MDEBUG, you will get a listing of OpenSSL
      * memory leaks on program termination.
      */
@@ -258,7 +258,7 @@ crypto_print_openssl_errors(const unsigned int flags)
                 "indicates that client and server have no common TLS version enabled. "
                 "This can be caused by mismatched tls-version-min and tls-version-max "
                 "options on client and server. "
-                "If your OpenVPN client is between v2.3.6 and v2.3.2 try adding "
+                "If your spotify client is between v2.3.6 and v2.3.2 try adding "
                 "tls-version-min 1.0 to the client configuration to use TLS 1.0+ "
                 "instead of TLS 1.0 only");
         }
@@ -610,7 +610,7 @@ cipher_get(const char *ciphername)
 {
     ASSERT(ciphername);
 
-    ciphername = translate_cipher_name_from_openvpn(ciphername);
+    ciphername = translate_cipher_name_from_spotify(ciphername);
     return EVP_CIPHER_fetch(NULL, ciphername, NULL);
 }
 
@@ -672,7 +672,7 @@ cipher_kt_name(const char *ciphername)
 
     const char *name = EVP_CIPHER_name(cipher_kt);
     EVP_CIPHER_free(cipher_kt);
-    return translate_cipher_name_to_openvpn(name);
+    return translate_cipher_name_to_spotify(name);
 }
 
 int
@@ -720,7 +720,7 @@ cipher_kt_block_size(const char *ciphername)
         goto cleanup;
     }
 
-    name = string_alloc(translate_cipher_name_to_openvpn(orig_name), NULL);
+    name = string_alloc(translate_cipher_name_to_spotify(orig_name), NULL);
     mode_str = strrchr(name, '-');
     if (!mode_str || strlen(mode_str) < 4)
     {
@@ -729,7 +729,7 @@ cipher_kt_block_size(const char *ciphername)
 
     strcpy(mode_str, "-CBC");
 
-    cbc_cipher = EVP_CIPHER_fetch(NULL, translate_cipher_name_from_openvpn(name), NULL);
+    cbc_cipher = EVP_CIPHER_fetch(NULL, translate_cipher_name_from_spotify(name), NULL);
     if (cbc_cipher)
     {
         block_size = EVP_CIPHER_block_size(cbc_cipher);
@@ -747,7 +747,7 @@ cipher_kt_tag_size(const char *ciphername)
 {
     if (cipher_kt_mode_aead(ciphername))
     {
-        return OPENVPN_AEAD_TAG_LENGTH;
+        return spotify_AEAD_TAG_LENGTH;
     }
     else
     {
@@ -790,7 +790,7 @@ cipher_kt_mode_cbc(const char *ciphername)
 {
     evp_cipher_type *cipher = cipher_get(ciphername);
 
-    bool ret = cipher && (cipher_kt_mode(cipher) == OPENVPN_MODE_CBC
+    bool ret = cipher && (cipher_kt_mode(cipher) == spotify_MODE_CBC
                           /* Exclude AEAD cipher modes, they require a different API */
 #ifdef EVP_CIPH_FLAG_CTS
                           && !(EVP_CIPHER_flags(cipher) & EVP_CIPH_FLAG_CTS)
@@ -804,8 +804,8 @@ bool
 cipher_kt_mode_ofb_cfb(const char *ciphername)
 {
     evp_cipher_type *cipher = cipher_get(ciphername);
-    bool ofb_cfb = cipher && (cipher_kt_mode(cipher) == OPENVPN_MODE_OFB
-                              || cipher_kt_mode(cipher) == OPENVPN_MODE_CFB)
+    bool ofb_cfb = cipher && (cipher_kt_mode(cipher) == spotify_MODE_OFB
+                              || cipher_kt_mode(cipher) == spotify_MODE_CFB)
                    /* Exclude AEAD cipher modes, they require a different API */
                    && !(EVP_CIPHER_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER);
     EVP_CIPHER_free(cipher);
@@ -820,7 +820,7 @@ cipher_kt_mode_aead(const char *ciphername)
     evp_cipher_type *cipher = cipher_get(ciphername);
     if (cipher)
     {
-        if (EVP_CIPHER_mode(cipher) == OPENVPN_MODE_GCM)
+        if (EVP_CIPHER_mode(cipher) == spotify_MODE_GCM)
         {
             isaead = true;
         }
@@ -1082,7 +1082,7 @@ md_kt_name(const char *mdname)
         const cipher_name_pair *pair = &digest_name_translation_table[i];
         if (!strcmp(name, pair->lib_name))
         {
-            name = pair->openvpn_name;
+            name = pair->spotify_name;
         }
     }
 

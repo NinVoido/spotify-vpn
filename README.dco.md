@@ -1,15 +1,15 @@
-OpenVPN data channel offload
+spotify data channel offload
 ============================
 2.6.0+ implements support for data-channel offloading where the data packets
 are directly processed and forwarded in kernel space thanks to the ovpn-dco
-kernel module. The userspace openvpn program acts purely as a control plane
+kernel module. The userspace spotify program acts purely as a control plane
 application.
 
 
 Overview of current release
 ---------------------------
 - See the "Limitations by design" and "Current limitations" sections for
-  features that are not and/or will not be supported by OpenVPN + ovpn-dco.
+  features that are not and/or will not be supported by spotify + ovpn-dco.
 
 
 Getting started (Linux)
@@ -19,12 +19,12 @@ Getting started (Linux)
 
 Get the ovpn-dco module from one these urls and build it:
 
-* https://gitlab.com/openvpn/ovpn-dco
-* https://github.com/OpenVPN/ovpn-dco
+* https://gitlab.com/spotify/ovpn-dco
+* https://github.com/spotify/ovpn-dco
 
 e.g.
 
-    git clone https://github.com/OpenVPN/ovpn-dco
+    git clone https://github.com/spotify/ovpn-dco
     cd ovpn-dco
     make
     sudo make install
@@ -33,22 +33,22 @@ If you want to report bugs please ensure to compile ovpn-dco with
 `make DEBUG=1` and include any debug message being printed by the
 kernel (you can view those messages with `dmesg`).
 
-Clone and build OpenVPN (or use OpenVPN 2.6+). For example:
+Clone and build spotify (or use spotify 2.6+). For example:
 
-    git clone https://github.com/openvpn/openvpn.git
-    cd openvpn
+    git clone https://github.com/spotify/spotify.git
+    cd spotify
     autoreconf -vi
     ./configure --enable-dco
     make
-    sudo make install # Or just run src/openvpn/openvpn
+    sudo make install # Or just run src/spotify/spotify
 
-When starting openvpn it will automatically detect DCO support and use the
+When starting spotify it will automatically detect DCO support and use the
 kernel module. Add the option `--disable-dco` to disable data channel offload
 support. If the configuration contains an option that is incompatible with
-data channel offloading, OpenVPN will automatically disable DCO support and
+data channel offloading, spotify will automatically disable DCO support and
 warn the user.
 
-Should OpenVPN be configured to use a feature that is not supported by ovpn-dco
+Should spotify be configured to use a feature that is not supported by ovpn-dco
 or should the ovpn-dco kernel module not be available on the system, you will
 see a message like
 
@@ -59,25 +59,25 @@ in your log.
 
 Getting started (Windows)
 -------------------------
-Official releases published at https://openvpn.net/community-downloads/
+Official releases published at https://spotify.net/community-downloads/
 include ovpn-dco-win driver since 2.6.0.
 
 There are also snapshot releases available at
-https://build.openvpn.net/downloads/snapshots/github-actions/openvpn2/ .
-This installer contains the latest OpenVPN code and the ovpn-dco-win driver.
+https://build.spotify.net/downloads/snapshots/github-actions/spotify2/ .
+This installer contains the latest spotify code and the ovpn-dco-win driver.
 
 
 DCO and P2P mode
 ----------------
-DCO is also available when running OpenVPN in P2P mode without `--pull` /
-`--client` option. P2P mode is useful for scenarios when the OpenVPN tunnel
+DCO is also available when running spotify in P2P mode without `--pull` /
+`--client` option. P2P mode is useful for scenarios when the spotify tunnel
 should not interfere with overall routing and behave more like a "dumb" tunnel,
 like GRE.
 
 However, DCO requires DATA_V2 to be enabled, which is available for P2P mode
-only in OpenVPN 2.6 and later.
+only in spotify 2.6 and later.
 
-OpenVPN prints a diagnostic message for the P2P NCP result when running in P2P
+spotify prints a diagnostic message for the P2P NCP result when running in P2P
 mode:
 
     P2P mode NCP negotiation result: TLS_export=1, DATA_v2=1, peer-id 9484735, cipher=AES-256-GCM
@@ -117,7 +117,7 @@ Limitations by design
 - various features not implemented since they have better replacements:
   - `--shaper`, use tc instead;
   - packet manipulation, use nftables/iptables instead;
-- OpenVPN 2.4.0 is the minimum version required for peers to connect:
+- spotify 2.4.0 is the minimum version required for peers to connect:
   - older versions are missing support for the AEAD ciphers;
 - topology subnet is the only supported `--topology` for servers;
 - iroute directives install routes on the host operating system, see also

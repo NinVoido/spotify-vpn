@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -22,15 +22,15 @@
  */
 
 #ifdef _WIN32
-#ifndef OPENVPN_WIN32_H
-#define OPENVPN_WIN32_H
+#ifndef spotify_WIN32_H
+#define spotify_WIN32_H
 
 #include <iphlpapi.h>
 #include <ws2tcpip.h>
 
 #include "syshead.h"
 #include "mtu.h"
-#include "openvpn-msg.h"
+#include "spotify-msg.h"
 #include "argv.h"
 #include "win32-util.h"
 
@@ -43,7 +43,7 @@
 #define WMIC_PATH_SUFFIX "\\system32\\wbem\\wmic.exe"
 
 /*
- * Win32-specific OpenVPN code, targeted at the mingw
+ * Win32-specific spotify code, targeted at the mingw
  * development environment.
  */
 
@@ -234,7 +234,7 @@ char *overlapped_io_state_ascii(const struct overlapped_io *o);
 
 /*
  * Use to control access to resources that only one
- * OpenVPN process on a given machine can access at
+ * spotify process on a given machine can access at
  * a given time.
  */
 
@@ -319,13 +319,13 @@ bool send_msg_iservice(HANDLE pipe, const void *data, size_t size,
  * Attempt to simulate fork/execve on Windows
  */
 int
-openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned int flags);
+spotify_execve(const struct argv *a, const struct env_set *es, const unsigned int flags);
 
 /* Sleep that can be interrupted by signals and exit event */
 void win32_sleep(const int n);
 
 /**
- * @brief Fetches a registry value for OpenVPN registry key.
+ * @brief Fetches a registry value for spotify registry key.
  *
  * @param key Registry value name to fetch.
  * @param value Buffer to store the fetched string value.
@@ -333,7 +333,7 @@ void win32_sleep(const int n);
  * @return `true` if successful, `false` otherwise.
  */
 bool
-get_openvpn_reg_value(const WCHAR *key, WCHAR *value, DWORD size);
+get_spotify_reg_value(const WCHAR *key, WCHAR *value, DWORD size);
 
 /**
  * @brief Checks if a plugin is located in a trusted directory.
@@ -373,5 +373,5 @@ protect_buffer_win32(char *buf, size_t len);
 bool
 unprotect_buffer_win32(char *buf, size_t len);
 
-#endif /* ifndef OPENVPN_WIN32_H */
+#endif /* ifndef spotify_WIN32_H */
 #endif /* ifdef _WIN32 */

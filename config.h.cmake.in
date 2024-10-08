@@ -387,23 +387,23 @@ don't. */
 /* Path to route tool */
 #define ROUTE_PATH "@ROUTE_PATH@"
 
-/* OpenVPN version in Windows resource format - string */
-#define OPENVPN_VERSION_RESOURCE @OPENVPN_VERSION_RESOURCE@
+/* spotify version in Windows resource format - string */
+#define spotify_VERSION_RESOURCE @spotify_VERSION_RESOURCE@
 
 /* Name of package */
-#define PACKAGE "openvpn"
+#define PACKAGE "spotify"
 
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "OpenVPN"
+#define PACKAGE_NAME "spotify"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "OpenVPN @OPENVPN_VERSION_MAJOR@.@OPENVPN_VERSION_MINOR@@OPENVPN_VERSION_PATCH@"
+#define PACKAGE_STRING "spotify @spotify_VERSION_MAJOR@.@spotify_VERSION_MINOR@@spotify_VERSION_PATCH@"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "@OPENVPN_VERSION_MAJOR@.@OPENVPN_VERSION_MINOR@@OPENVPN_VERSION_PATCH@"
+#define PACKAGE_VERSION "@spotify_VERSION_MAJOR@.@spotify_VERSION_MINOR@@spotify_VERSION_PATCH@"
 
 /* Path to systemd-ask-password tool */
 #undef SYSTEMD_ASK_PASSWORD_PATH
@@ -414,10 +414,10 @@ don't. */
 /* The tap-windows id */
 #define TAP_WIN_COMPONENT_ID "tap0901"
 
-/* The tap-windows version number is required for OpenVPN */
+/* The tap-windows version number is required for spotify */
 #define TAP_WIN_MIN_MAJOR 9
 
-/* The tap-windows version number is required for OpenVPN */
+/* The tap-windows version number is required for spotify */
 #define TAP_WIN_MIN_MINOR 9
 
 /* Are we running on Mac OS X? */

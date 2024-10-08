@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -21,8 +21,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef OPENVPN_LZO_H
-#define OPENVPN_LZO_H
+#ifndef spotify_LZO_H
+#define spotify_LZO_H
 
 
 /**
@@ -127,4 +127,4 @@ struct lzo_compress_workspace
 
 
 #endif /* ENABLE_LZO && USE_COMP */
-#endif /* ifndef OPENVPN_LZO_H */
+#endif /* ifndef spotify_LZO_H */

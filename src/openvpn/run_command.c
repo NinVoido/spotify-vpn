@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Technologies, Inc. <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Technologies, Inc. <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -52,7 +52,7 @@ script_security_set(int level)
 }
 
 /*
- * Generate an error message based on the status code returned by openvpn_execve().
+ * Generate an error message based on the status code returned by spotify_execve().
  */
 static const char *
 system_error_message(int stat, struct gc_arena *gc)
@@ -61,12 +61,12 @@ system_error_message(int stat, struct gc_arena *gc)
 
     switch (stat)
     {
-        case OPENVPN_EXECVE_NOT_ALLOWED:
+        case spotify_EXECVE_NOT_ALLOWED:
             buf_printf(&out, "disallowed by script-security setting");
             break;
 
 #ifdef _WIN32
-        case OPENVPN_EXECVE_ERROR:
+        case spotify_EXECVE_ERROR:
             buf_printf(&out, "external program did not execute -- ");
         /* fall through */
 
@@ -75,7 +75,7 @@ system_error_message(int stat, struct gc_arena *gc)
             break;
 #else  /* ifdef _WIN32 */
 
-        case OPENVPN_EXECVE_ERROR:
+        case spotify_EXECVE_ERROR:
             buf_printf(&out, "external program fork failed");
             break;
 
@@ -91,7 +91,7 @@ system_error_message(int stat, struct gc_arena *gc)
                 {
                     buf_printf(&out, "external program exited normally");
                 }
-                else if (cmd_ret == OPENVPN_EXECVE_FAILURE)
+                else if (cmd_ret == spotify_EXECVE_FAILURE)
                 {
                     buf_printf(&out, "could not execute external program");
                 }
@@ -107,7 +107,7 @@ system_error_message(int stat, struct gc_arena *gc)
 }
 
 bool
-openvpn_execve_allowed(const unsigned int flags)
+spotify_execve_allowed(const unsigned int flags)
 {
     if (flags & S_SCRIPT)
     {
@@ -125,20 +125,20 @@ openvpn_execve_allowed(const unsigned int flags)
  * Run execve() inside a fork().  Designed to replicate the semantics of system() but
  * in a safer way that doesn't require the invocation of a shell or the risks
  * associated with formatting and parsing a command line.
- * Returns the exit status of child, OPENVPN_EXECVE_NOT_ALLOWED if openvpn_execve_allowed()
- * returns false, or OPENVPN_EXECVE_ERROR on other errors.
+ * Returns the exit status of child, spotify_EXECVE_NOT_ALLOWED if spotify_execve_allowed()
+ * returns false, or spotify_EXECVE_ERROR on other errors.
  */
 int
-openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned int flags)
+spotify_execve(const struct argv *a, const struct env_set *es, const unsigned int flags)
 {
     struct gc_arena gc = gc_new();
-    int ret = OPENVPN_EXECVE_ERROR;
+    int ret = spotify_EXECVE_ERROR;
     static bool warn_shown = false;
 
     if (a && a->argv[0])
     {
 #if defined(ENABLE_FEATURE_EXECVE)
-        if (openvpn_execve_allowed(flags))
+        if (spotify_execve_allowed(flags))
         {
             const char *cmd = a->argv[0];
             char *const *argv = a->argv;
@@ -149,11 +149,11 @@ openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned in
             if (pid == (pid_t)0) /* child side */
             {
                 execve(cmd, argv, envp);
-                exit(OPENVPN_EXECVE_FAILURE);
+                exit(spotify_EXECVE_FAILURE);
             }
             else if (pid < (pid_t)0) /* fork failed */
             {
-                msg(M_ERR, "openvpn_execve: unable to fork");
+                msg(M_ERR, "spotify_execve: unable to fork");
             }
             else if (flags & S_NOWAITPID)
             {
@@ -163,13 +163,13 @@ openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned in
             {
                 if (waitpid(pid, &ret, 0) != pid)
                 {
-                    ret = OPENVPN_EXECVE_ERROR;
+                    ret = spotify_EXECVE_ERROR;
                 }
             }
         }
         else
         {
-            ret = OPENVPN_EXECVE_NOT_ALLOWED;
+            ret = spotify_EXECVE_NOT_ALLOWED;
             if (!warn_shown && (script_security() < SSEC_SCRIPTS))
             {
                 msg(M_WARN, SCRIPT_SECURITY_WARNING);
@@ -177,12 +177,12 @@ openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned in
             }
         }
 #else  /* if defined(ENABLE_FEATURE_EXECVE) */
-        msg(M_WARN, "openvpn_execve: execve function not available");
+        msg(M_WARN, "spotify_execve: execve function not available");
 #endif /* if defined(ENABLE_FEATURE_EXECVE) */
     }
     else
     {
-        msg(M_FATAL, "openvpn_execve: called with empty argv");
+        msg(M_FATAL, "spotify_execve: called with empty argv");
     }
 
     gc_free(&gc);
@@ -191,13 +191,13 @@ openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned in
 #endif /* ifndef _WIN32 */
 
 /*
- * Wrapper around openvpn_execve
+ * Wrapper around spotify_execve
  */
 int
-openvpn_execve_check(const struct argv *a, const struct env_set *es, const unsigned int flags, const char *error_message)
+spotify_execve_check(const struct argv *a, const struct env_set *es, const unsigned int flags, const char *error_message)
 {
     struct gc_arena gc = gc_new();
-    const int stat = openvpn_execve(a, es, flags);
+    const int stat = spotify_execve(a, es, flags);
     int ret = false;
 
     if (flags & S_EXITCODE)
@@ -236,7 +236,7 @@ done:
  * associated with formatting and parsing a command line.
  */
 int
-openvpn_popen(const struct argv *a,  const struct env_set *es)
+spotify_popen(const struct argv *a,  const struct env_set *es)
 {
     struct gc_arena gc = gc_new();
     int ret = -1;
@@ -261,7 +261,7 @@ openvpn_popen(const struct argv *a,  const struct env_set *es)
                     close(pipe_stdout[0]);         /* Close read end */
                     dup2(pipe_stdout[1], 1);
                     execve(cmd, argv, envp);
-                    exit(OPENVPN_EXECVE_FAILURE);
+                    exit(spotify_EXECVE_FAILURE);
                 }
                 else if (pid > (pid_t)0)       /* parent side */
                 {
@@ -275,12 +275,12 @@ openvpn_popen(const struct argv *a,  const struct env_set *es)
                 {
                     close(pipe_stdout[0]);
                     close(pipe_stdout[1]);
-                    msg(M_ERR, "openvpn_popen: unable to fork %s", cmd);
+                    msg(M_ERR, "spotify_popen: unable to fork %s", cmd);
                 }
             }
             else
             {
-                msg(M_WARN, "openvpn_popen: unable to create stdout pipe for %s", cmd);
+                msg(M_WARN, "spotify_popen: unable to create stdout pipe for %s", cmd);
                 ret = -1;
             }
         }
@@ -290,12 +290,12 @@ openvpn_popen(const struct argv *a,  const struct env_set *es)
             warn_shown = true;
         }
 #else  /* if defined(ENABLE_FEATURE_EXECVE) */
-        msg(M_WARN, "openvpn_popen: execve function not available");
+        msg(M_WARN, "spotify_popen: execve function not available");
 #endif /* if defined(ENABLE_FEATURE_EXECVE) */
     }
     else
     {
-        msg(M_FATAL, "openvpn_popen: called with empty argv");
+        msg(M_FATAL, "spotify_popen: called with empty argv");
     }
 
     gc_free(&gc);

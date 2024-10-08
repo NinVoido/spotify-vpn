@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -44,7 +44,7 @@ static
 time_t
 __mytime(void)
 {
-    return openvpn_time(NULL);
+    return spotify_time(NULL);
 }
 
 #if !defined(_WIN32)
@@ -82,49 +82,49 @@ static pkcs11h_engine_system_t s_pkcs11h_sys_engine = {
 
 static
 unsigned
-_pkcs11_msg_pkcs112openvpn(
+_pkcs11_msg_pkcs112spotify(
     const unsigned flags
     )
 {
-    unsigned openvpn_flags;
+    unsigned spotify_flags;
 
     switch (flags)
     {
         case PKCS11H_LOG_DEBUG2:
-            openvpn_flags = D_PKCS11_DEBUG;
+            spotify_flags = D_PKCS11_DEBUG;
             break;
 
         case PKCS11H_LOG_DEBUG1:
-            openvpn_flags = D_SHOW_PKCS11;
+            spotify_flags = D_SHOW_PKCS11;
             break;
 
         case PKCS11H_LOG_INFO:
-            openvpn_flags = M_INFO;
+            spotify_flags = M_INFO;
             break;
 
         case PKCS11H_LOG_WARN:
-            openvpn_flags = M_WARN;
+            spotify_flags = M_WARN;
             break;
 
         case PKCS11H_LOG_ERROR:
-            openvpn_flags = M_FATAL;
+            spotify_flags = M_FATAL;
             break;
 
         default:
-            openvpn_flags = M_FATAL;
+            spotify_flags = M_FATAL;
             break;
     }
 
 #if defined(ENABLE_PKCS11_FORCE_DEBUG)
-    openvpn_flags = M_INFO;
+    spotify_flags = M_INFO;
 #endif
 
-    return openvpn_flags;
+    return spotify_flags;
 }
 
 static
 unsigned
-_pkcs11_msg_openvpn2pkcs11(
+_pkcs11_msg_spotify2pkcs11(
     const unsigned flags
     )
 {
@@ -164,7 +164,7 @@ _pkcs11_msg_openvpn2pkcs11(
 
 static
 void
-_pkcs11_openvpn_log(
+_pkcs11_spotify_log(
     void *const global_data,
     unsigned flags,
     const char *const szFormat,
@@ -178,12 +178,12 @@ _pkcs11_openvpn_log(
     vsnprintf(Buffer, sizeof(Buffer), szFormat, args);
     Buffer[sizeof(Buffer)-1] = 0;
 
-    msg(_pkcs11_msg_pkcs112openvpn(flags), "%s", Buffer);
+    msg(_pkcs11_msg_pkcs112spotify(flags), "%s", Buffer);
 }
 
 static
 PKCS11H_BOOL
-_pkcs11_openvpn_token_prompt(
+_pkcs11_spotify_token_prompt(
     void *const global_data,
     void *const user_data,
     const pkcs11h_token_id_t token,
@@ -227,7 +227,7 @@ _pkcs11_openvpn_token_prompt(
 
 static
 PKCS11H_BOOL
-_pkcs11_openvpn_pin_prompt(
+_pkcs11_spotify_pin_prompt(
     void *const global_data,
     void *const user_data,
     const pkcs11h_token_id_t token,
@@ -303,13 +303,13 @@ pkcs11_initialize(
         goto cleanup;
     }
 
-    if ((rv = pkcs11h_setLogHook(_pkcs11_openvpn_log, NULL)) != CKR_OK)
+    if ((rv = pkcs11h_setLogHook(_pkcs11_spotify_log, NULL)) != CKR_OK)
     {
         msg(M_FATAL, "PKCS#11: Cannot set hooks %ld-'%s'", rv, pkcs11h_getMessage(rv));
         goto cleanup;
     }
 
-    pkcs11h_setLogLevel(_pkcs11_msg_openvpn2pkcs11(get_debug_level()));
+    pkcs11h_setLogLevel(_pkcs11_msg_spotify2pkcs11(get_debug_level()));
 
     if ((rv = pkcs11h_setForkMode(FALSE)) != CKR_OK)
     {
@@ -317,13 +317,13 @@ pkcs11_initialize(
         goto cleanup;
     }
 
-    if ((rv = pkcs11h_setTokenPromptHook(_pkcs11_openvpn_token_prompt, NULL)) != CKR_OK)
+    if ((rv = pkcs11h_setTokenPromptHook(_pkcs11_spotify_token_prompt, NULL)) != CKR_OK)
     {
         msg(M_FATAL, "PKCS#11: Cannot set hooks %ld-'%s'", rv, pkcs11h_getMessage(rv));
         goto cleanup;
     }
 
-    if ((rv = pkcs11h_setPINPromptHook(_pkcs11_openvpn_pin_prompt, NULL)) != CKR_OK)
+    if ((rv = pkcs11h_setPINPromptHook(_pkcs11_spotify_pin_prompt, NULL)) != CKR_OK)
     {
         msg(M_FATAL, "PKCS#11: Cannot set hooks %ld-'%s'", rv, pkcs11h_getMessage(rv));
         goto cleanup;
@@ -652,7 +652,7 @@ pkcs11_management_id_get(
         goto cleanup;
     }
 
-    if (openvpn_base64_encode(certificate_blob, certificate_blob_size, &internal_base64) == -1)
+    if (spotify_base64_encode(certificate_blob, certificate_blob_size, &internal_base64) == -1)
     {
         msg(M_WARN, "PKCS#11: Cannot encode certificate");
         goto cleanup;
@@ -818,7 +818,7 @@ cleanup:
 
 static
 PKCS11H_BOOL
-_pkcs11_openvpn_show_pkcs11_ids_pin_prompt(
+_pkcs11_spotify_show_pkcs11_ids_pin_prompt(
     void *const global_data,
     void *const user_data,
     const pkcs11h_token_id_t token,
@@ -872,13 +872,13 @@ show_pkcs11_ids(
         goto cleanup;
     }
 
-    if ((rv = pkcs11h_setLogHook(_pkcs11_openvpn_log, NULL)) != CKR_OK)
+    if ((rv = pkcs11h_setLogHook(_pkcs11_spotify_log, NULL)) != CKR_OK)
     {
         msg(M_FATAL, "PKCS#11: Cannot set hooks %ld-'%s'", rv, pkcs11h_getMessage(rv));
         goto cleanup;
     }
 
-    pkcs11h_setLogLevel(_pkcs11_msg_openvpn2pkcs11(get_debug_level()));
+    pkcs11h_setLogLevel(_pkcs11_msg_spotify2pkcs11(get_debug_level()));
 
     if ((rv = pkcs11h_setProtectedAuthentication(TRUE)) != CKR_OK)
     {
@@ -886,7 +886,7 @@ show_pkcs11_ids(
         goto cleanup;
     }
 
-    if ((rv = pkcs11h_setPINPromptHook(_pkcs11_openvpn_show_pkcs11_ids_pin_prompt, NULL)) != CKR_OK)
+    if ((rv = pkcs11h_setPINPromptHook(_pkcs11_spotify_show_pkcs11_ids_pin_prompt, NULL)) != CKR_OK)
     {
         msg(M_FATAL, "PKCS#11: Cannot set PIN hook %ld-'%s'", rv, pkcs11h_getMessage(rv));
         goto cleanup;

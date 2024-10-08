@@ -1,5 +1,5 @@
 #!/bin/sh
 
-# stop all openvpn processes
+# stop all spotify processes
 
-killall -TERM openvpn
+killall -TERM spotify

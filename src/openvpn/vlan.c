@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Technologies, Inc. <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Technologies, Inc. <sales@spotify.net>
  *  Copyright (C) 2010      Fabian Knittel <fabian.knittel@lettink.de>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -39,9 +39,9 @@
  * @return    Returns the VID in host byte order.
  */
 static uint16_t
-vlanhdr_get_vid(const struct openvpn_8021qhdr *hdr)
+vlanhdr_get_vid(const struct spotify_8021qhdr *hdr)
 {
-    return ntohs(hdr->pcp_cfi_vid & OPENVPN_8021Q_MASK_VID);
+    return ntohs(hdr->pcp_cfi_vid & spotify_8021Q_MASK_VID);
 }
 
 /*
@@ -51,10 +51,10 @@ vlanhdr_get_vid(const struct openvpn_8021qhdr *hdr)
  * @param vid The VID to set (in host byte order).
  */
 static void
-vlanhdr_set_vid(struct openvpn_8021qhdr *hdr, const uint16_t vid)
+vlanhdr_set_vid(struct spotify_8021qhdr *hdr, const uint16_t vid)
 {
-    hdr->pcp_cfi_vid = (hdr->pcp_cfi_vid & ~OPENVPN_8021Q_MASK_VID)
-                       | (htons(vid) & OPENVPN_8021Q_MASK_VID);
+    hdr->pcp_cfi_vid = (hdr->pcp_cfi_vid & ~spotify_8021Q_MASK_VID)
+                       | (htons(vid) & spotify_8021Q_MASK_VID);
 }
 
 /*
@@ -81,8 +81,8 @@ vlanhdr_set_vid(struct openvpn_8021qhdr *hdr, const uint16_t vid)
 int16_t
 vlan_decapsulate(const struct context *c, struct buffer *buf)
 {
-    const struct openvpn_8021qhdr *vlanhdr;
-    struct openvpn_ethhdr *ethhdr;
+    const struct spotify_8021qhdr *vlanhdr;
+    struct spotify_ethhdr *ethhdr;
     uint16_t vid;
 
     /* assume untagged frame */
@@ -91,8 +91,8 @@ vlan_decapsulate(const struct context *c, struct buffer *buf)
         goto drop;
     }
 
-    ethhdr = (struct openvpn_ethhdr *)BPTR(buf);
-    if (ethhdr->proto != htons(OPENVPN_ETH_P_8021Q))
+    ethhdr = (struct spotify_ethhdr *)BPTR(buf);
+    if (ethhdr->proto != htons(spotify_ETH_P_8021Q))
     {
         /* reject untagged frame */
         if (c->options.vlan_accept == VLAN_ONLY_TAGGED)
@@ -117,7 +117,7 @@ vlan_decapsulate(const struct context *c, struct buffer *buf)
         goto drop;
     }
 
-    vlanhdr = (const struct openvpn_8021qhdr *)BPTR(buf);
+    vlanhdr = (const struct spotify_8021qhdr *)BPTR(buf);
     vid = vlanhdr_get_vid(vlanhdr);
 
     switch (c->options.vlan_accept)
@@ -185,16 +185,16 @@ drop:
 void
 vlan_encapsulate(const struct context *c, struct buffer *buf)
 {
-    const struct openvpn_ethhdr *ethhdr;
-    struct openvpn_8021qhdr *vlanhdr;
+    const struct spotify_ethhdr *ethhdr;
+    struct spotify_8021qhdr *vlanhdr;
 
     if (BLEN(buf) < sizeof(*ethhdr))
     {
         goto drop;
     }
 
-    ethhdr = (const struct openvpn_ethhdr *)BPTR(buf);
-    if (ethhdr->proto == htons(OPENVPN_ETH_P_8021Q))
+    ethhdr = (const struct spotify_ethhdr *)BPTR(buf);
+    if (ethhdr->proto == htons(spotify_ETH_P_8021Q))
     {
         /* Priority-tagged frame. (VLAN-tagged frames have been dropped before
          * getting to this point)
@@ -206,7 +206,7 @@ vlan_encapsulate(const struct context *c, struct buffer *buf)
             goto drop;
         }
 
-        vlanhdr = (struct openvpn_8021qhdr *)BPTR(buf);
+        vlanhdr = (struct spotify_8021qhdr *)BPTR(buf);
 
         /* sanity check: ensure this packet is really just prio-tagged */
         uint16_t vid = vlanhdr_get_vid(vlanhdr);
@@ -225,7 +225,7 @@ vlan_encapsulate(const struct context *c, struct buffer *buf)
             goto drop;
         }
 
-        vlanhdr = (struct openvpn_8021qhdr *)buf_prepend(buf,
+        vlanhdr = (struct spotify_8021qhdr *)buf_prepend(buf,
                                                          SIZE_ETH_TO_8021Q_HDR);
 
         /* Initialise VLAN/802.1q header.
@@ -237,7 +237,7 @@ vlan_encapsulate(const struct context *c, struct buffer *buf)
          */
         uint16_t proto = ethhdr->proto;
         memmove(vlanhdr, ethhdr, sizeof(*ethhdr));
-        vlanhdr->tpid = htons(OPENVPN_ETH_P_8021Q);
+        vlanhdr->tpid = htons(spotify_ETH_P_8021Q);
         vlanhdr->pcp_cfi_vid = 0;
         vlanhdr->proto = proto;
     }
@@ -265,18 +265,18 @@ drop:
 bool
 vlan_is_tagged(const struct buffer *buf)
 {
-    const struct openvpn_8021qhdr *vlanhdr;
+    const struct spotify_8021qhdr *vlanhdr;
     uint16_t vid;
 
-    if (BLEN(buf) < sizeof(struct openvpn_8021qhdr))
+    if (BLEN(buf) < sizeof(struct spotify_8021qhdr))
     {
         /* frame too small to be VLAN-tagged */
         return false;
     }
 
-    vlanhdr = (const struct openvpn_8021qhdr *)BPTR(buf);
+    vlanhdr = (const struct spotify_8021qhdr *)BPTR(buf);
 
-    if (ntohs(vlanhdr->tpid) != OPENVPN_ETH_P_8021Q)
+    if (ntohs(vlanhdr->tpid) != spotify_ETH_P_8021Q)
     {
         /* non tagged frame */
         return false;

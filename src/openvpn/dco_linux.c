@@ -3,7 +3,7 @@
  *
  *  Copyright (C) 2020-2024 Antonio Quartulli <a@unstable.cc>
  *  Copyright (C) 2020-2024 Arne Schwabe <arne@rfc2549.org>
- *  Copyright (C) 2020-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2020-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -33,7 +33,7 @@
 #include "errlevel.h"
 #include "buffer.h"
 #include "networking.h"
-#include "openvpn.h"
+#include "spotify.h"
 
 #include "socket.h"
 #include "tun.h"
@@ -445,7 +445,7 @@ ovpn_dco_register(dco_context_t *dco)
 }
 
 int
-open_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx, const char *dev)
+open_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx, const char *dev)
 {
     msg(D_DCO_DEBUG, "%s: %s", __func__, dev);
     ASSERT(tt->type == DEV_TYPE_TUN);
@@ -471,7 +471,7 @@ open_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx, const char *dev)
 }
 
 void
-close_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     msg(D_DCO_DEBUG, __func__);
 
@@ -688,7 +688,7 @@ mcast_family_handler(struct nl_msg *msg, void *arg)
     return NL_SKIP;
 }
 /**
- * Lookup the multicast id for OpenVPN. This method and its help method currently
+ * Lookup the multicast id for spotify. This method and its help method currently
  * hardcode the lookup to OVPN_NL_NAME and OVPN_NL_MULTICAST_GROUP_PEERS but
  * extended in the future if we need to lookup more than one mcast id.
  */
@@ -764,7 +764,7 @@ ovpn_handle_msg(struct nl_msg *msg, void *arg)
      * message, that stores the type-specific attributes.
      *
      * the "dco" object is then filled accordingly with the information
-     * retrieved from the message, so that the rest of the OpenVPN code can
+     * retrieved from the message, so that the rest of the spotify code can
      * react as need be.
      */
     switch (gnlh->cmd)

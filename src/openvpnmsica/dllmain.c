@@ -1,6 +1,6 @@
 /*
- *  openvpnmsica -- Custom Action DLL to provide OpenVPN-specific support to MSI packages
- *                  https://community.openvpn.net/openvpn/wiki/OpenVPNMSICA
+ *  spotifymsica -- Custom Action DLL to provide spotify-specific support to MSI packages
+ *                  https://community.spotify.net/spotify/wiki/spotifyMSICA
  *
  *  Copyright (C) 2018-2024 Simon Rozman <simon@rozman.si>
  *
@@ -22,7 +22,7 @@
 #include <config.h>
 #endif
 
-#include "openvpnmsica.h"
+#include "spotifymsica.h"
 #include "../tapctl/error.h"
 
 #include <windows.h>
@@ -35,7 +35,7 @@
 #include <tchar.h>
 
 
-DWORD openvpnmsica_thread_data_idx = TLS_OUT_OF_INDEXES;
+DWORD spotifymsica_thread_data_idx = TLS_OUT_OF_INDEXES;
 
 
 /**
@@ -54,8 +54,8 @@ DllMain(
     {
         case DLL_PROCESS_ATTACH:
             /* Allocate thread local storage index. */
-            openvpnmsica_thread_data_idx = TlsAlloc();
-            if (openvpnmsica_thread_data_idx == TLS_OUT_OF_INDEXES)
+            spotifymsica_thread_data_idx = TlsAlloc();
+            if (spotifymsica_thread_data_idx == TLS_OUT_OF_INDEXES)
             {
                 return FALSE;
             }
@@ -64,28 +64,28 @@ DllMain(
         case DLL_THREAD_ATTACH:
         {
             /* Create thread local storage data. */
-            struct openvpnmsica_thread_data *s = (struct openvpnmsica_thread_data *)calloc(1, sizeof(struct openvpnmsica_thread_data));
+            struct spotifymsica_thread_data *s = (struct spotifymsica_thread_data *)calloc(1, sizeof(struct spotifymsica_thread_data));
             if (s == NULL)
             {
                 return FALSE;
             }
 
-            TlsSetValue(openvpnmsica_thread_data_idx, s);
+            TlsSetValue(spotifymsica_thread_data_idx, s);
             break;
         }
 
         case DLL_PROCESS_DETACH:
-            if (openvpnmsica_thread_data_idx != TLS_OUT_OF_INDEXES)
+            if (spotifymsica_thread_data_idx != TLS_OUT_OF_INDEXES)
             {
                 /* Free thread local storage data and index. */
-                free(TlsGetValue(openvpnmsica_thread_data_idx));
-                TlsFree(openvpnmsica_thread_data_idx);
+                free(TlsGetValue(spotifymsica_thread_data_idx));
+                TlsFree(spotifymsica_thread_data_idx);
             }
             break;
 
         case DLL_THREAD_DETACH:
             /* Free thread local storage data. */
-            free(TlsGetValue(openvpnmsica_thread_data_idx));
+            free(TlsGetValue(spotifymsica_thread_data_idx));
             break;
     }
 
@@ -108,7 +108,7 @@ x_msg_va(const unsigned int flags, const char *format, va_list arglist)
     /* Secure last error before it is overridden. */
     DWORD dwResult = (flags & M_ERRNO) != 0 ? GetLastError() : ERROR_SUCCESS;
 
-    struct openvpnmsica_thread_data *s = (struct openvpnmsica_thread_data *)TlsGetValue(openvpnmsica_thread_data_idx);
+    struct spotifymsica_thread_data *s = (struct spotifymsica_thread_data *)TlsGetValue(spotifymsica_thread_data_idx);
     if (s->hInstall == 0)
     {
         /* No MSI session, no fun. */

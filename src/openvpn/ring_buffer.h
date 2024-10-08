@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *                2019 Lev Stipakov <lev@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *                2019 Lev Stipakov <lev@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -23,8 +23,8 @@
  */
 
 #ifdef _WIN32
-#ifndef OPENVPN_RING_BUFFER_H
-#define OPENVPN_RING_BUFFER_H
+#ifndef spotify_RING_BUFFER_H
+#define spotify_RING_BUFFER_H
 
 #include <windows.h>
 #include <winioctl.h>
@@ -82,15 +82,15 @@ struct TUN_PACKET
 
 /**
  * Registers ring buffers used to exchange data between
- * userspace openvpn process and wintun kernel driver,
+ * userspace spotify process and wintun kernel driver,
  * see https://github.com/WireGuard/wintun#registering-rings
  *
  * @param device              handle to opened wintun device
  * @param send_ring           pointer to send ring
  * @param receive_ring        pointer to receive ring
- * @param send_tail_moved     event set by wintun to signal openvpn
+ * @param send_tail_moved     event set by wintun to signal spotify
  *                            that data is available for reading in send ring
- * @param receive_tail_moved  event set by openvpn to signal wintun
+ * @param receive_tail_moved  event set by spotify to signal wintun
  *                            that data has been written to receive ring
  * @return                    true if registration is successful, false otherwise - use GetLastError()
  */
@@ -121,5 +121,5 @@ register_ring_buffers(HANDLE device,
     return res != FALSE;
 }
 
-#endif /* ifndef OPENVPN_RING_BUFFER_H */
+#endif /* ifndef spotify_RING_BUFFER_H */
 #endif /* ifdef _WIN32 */

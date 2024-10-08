@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -40,7 +40,7 @@
 #include "ssl.h"
 #include "common.h"
 #include "manage.h"
-#include "openvpn.h"
+#include "spotify.h"
 #include "dco.h"
 
 #include "memdbg.h"
@@ -92,12 +92,12 @@ man_help(void)
     msg(M_CLIENT, "needstr type action    : Enter confirmation for NEED-STR request of 'type',");
     msg(M_CLIENT, "                         where action is reply string.");
     msg(M_CLIENT, "net                    : (Windows only) Show network info and routing table.");
-    msg(M_CLIENT, "password type p        : Enter password p for a queried OpenVPN password.");
+    msg(M_CLIENT, "password type p        : Enter password p for a queried spotify password.");
     msg(M_CLIENT, "remote type [host port] : Override remote directive, type=ACCEPT|MOD|SKIP.");
     msg(M_CLIENT, "remote-entry-count     : Get number of available remote entries.");
     msg(M_CLIENT, "remote-entry-get  i|all [j]: Get remote entry at index = i to to j-1 or all.");
     msg(M_CLIENT, "proxy type [host port flags] : Enter dynamic proxy server info.");
-    msg(M_CLIENT, "pid                    : Show process ID of the current OpenVPN process.");
+    msg(M_CLIENT, "pid                    : Show process ID of the current spotify process.");
 #ifdef ENABLE_PKCS11
     msg(M_CLIENT, "pkcs11-id-count        : Get number of available PKCS#11 identities.");
     msg(M_CLIENT, "pkcs11-id-get index    : Get PKCS#11 identity at index.");
@@ -106,7 +106,7 @@ man_help(void)
     msg(M_CLIENT, "client-auth-nt CID KID : Authenticate client-id/key-id CID/KID");
     msg(M_CLIENT, "client-deny CID KID R [CR] : Deny auth client-id/key-id CID/KID with log reason");
     msg(M_CLIENT, "                             text R and optional client reason text CR");
-    msg(M_CLIENT, "client-pending-auth CID KID MSG timeout : Instruct OpenVPN to send AUTH_PENDING and INFO_PRE msg");
+    msg(M_CLIENT, "client-pending-auth CID KID MSG timeout : Instruct spotify to send AUTH_PENDING and INFO_PRE msg");
     msg(M_CLIENT, "                                      to the client and wait for a final client-auth/client-deny");
     msg(M_CLIENT, "client-kill CID [M]    : Kill client instance CID with message M (def=RESTART)");
     msg(M_CLIENT, "env-filter [level]     : Set env-var filter level");
@@ -121,7 +121,7 @@ man_help(void)
     msg(M_CLIENT, "state [on|off] [N|all] : Like log, but show state history.");
     msg(M_CLIENT, "status [n]             : Show current daemon status info using format #n.");
     msg(M_CLIENT, "test n                 : Produce n lines of output for testing/debugging.");
-    msg(M_CLIENT, "username type u        : Enter username u for a queried OpenVPN username.");
+    msg(M_CLIENT, "username type u        : Enter username u for a queried spotify username.");
     msg(M_CLIENT, "verb [n]               : Set log verbosity level to n, or show if n is absent.");
     msg(M_CLIENT, "version [n]            : Set client's version to n or show current version of daemon.");
     msg(M_CLIENT, "END");
@@ -132,43 +132,43 @@ man_state_name(const int state)
 {
     switch (state)
     {
-        case OPENVPN_STATE_INITIAL:
+        case spotify_STATE_INITIAL:
             return "INITIAL";
 
-        case OPENVPN_STATE_CONNECTING:
+        case spotify_STATE_CONNECTING:
             return "CONNECTING";
 
-        case OPENVPN_STATE_WAIT:
+        case spotify_STATE_WAIT:
             return "WAIT";
 
-        case OPENVPN_STATE_AUTH:
+        case spotify_STATE_AUTH:
             return "AUTH";
 
-        case OPENVPN_STATE_GET_CONFIG:
+        case spotify_STATE_GET_CONFIG:
             return "GET_CONFIG";
 
-        case OPENVPN_STATE_ASSIGN_IP:
+        case spotify_STATE_ASSIGN_IP:
             return "ASSIGN_IP";
 
-        case OPENVPN_STATE_ADD_ROUTES:
+        case spotify_STATE_ADD_ROUTES:
             return "ADD_ROUTES";
 
-        case OPENVPN_STATE_CONNECTED:
+        case spotify_STATE_CONNECTED:
             return "CONNECTED";
 
-        case OPENVPN_STATE_RECONNECTING:
+        case spotify_STATE_RECONNECTING:
             return "RECONNECTING";
 
-        case OPENVPN_STATE_EXITING:
+        case spotify_STATE_EXITING:
             return "EXITING";
 
-        case OPENVPN_STATE_RESOLVE:
+        case spotify_STATE_RESOLVE:
             return "RESOLVE";
 
-        case OPENVPN_STATE_TCP_CONNECT:
+        case spotify_STATE_TCP_CONNECT:
             return "TCP_CONNECT";
 
-        case OPENVPN_STATE_AUTH_PENDING:
+        case spotify_STATE_AUTH_PENDING:
             return "AUTH_PENDING";
 
         default:
@@ -179,7 +179,7 @@ man_state_name(const int state)
 static void
 man_welcome(struct management *man)
 {
-    msg(M_CLIENT, ">INFO:OpenVPN Management Interface Version %d -- type 'help' for more info",
+    msg(M_CLIENT, ">INFO:spotify Management Interface Version %d -- type 'help' for more info",
         MANAGEMENT_VERSION);
     if (man->persist.special_state_msg)
     {
@@ -326,7 +326,7 @@ man_close_socket(struct management *man, const socket_descriptor_t sd)
         (*man->persist.callback.delete_event)(man->persist.callback.arg, sd);
     }
 #endif
-    openvpn_close_socket(sd);
+    spotify_close_socket(sd);
 }
 
 static void
@@ -1297,10 +1297,10 @@ man_remote(struct management *man, const char **p)
 static void
 man_network_change(struct management *man, bool samenetwork)
 {
-    /* Called to signal the OpenVPN that the network configuration has changed and
+    /* Called to signal the spotify that the network configuration has changed and
      * the client should either float or reconnect.
      *
-     * The code is currently only used by ics-openvpn
+     * The code is currently only used by ics-spotify
      */
     if (man->persist.callback.network_change)
     {
@@ -1346,7 +1346,7 @@ man_dispatch_command(struct management *man, struct status_output *so, const cha
     }
     else if (streq(p[0], "version"))
     {
-        msg(M_CLIENT, "OpenVPN Version: %s", title_string);
+        msg(M_CLIENT, "spotify Version: %s", title_string);
         msg(M_CLIENT, "Management Version: %d", MANAGEMENT_VERSION);
         msg(M_CLIENT, "END");
     }
@@ -1948,7 +1948,7 @@ man_connect(struct management *man)
 #endif
     {
         man->connection.sd_cli = create_socket_tcp(man->settings.local);
-        status = openvpn_connect(man->connection.sd_cli,
+        status = spotify_connect(man->connection.sd_cli,
                                  man->settings.local->ai_addr,
                                  5,
                                  &signal_received);
@@ -2084,7 +2084,7 @@ static bool
 man_io_error(struct management *man, const char *prefix)
 {
     bool crt_error = false;
-    int err = openvpn_errno_maybe_crt(&crt_error);
+    int err = spotify_errno_maybe_crt(&crt_error);
 
     if (!ignore_sys_error(err, crt_error))
     {
@@ -2184,7 +2184,7 @@ man_recv_with_fd(int fd, void *ptr, size_t nbytes, int flags, int *recvfd)
 }
 
 /*
- * The android control method will instruct the GUI part of openvpn to do
+ * The android control method will instruct the GUI part of spotify to do
  * the route/ifconfig/open tun command.   See doc/android.txt for details.
  */
 bool
@@ -2521,7 +2521,7 @@ man_settings_init(struct man_settings *ms,
                     resolve_flags |= GETADDR_PASSIVE;
                 }
 
-                status = openvpn_getaddrinfo(resolve_flags, addr, port, 0,
+                status = spotify_getaddrinfo(resolve_flags, addr, port, 0,
                                              NULL, AF_UNSPEC, &ms->local);
                 ASSERT(status==0);
             }
@@ -2739,10 +2739,10 @@ management_set_state(struct management *man,
                      const char *detail,
                      const in_addr_t *tun_local_ip,
                      const struct in6_addr *tun_local_ip6,
-                     const struct openvpn_sockaddr *local,
-                     const struct openvpn_sockaddr *remote)
+                     const struct spotify_sockaddr *local,
+                     const struct spotify_sockaddr *remote)
 {
-    if (man->persist.state && (!(man->settings.flags & MF_SERVER) || state < OPENVPN_STATE_CLIENT_BASE))
+    if (man->persist.state && (!(man->settings.flags & MF_SERVER) || state < spotify_STATE_CLIENT_BASE))
     {
         struct gc_arena gc = gc_new();
         struct log_entry e;
@@ -3059,7 +3059,7 @@ management_post_tunnel_open(struct management *man, const in_addr_t tun_local_ip
 
         ia.s_addr = htonl(tun_local_ip);
         inet_ntop(AF_INET, &ia, buf, sizeof(buf));
-        ret = openvpn_getaddrinfo(GETADDR_PASSIVE, buf, NULL, 0, NULL,
+        ret = spotify_getaddrinfo(GETADDR_PASSIVE, buf, NULL, 0, NULL,
                                   AF_INET, &man->settings.local);
         ASSERT(ret==0);
         man_connection_init(man);
@@ -3797,7 +3797,7 @@ management_would_hold(struct management *man)
 }
 
 /*
- * Return true if (from the management interface's perspective) OpenVPN should
+ * Return true if (from the management interface's perspective) spotify should
  * daemonize.
  */
 bool

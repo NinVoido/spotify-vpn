@@ -41,13 +41,13 @@ m4/ltversion.m4
 m4/lt~obsolete.m4
 
 build
-doc/openvpn-examples.5
-doc/openvpn-examples.5.html
-doc/openvpn.8
-doc/openvpn.8.html
+doc/spotify-examples.5
+doc/spotify-examples.5.html
+doc/spotify.8
+doc/spotify.8.html
 /doc/doxygen/html/
 /doc/doxygen/latex/
-/doc/doxygen/openvpn.doxyfile
+/doc/doxygen/spotify.doxyfile
 distro/systemd/*.service
 sample/sample-keys/sample-ca/
 vendor/cmocka_build
@@ -60,8 +60,8 @@ t_client.rc
 t_client_ips.rc
 tests/unit_tests/**/*_testdriver
 
-src/openvpn/openvpn
-include/openvpn-plugin.h
+src/spotify/spotify
+include/spotify-plugin.h
 config-version.h
 nbproject
 test-driver

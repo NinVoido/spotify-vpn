@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -44,13 +44,13 @@
  * can be going to a remote destination which is reachable through a VPN
  * tunnel, in which case this module prepares them to be sent out through
  * a VPN tunnel.  On the other hand, they can have been received through a
- * VPN tunnel from a remote OpenVPN peer, in which case this module
+ * VPN tunnel from a remote spotify peer, in which case this module
  * retrieves the packet in its original form as it was before entering the
- * VPN tunnel on the remote OpenVPN peer.  How this module processes
+ * VPN tunnel on the remote spotify peer.  How this module processes
  * packets traveling in the two directions is discussed in more detail
  * below.
  *
- * @par Packets to be sent to a remote OpenVPN peer
+ * @par Packets to be sent to a remote spotify peer
  * This module's main function for processing packets traveling in this
  * direction is \c encrypt_sign(), which performs the following processing
  * steps:
@@ -67,11 +67,11 @@
  *
  * @par
  * After the above processing is complete, the packet is ready to be sent
- * to a remote OpenVPN peer as a VPN tunnel packet.  The actual sending of
+ * to a remote spotify peer as a VPN tunnel packet.  The actual sending of
  * the packet is handled by the \link external_multiplexer External
  * Multiplexer\endlink.
  *
- * @par Packets received from a remote OpenVPN peer
+ * @par Packets received from a remote spotify peer
  * The function that controls how packets traveling in this direction are
  * processed is \c process_incoming_link().  That function, however, also
  * performs some of the tasks required for the \link external_multiplexer
@@ -95,7 +95,7 @@
  *
  * @par
  * After the above processing is complete, the packet is in its original
- * form again as it was received by the remote OpenVPN peer.  It can now
+ * form again as it was received by the remote spotify peer.  It can now
  * be routed further to its final destination.  If that destination is a
  * locally reachable host, then the \link internal_multiplexer Internal
  * Multiplexer\endlink will send it there.

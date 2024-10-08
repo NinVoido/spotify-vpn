@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -77,7 +77,7 @@ int pem_password_callback(char *buf, int size, int rwflag, void *u);
 
 /**
  * Perform any static initialisation necessary by the library.
- * Called on OpenVPN initialisation
+ * Called on spotify initialisation
  */
 void tls_init_lib(void);
 
@@ -387,9 +387,9 @@ void key_state_ssl_free(struct key_state_ssl *ks_ssl);
 void backend_tls_ctx_reload_crl(struct tls_root_ctx *ssl_ctx,
                                 const char *crl_file, bool crl_inline);
 
-#define EXPORT_KEY_DATA_LABEL       "EXPORTER-OpenVPN-datakeys"
-#define EXPORT_P2P_PEERID_LABEL     "EXPORTER-OpenVPN-p2p-peerid"
-#define EXPORT_DYNAMIC_TLS_CRYPT_LABEL  "EXPORTER-OpenVPN-dynamic-tls-crypt"
+#define EXPORT_KEY_DATA_LABEL       "EXPORTER-spotify-datakeys"
+#define EXPORT_P2P_PEERID_LABEL     "EXPORTER-spotify-p2p-peerid"
+#define EXPORT_DYNAMIC_TLS_CRYPT_LABEL  "EXPORTER-spotify-dynamic-tls-crypt"
 /**
  * Keying Material Exporters [RFC 5705] allows additional keying material to be
  * derived from existing TLS channel. This exported keying material can then be
@@ -411,7 +411,7 @@ key_state_export_keying_material(struct tls_session *session,
 /** @addtogroup control_tls
  *  @{ */
 
-/** @name Functions for packets to be sent to a remote OpenVPN peer
+/** @name Functions for packets to be sent to a remote spotify peer
  *  @{ */
 
 /**
@@ -471,10 +471,10 @@ int key_state_write_plaintext_const(struct key_state_ssl *ks_ssl,
 int key_state_read_ciphertext(struct key_state_ssl *ks_ssl, struct buffer *buf);
 
 
-/** @} name Functions for packets to be sent to a remote OpenVPN peer */
+/** @} name Functions for packets to be sent to a remote spotify peer */
 
 
-/** @name Functions for packets received from a remote OpenVPN peer
+/** @name Functions for packets received from a remote spotify peer
  *  @{ */
 
 /**
@@ -517,7 +517,7 @@ int key_state_write_ciphertext(struct key_state_ssl *ks_ssl,
  */
 int key_state_read_plaintext(struct key_state_ssl *ks_ssl, struct buffer *buf);
 
-/** @} name Functions for packets received from a remote OpenVPN peer */
+/** @} name Functions for packets received from a remote spotify peer */
 
 /** @} addtogroup control_tls */
 

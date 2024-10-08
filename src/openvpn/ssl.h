@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -26,8 +26,8 @@
  * @file Control Channel SSL/Data channel negotiation module
  */
 
-#ifndef OPENVPN_SSL_H
-#define OPENVPN_SSL_H
+#ifndef spotify_SSL_H
+#define spotify_SSL_H
 
 #include "basic.h"
 #include "common.h"
@@ -46,7 +46,7 @@
 #include "tls_crypt.h"
 
 /* Used in the TLS PRF function */
-#define KEY_EXPANSION_ID "OpenVPN"
+#define KEY_EXPANSION_ID "spotify"
 
 /*
  * Set the max number of acknowledgments that can "hitch a ride" on an outgoing
@@ -70,7 +70,7 @@
 
 /* Definitions of the bits in the IV_PROTO bitfield
  *
- * In older OpenVPN versions this used in a comparison
+ * In older spotify versions this used in a comparison
  * IV_PROTO >= 2 to determine if DATA_V2 is supported.
  * Therefore any client announcing any of the flags must
  * also announce IV_PROTO_DATA_V2. We also treat bit 0
@@ -134,7 +134,7 @@ void init_ssl_lib(void);
 void free_ssl_lib(void);
 
 /**
- * Build master SSL context object that serves for the whole of OpenVPN
+ * Build master SSL context object that serves for the whole of spotify
  * instantiation
  */
 void init_ssl(const struct options *options, struct tls_root_ctx *ctx, bool in_chroot);
@@ -246,7 +246,7 @@ int tls_multi_process(struct tls_multi *multi,
  * channel packet, and process accordingly.
  * @ingroup external_multiplexer
  *
- * When OpenVPN is in TLS mode, this is the first function to process an
+ * When spotify is in TLS mode, this is the first function to process an
  * incoming packet.  It inspects the packet's one-byte header which
  * contains the packet's opcode and key ID.  Depending on the opcode, the
  * packet is processed as a data channel or as a control channel packet.
@@ -258,7 +258,7 @@ int tls_multi_process(struct tls_multi *multi,
  * with.  This state is checked whether it is active, authenticated, and
  * its remote peer is the source of this packet.  If these checks passed,
  * the state's security parameters are loaded into the \a opt crypto
- * options so that \p openvpn_decrypt() can later use them to authenticate
+ * options so that \p spotify_decrypt() can later use them to authenticate
  * and decrypt the packet.
  *
  * This function then returns false.  The \a buf buffer has not been
@@ -333,7 +333,7 @@ void tls_pre_encrypt(struct tls_multi *multi,
 struct key_state *tls_select_encryption_key(struct tls_multi *multi);
 
 /**
- * Prepend a one-byte OpenVPN data channel P_DATA_V1 opcode to the packet.
+ * Prepend a one-byte spotify data channel P_DATA_V1 opcode to the packet.
  *
  * The opcode identifies the packet as a V1 data channel packet and gives the
  * low-permutation version of the key-id to the recipient, so it knows which
@@ -348,7 +348,7 @@ void
 tls_prepend_opcode_v1(const struct tls_multi *multi, struct buffer *buf);
 
 /**
- * Prepend an OpenVPN data channel P_DATA_V2 header to the packet.  The
+ * Prepend an spotify data channel P_DATA_V2 header to the packet.  The
  * P_DATA_V2 header consists of a 1-byte opcode, followed by a 3-byte peer-id.
  *
  * The opcode identifies the packet as a V2 data channel packet and gives the
@@ -595,4 +595,4 @@ session_skip_to_pre_start(struct tls_session *session,
                           struct tls_pre_decrypt_state *state,
                           struct link_socket_actual *from);
 
-#endif /* ifndef OPENVPN_SSL_H */
+#endif /* ifndef spotify_SSL_H */

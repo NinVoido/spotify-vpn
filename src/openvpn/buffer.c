@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -72,7 +72,7 @@ alloc_buf(size_t size)
     buf.offset = 0;
     buf.len = 0;
 #ifdef DMALLOC
-    buf.data = openvpn_dmalloc(file, line, size);
+    buf.data = spotify_dmalloc(file, line, size);
 #else
     buf.data = calloc(1, size);
 #endif
@@ -120,7 +120,7 @@ clone_buf(const struct buffer *buf)
     ret.offset = buf->offset;
     ret.len = buf->len;
 #ifdef DMALLOC
-    ret.data = (uint8_t *) openvpn_dmalloc(file, line, buf->capacity);
+    ret.data = (uint8_t *) spotify_dmalloc(file, line, buf->capacity);
 #else
     ret.data = (uint8_t *) malloc(buf->capacity);
 #endif
@@ -359,7 +359,7 @@ gc_malloc(size_t size, bool clear, struct gc_arena *a)
     {
         struct gc_entry *e;
 #ifdef DMALLOC
-        e = (struct gc_entry *) openvpn_dmalloc(file, line, size + sizeof(struct gc_entry));
+        e = (struct gc_entry *) spotify_dmalloc(file, line, size + sizeof(struct gc_entry));
 #else
         e = (struct gc_entry *) malloc(size + sizeof(struct gc_entry));
 #endif
@@ -371,7 +371,7 @@ gc_malloc(size_t size, bool clear, struct gc_arena *a)
     else
     {
 #ifdef DMALLOC
-        ret = openvpn_dmalloc(file, line, size);
+        ret = spotify_dmalloc(file, line, size);
 #else
         ret = malloc(size);
 #endif
@@ -458,7 +458,7 @@ gc_addspecial(void *addr, void (*free_function)(void *), struct gc_arena *a)
     ASSERT(a);
     struct gc_entry_special *e;
 #ifdef DMALLOC
-    e = (struct gc_entry_special *) openvpn_dmalloc(file, line, sizeof(struct gc_entry_special));
+    e = (struct gc_entry_special *) spotify_dmalloc(file, line, sizeof(struct gc_entry_special));
 #else
     e = (struct gc_entry_special *) malloc(sizeof(struct gc_entry_special));
 #endif
@@ -687,7 +687,7 @@ string_alloc(const char *str, struct gc_arena *gc)
              * earlier behaviour when gc_malloc() would be called with gc == NULL
              */
 #ifdef DMALLOC
-            ret = openvpn_dmalloc(file, line, n);
+            ret = spotify_dmalloc(file, line, n);
 #else
             ret = calloc(1, n);
 #endif

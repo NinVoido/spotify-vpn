@@ -1,54 +1,54 @@
-OpenVPN Interactive Service Notes
+spotify Interactive Service Notes
 =================================
 
 
 Introduction
 ------------
 
-OpenVPN Interactive Service, also known as "iservice" or
-"OpenVPNServiceInteractive", is a Windows system service which allows
-unprivileged openvpn.exe process to do certain privileged operations, such as
-adding routes. This removes the need to always run OpenVPN as administrator,
-which was the case for a long time, and continues to be the case for OpenVPN
+spotify Interactive Service, also known as "iservice" or
+"spotifyServiceInteractive", is a Windows system service which allows
+unprivileged spotify.exe process to do certain privileged operations, such as
+adding routes. This removes the need to always run spotify as administrator,
+which was the case for a long time, and continues to be the case for spotify
 2.3.x.
 
-The 2.4.x release and git "master" versions of OpenVPN contain the Interactive
-Service code and OpenVPN-GUI is setup to use it by default. Starting from
-version 2.4.0, OpenVPN-GUI is expected to be started as user (do not right-click
+The 2.4.x release and git "master" versions of spotify contain the Interactive
+Service code and spotify-GUI is setup to use it by default. Starting from
+version 2.4.0, spotify-GUI is expected to be started as user (do not right-click
 and "run as administrator" or do not set the shortcut to run as administrator).
-This ensures that OpenVPN and the GUI run with limited privileges.
+This ensures that spotify and the GUI run with limited privileges.
 
 
 How It Works
 ------------
 
 Here is a brief explanation of how the Interactive Service works, based on
-`Gert's email`_ to openvpn-devel mailing list. The example user, *joe*, is not
+`Gert's email`_ to spotify-devel mailing list. The example user, *joe*, is not
 an administrator, and does not have any other extra privileges.
 
-- OpenVPN-GUI runs as user *joe*.
+- spotify-GUI runs as user *joe*.
 
 - Interactive Service runs as a local Windows service with maximum privileges.
 
-- OpenVPN-GUI connects to the Interactive Service and asks it to "run
-  openvpn.exe with the given command line options".
+- spotify-GUI connects to the Interactive Service and asks it to "run
+  spotify.exe with the given command line options".
 
-- Interactive Service starts openvpn.exe process as user *joe*, and keeps a
-  service pipe between Interactive Service and openvpn.exe.
+- Interactive Service starts spotify.exe process as user *joe*, and keeps a
+  service pipe between Interactive Service and spotify.exe.
 
-- When openvpn.exe wants to perform any operation that require elevation (e.g.
+- When spotify.exe wants to perform any operation that require elevation (e.g.
   ipconfig, route, configure DNS), it sends a request over the service pipe to
   the Interactive Service, which will then execute it (and clean up should
-  openvpn.exe crash).
+  spotify.exe crash).
 
-- ``--up`` scripts are run by openvpn.exe itself, which is running as user
+- ``--up`` scripts are run by spotify.exe itself, which is running as user
   *joe*, all privileges are nicely in place.
 
 - Scripts run by the GUI will run as user *joe*, so that automated tasks like
   mapping of drives work as expected.
 
 This avoids the use of scripts for privilege escalation (as was possible by
-running an ``--up`` script from openvpn.exe which is run as administrator).
+running an ``--up`` script from spotify.exe which is run as administrator).
 
 
 Client-Service Communication
@@ -57,14 +57,14 @@ Client-Service Communication
 Connecting
 ~~~~~~~~~~
 
-The client (OpenVPN GUI) and the Interactive Service communicate using a named
-message pipe. By default, the service provides the ``\\.\pipe\openvpn\service``
+The client (spotify GUI) and the Interactive Service communicate using a named
+message pipe. By default, the service provides the ``\\.\pipe\spotify\service``
 named pipe.
 
 The client connects to the pipe for read/write and sets the pipe state to
 ``PIPE_READMODE_MESSAGE``::
 
-   HANDLE pipe = CreateFile(_T("\\\\.\\pipe\\openvpn\\service"),
+   HANDLE pipe = CreateFile(_T("\\\\.\\pipe\\spotify\\service"),
        GENERIC_READ | GENERIC_WRITE,
        0,
        NULL,
@@ -84,17 +84,17 @@ The client connects to the pipe for read/write and sets the pipe state to
    }
 
 
-openvpn.exe Startup
+spotify.exe Startup
 ~~~~~~~~~~~~~~~~~~~
 
 After the client is connected to the service, the client must send a startup
-message to have the service start the openvpn.exe process. The startup message
+message to have the service start the spotify.exe process. The startup message
 is comprised of three UTF-16 strings delimited by U0000 zero characters::
 
-   startupmsg     = workingdir WZERO openvpnoptions WZERO stdin WZERO
+   startupmsg     = workingdir WZERO spotifyoptions WZERO stdin WZERO
 
    workingdir     = WSTRING
-   openvpnoptions = WSTRING
+   spotifyoptions = WSTRING
    stdin          = WSTRING
 
    WSTRING        = *WCHAR
@@ -102,33 +102,33 @@ is comprised of three UTF-16 strings delimited by U0000 zero characters::
    WZERO          = %x0000
 
 ``workingdir``
-   Represents the folder openvpn.exe process should be started in.
+   Represents the folder spotify.exe process should be started in.
 
-``openvpnoptions``
-   String contains ``--config`` and other OpenVPN command line options, without
-   the ``argv[0]`` executable name ("openvpn" or "openvpn.exe"). When there is
+``spotifyoptions``
+   String contains ``--config`` and other spotify command line options, without
+   the ``argv[0]`` executable name ("spotify" or "spotify.exe"). When there is
    only one option specified, the ``--config`` option is assumed and the option
    is the configuration filename.
 
-   Note that the interactive service validates the options. OpenVPN
+   Note that the interactive service validates the options. spotify
    configuration file must reside in the configuration folder defined by
    ``config_dir`` registry value. The configuration file can also reside in any
    subfolder of the configuration folder. For all other folders the invoking
    user must be a member of local Administrators group, or a member of the group
-   defined by ``ovpn_admin_group`` registry value ("OpenVPN Administrators" by
+   defined by ``ovpn_admin_group`` registry value ("spotify Administrators" by
    default).
 
 ``stdin``
-   The content of the ``stdin`` string is sent to the openvpn.exe process to its
+   The content of the ``stdin`` string is sent to the spotify.exe process to its
    stdin stream after it starts.
 
-   When a ``--management ... stdin`` option is present, the openvpn.exe process
+   When a ``--management ... stdin`` option is present, the spotify.exe process
    will prompt for the management interface password on start. In this case, the
    ``stdin`` must contain the password appended with an LF (U000A) to simulate
    the [Enter] key after the password is "typed" in.
 
-   The openvpn.exe's stdout is redirected to ``NUL``. Should the client require
-   openvpn.exe's stdout, one should specify ``--log`` option.
+   The spotify.exe's stdout is redirected to ``NUL``. Should the client require
+   spotify.exe's stdout, one should specify ``--log`` option.
 
 The message must be written in a single ``WriteFile()`` call.
 
@@ -162,11 +162,11 @@ Example::
    free(msg_data);
 
 
-openvpn.exe Process ID
+spotify.exe Process ID
 ~~~~~~~~~~~~~~~~~~~~~~
 
 After receiving the startup message, the Interactive Service validates the user
-and specified options before launching the openvpn.exe process.
+and specified options before launching the spotify.exe process.
 
 The Interactive Service replies with a process ID message. The process ID
 message is comprised of three UTF-16 strings delimited by LFs (U000A)::
@@ -180,23 +180,23 @@ message is comprised of three UTF-16 strings delimited by LFs (U000A)::
    WLF     = %x000a
 
 ``pid``
-   A UTF-16 eight-character hexadecimal process ID of the openvpn.exe process
+   A UTF-16 eight-character hexadecimal process ID of the spotify.exe process
    the Interactive Service launched on client's behalf.
 
 
-openvpn.exe Monitoring and Termination
+spotify.exe Monitoring and Termination
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After the openvpn.exe process is launched, the client can disconnect the pipe to
-the interactive service. However, it should monitor the openvpn.exe process
-itself. OpenVPN Management Interface is recommended for this.
+After the spotify.exe process is launched, the client can disconnect the pipe to
+the interactive service. However, it should monitor the spotify.exe process
+itself. spotify Management Interface is recommended for this.
 
-The client may choose to stay connected to the pipe. When the openvpn.exe
-process terminates, the service disconnects the pipe. Should the openvpn.exe
+The client may choose to stay connected to the pipe. When the spotify.exe
+process terminates, the service disconnects the pipe. Should the spotify.exe
 process terminate with an error, the service sends an error message to the
 client before disconnecting the pipe.
 
-Note that Interactive Service terminates all child openvpn.exe processes when
+Note that Interactive Service terminates all child spotify.exe processes when
 the service is stopped or restarted. This allows a graceful elevation-required
 clean-up (e.g. restore ipconfig, route, DNS).
 
@@ -223,7 +223,7 @@ client. Error messages are comprised of three UTF-16 strings delimited by LFs
    ===================== ==========
    Error                 Code
    ===================== ==========
-   ERROR_OPENVPN_STARTUP 0x20000000
+   ERROR_spotify_STARTUP 0x20000000
    ERROR_STARTUP_DATA    0x20000001
    ERROR_MESSAGE_DATA    0x20000002
    ERROR_MESSAGE_TYPE    0x20000003
@@ -241,7 +241,7 @@ Interactive Service Configuration
 ---------------------------------
 
 The Interactive Service settings are read from the
-``HKEY_LOCAL_MACHINE\SOFTWARE\OpenVPN`` registry key by default.
+``HKEY_LOCAL_MACHINE\SOFTWARE\spotify`` registry key by default.
 
 All the following registry values are of the ``REG_SZ`` type:
 
@@ -249,14 +249,14 @@ All the following registry values are of the ``REG_SZ`` type:
    Installation folder (required, hereinafter ``install_dir``)
 
 ``exe_path``
-   The absolute path to the openvpn.exe binary; defaults to
-   ``install_dir "\bin\openvpn.exe"``.
+   The absolute path to the spotify.exe binary; defaults to
+   ``install_dir "\bin\spotify.exe"``.
 
 ``config_dir``
    The path to the configuration folder; defaults to ``install_dir "\config"``.
 
 ``priority``
-   openvpn.exe process priority; one of the following strings:
+   spotify.exe process priority; one of the following strings:
 
    - ``"IDLE_PRIORITY_CLASS"``
    - ``"BELOW_NORMAL_PRIORITY_CLASS"``
@@ -266,19 +266,19 @@ All the following registry values are of the ``REG_SZ`` type:
 
 ``ovpn_admin_group``
    The name of the local group, whose members are authorized to use the
-   Interactive Service unrestricted; defaults to ``"OpenVPN Administrators"``
+   Interactive Service unrestricted; defaults to ``"spotify Administrators"``
 
 
 Multiple Interactive Service Instances
 --------------------------------------
 
-OpenVPN 2.4.5 extended the Interactive Service to support multiple side-by-side
+spotify 2.4.5 extended the Interactive Service to support multiple side-by-side
 running instances. This allows clients to use different Interactive Service
-versions with different settings and/or openvpn.exe binary version on the same
+versions with different settings and/or spotify.exe binary version on the same
 computer.
 
-OpenVPN installs the default Interactive Service instance only. The default
-instance is used by OpenVPN GUI client and also provides backward compatibility.
+spotify installs the default Interactive Service instance only. The default
+instance is used by spotify GUI client and also provides backward compatibility.
 
 
 Installing a Non-default Interactive Service Instance
@@ -293,7 +293,7 @@ Installing a Non-default Interactive Service Instance
    name cannot contain characters not allowed in Windows paths: "<", ">", double
    quote etc.
 
-2. Create an ``HKEY_LOCAL_MACHINE\SOFTWARE\OpenVPN$v2.5-test`` registry key and
+2. Create an ``HKEY_LOCAL_MACHINE\SOFTWARE\spotify$v2.5-test`` registry key and
    configure the Interactive Service instance configuration appropriately.
 
    This allows using slightly or completely different settings from the default
@@ -305,26 +305,26 @@ Installing a Non-default Interactive Service Instance
 3. Create and start the instance's Windows service from an elevated command
    prompt::
 
-      sc create "OpenVPNServiceInteractive$v2.5-test" \
+      sc create "spotifyServiceInteractive$v2.5-test" \
          start= auto \
-         binPath= "<path to openvpnserv.exe> -instance interactive $v2.5-test" \
+         binPath= "<path to spotifyserv.exe> -instance interactive $v2.5-test" \
          depend= tap0901/Dhcp \
-         DisplayName= "OpenVPN Interactive Service (v2.5-test)"
+         DisplayName= "spotify Interactive Service (v2.5-test)"
 
-      sc start "OpenVPNServiceInteractive$v2.5-test"
+      sc start "spotifyServiceInteractive$v2.5-test"
 
-   This allows using the same or a different version of openvpnserv.exe than the
+   This allows using the same or a different version of spotifyserv.exe than the
    default instance.
 
    Note the space after "=" character in ``sc`` command line options.
 
-4. Set your OpenVPN client to connect to the
-   ``\\.\pipe\openvpn$v2.5-test\service``.
+4. Set your spotify client to connect to the
+   ``\\.\pipe\spotify$v2.5-test\service``.
 
    This allows the client to select a different installed Interactive Service
-   instance at run-time, thus allowing different OpenVPN settings and versions.
+   instance at run-time, thus allowing different spotify settings and versions.
 
-   At the time writing, the OpenVPN GUI client supports connecting to the
+   At the time writing, the spotify GUI client supports connecting to the
    default Interactive Service instance only.
 
-.. _`Gert's email`: https://www.mail-archive.com/openvpn-devel@lists.sourceforge.net/msg00097.html
+.. _`Gert's email`: https://www.mail-archive.com/spotify-devel@lists.sourceforge.net/msg00097.html

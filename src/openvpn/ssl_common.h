@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -47,7 +47,7 @@
  * @name Control channel negotiation states
  *
  * These states represent the different phases of control channel
- * negotiation between OpenVPN peers.  OpenVPN servers and clients
+ * negotiation between spotify peers.  spotify servers and clients
  * progress through the states in a different order, because of their
  * different roles during exchange of random material.  The references to
  * the \c key_source2 structure in the list below is only valid if %key
@@ -83,14 +83,14 @@
 #define S_INITIAL         1     /**< Initial \c key_state state after
                                  *   initialization by \c key_state_init()
                                  *   before start of three-way handshake. */
-#define S_PRE_START       2     /**< Waiting for the remote OpenVPN peer
+#define S_PRE_START       2     /**< Waiting for the remote spotify peer
                                  *   to acknowledge during the initial
                                  *   three-way handshake. */
 #define S_START           3     /**< Three-way handshake is complete,
                                  *   start of key exchange. */
-#define S_SENT_KEY        4     /**< Local OpenVPN process has sent its
+#define S_SENT_KEY        4     /**< Local spotify process has sent its
                                  *   part of the key material. */
-#define S_GOT_KEY         5     /**< Local OpenVPN process has received
+#define S_GOT_KEY         5     /**< Local spotify process has received
                                  *   the remote's part of the key
                                  *   material. */
 #define S_ACTIVE          6     /**< Operational \c key_state state
@@ -116,7 +116,7 @@
 struct key_source {
     uint8_t pre_master[48];     /**< Random used for master secret
                                  *   generation, provided only by client
-                                 *   OpenVPN peer. */
+                                 *   spotify peer. */
     uint8_t random1[32];        /**< Seed used for master secret
                                  *   generation, provided by both client
                                  *   and server. */
@@ -182,7 +182,7 @@ enum dco_key_status {
  * @ingroup control_processor
  *
  * This structure represents one security parameter session between
- * OpenVPN peers.  It includes the control channel TLS state and the data
+ * spotify peers.  It includes the control channel TLS state and the data
  * channel crypto state.  It also contains the reliability layer
  * structures used for control channel messages.
  *
@@ -395,7 +395,7 @@ struct tls_options
 
     /* instance-wide environment variable set */
     struct env_set *es;
-    openvpn_net_ctx_t *net_ctx;
+    spotify_net_ctx_t *net_ctx;
     const struct plugin_list *plugins;
 
     /* compression parms */
@@ -456,7 +456,7 @@ struct tls_options
  * Security parameter state of a single session within a VPN tunnel.
  * @ingroup control_processor
  *
- * This structure represents an OpenVPN peer-to-peer control channel
+ * This structure represents an spotify peer-to-peer control channel
  * session.
  *
  * A \c tls_session remains over soft resets, but a new instance is
@@ -515,7 +515,7 @@ struct tls_session
  *
  *  This is the index of \c tls_multi.session
  *
- *  Normally three tls_session objects are maintained by an active openvpn
+ *  Normally three tls_session objects are maintained by an active spotify
  *  session.  The first is the current, TLS authenticated session, the
  *  second is used to process connection requests from a new client that
  *  would usurp the current session if successfully authenticated, and the
@@ -658,7 +658,7 @@ struct tls_multi
      * Auth-token is only valid for an empty username
      * and not the username actually supplied from the client
      *
-     * OpenVPN 3 clients sometimes wipes or replaces the username with a
+     * spotify 3 clients sometimes wipes or replaces the username with a
      * username hint from their config.
      */
 

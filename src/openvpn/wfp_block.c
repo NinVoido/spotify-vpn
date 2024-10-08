@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *                2015-2016  <iam@valdikss.org.ru>
  *                2016 Selva Nair <selva.nair@gmail.com>
  *
@@ -102,17 +102,17 @@ DEFINE_GUID(
     0x86, 0xd7, 0xe9, 0x03, 0x68, 0x4a, 0xa8, 0x0c
     );
 
-/* UUID of WFP sublayer used by all instances of openvpn
+/* UUID of WFP sublayer used by all instances of spotify
  * 2f660d7e-6a37-11e6-a181-001e8c6e04a2 */
 DEFINE_GUID(
-    OPENVPN_WFP_BLOCK_SUBLAYER,
+    spotify_WFP_BLOCK_SUBLAYER,
     0x2f660d7e,
     0x6a37,
     0x11e6,
     0xa1, 0x81, 0x00, 0x1e, 0x8c, 0x6e, 0x04, 0xa2
     );
 
-static WCHAR *FIREWALL_NAME = L"OpenVPN";
+static WCHAR *FIREWALL_NAME = L"spotify";
 
 /*
  * Default msg handler does nothing
@@ -192,10 +192,10 @@ add_wfp_block_filters(HANDLE *engine_handle,
     FWPM_SUBLAYER0 *sublayer_ptr = NULL;
     NET_LUID itf_luid;
     UINT64 filterid;
-    FWP_BYTE_BLOB *openvpnblob = NULL;
+    FWP_BYTE_BLOB *spotifyblob = NULL;
     FWPM_FILTER0 Filter = {0};
     FWPM_FILTER_CONDITION0 Condition[2];
-    FWPM_FILTER_CONDITION0 match_openvpn = {0};
+    FWPM_FILTER_CONDITION0 match_spotify = {0};
     FWPM_FILTER_CONDITION0 match_port_53 = {0};
     FWPM_FILTER_CONDITION0 match_interface = {0};
     FWPM_FILTER_CONDITION0 match_loopback = {0};
@@ -217,7 +217,7 @@ add_wfp_block_filters(HANDLE *engine_handle,
     msg_handler(0, "WFP Block: WFP engine opened");
 
     /* Check sublayer exists and add one if it does not. */
-    if (FwpmSubLayerGetByKey0(*engine_handle, &OPENVPN_WFP_BLOCK_SUBLAYER, &sublayer_ptr)
+    if (FwpmSubLayerGetByKey0(*engine_handle, &spotify_WFP_BLOCK_SUBLAYER, &sublayer_ptr)
         == ERROR_SUCCESS)
     {
         msg_handler(0, "WFP Block: Using existing sublayer");
@@ -226,7 +226,7 @@ add_wfp_block_filters(HANDLE *engine_handle,
     else
     {  /* Add a new sublayer -- as another process may add it in the meantime,
         * do not treat "already exists" as an error */
-        err = add_sublayer(OPENVPN_WFP_BLOCK_SUBLAYER);
+        err = add_sublayer(spotify_WFP_BLOCK_SUBLAYER);
 
         if (err == FWP_E_ALREADY_EXISTS || err == ERROR_SUCCESS)
         {
@@ -241,14 +241,14 @@ add_wfp_block_filters(HANDLE *engine_handle,
     err = ConvertInterfaceIndexToLuid(index, &itf_luid);
     OUT_ON_ERROR(err, "Convert interface index to luid failed");
 
-    err = FwpmGetAppIdFromFileName0(exe_path, &openvpnblob);
-    OUT_ON_ERROR(err, "Get byte blob for openvpn executable name failed");
+    err = FwpmGetAppIdFromFileName0(exe_path, &spotifyblob);
+    OUT_ON_ERROR(err, "Get byte blob for spotify executable name failed");
 
     /* Prepare match conditions */
-    match_openvpn.fieldKey = FWPM_CONDITION_ALE_APP_ID;
-    match_openvpn.matchType = FWP_MATCH_EQUAL;
-    match_openvpn.conditionValue.type = FWP_BYTE_BLOB_TYPE;
-    match_openvpn.conditionValue.byteBlob = openvpnblob;
+    match_spotify.fieldKey = FWPM_CONDITION_ALE_APP_ID;
+    match_spotify.matchType = FWP_MATCH_EQUAL;
+    match_spotify.conditionValue.type = FWP_BYTE_BLOB_TYPE;
+    match_spotify.conditionValue.byteBlob = spotifyblob;
 
     match_port_53.fieldKey = FWPM_CONDITION_IP_REMOTE_PORT;
     match_port_53.matchType = FWP_MATCH_EQUAL;
@@ -271,29 +271,29 @@ add_wfp_block_filters(HANDLE *engine_handle,
     match_not_loopback.conditionValue.uint32 = FWP_CONDITION_FLAG_IS_LOOPBACK;
 
     /* Prepare filter. */
-    Filter.subLayerKey = OPENVPN_WFP_BLOCK_SUBLAYER;
+    Filter.subLayerKey = spotify_WFP_BLOCK_SUBLAYER;
     Filter.displayData.name = FIREWALL_NAME;
     Filter.weight.type = FWP_UINT8;
     Filter.weight.uint8 = 0xF;
     Filter.filterCondition = Condition;
     Filter.numFilterConditions = 1;
 
-    /* First filter. Permit IPv4 from OpenVPN itself. */
+    /* First filter. Permit IPv4 from spotify itself. */
     Filter.layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V4;
     Filter.action.type = FWP_ACTION_PERMIT;
-    Condition[0] = match_openvpn;
+    Condition[0] = match_spotify;
     if (dns_only)
     {
         Filter.numFilterConditions = 2;
         Condition[1] = match_port_53;
     }
     err = FwpmFilterAdd0(*engine_handle, &Filter, NULL, &filterid);
-    OUT_ON_ERROR(err, "Add filter to permit IPv4 traffic from OpenVPN failed");
+    OUT_ON_ERROR(err, "Add filter to permit IPv4 traffic from spotify failed");
 
-    /* Second filter. Permit IPv6 from OpenVPN itself. */
+    /* Second filter. Permit IPv6 from spotify itself. */
     Filter.layerKey = FWPM_LAYER_ALE_AUTH_CONNECT_V6;
     err = FwpmFilterAdd0(*engine_handle, &Filter, NULL, &filterid);
-    OUT_ON_ERROR(err, "Add filter to permit IPv6 traffic from OpenVPN failed");
+    OUT_ON_ERROR(err, "Add filter to permit IPv6 traffic from spotify failed");
 
     msg_handler(0, "WFP Block: Added permit filters for exe_path");
 
@@ -361,9 +361,9 @@ add_wfp_block_filters(HANDLE *engine_handle,
     msg_handler(0, "WFP Block: Added block filters for DNS traffic to loopback");
 
 out:
-    if (openvpnblob)
+    if (spotifyblob)
     {
-        FwpmFreeMemory0((void **)&openvpnblob);
+        FwpmFreeMemory0((void **)&spotifyblob);
     }
 
     if (err && *engine_handle)

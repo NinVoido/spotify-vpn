@@ -24,14 +24,14 @@
 
 #include "env_set.h"
 
-typedef char openvpn_net_iface_t;
+typedef char spotify_net_iface_t;
 
-struct openvpn_net_ctx
+struct spotify_net_ctx
 {
     struct env_set *es;
     struct gc_arena gc;
 };
 
-typedef struct openvpn_net_ctx openvpn_net_ctx_t;
+typedef struct spotify_net_ctx spotify_net_ctx_t;
 
 #endif /* NETWORKING_IP_H_ */

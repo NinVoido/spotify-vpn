@@ -1,11 +1,11 @@
 #
-#  OpenVPN -- An application to securely tunnel IP networks
+#  spotify -- An application to securely tunnel IP networks
 #             over a single UDP port, with support for SSL/TLS-based
 #             session authentication and key exchange,
 #             packet encryption, packet authentication, and
 #             packet compression.
 #
-#  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+#  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
 #  Copyright (C) 2006-2012 Alon Bar-Lev <alon.barlev@gmail.com>
 #
 
@@ -15,7 +15,7 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/Makefile.in
 
 EXTRA_DIST = \
-	openvpn.manifest
+	spotify.manifest
 
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
@@ -37,9 +37,9 @@ if WIN32
 AM_CFLAGS += -municode -UUNICODE
 endif
 
-sbin_PROGRAMS = openvpn
+sbin_PROGRAMS = spotify
 
-openvpn_SOURCES = \
+spotify_SOURCES = \
 	argv.c argv.h \
 	auth_token.c auth_token.h \
 	base64.c base64.h \
@@ -102,7 +102,7 @@ openvpn_SOURCES = \
 	pkcs11.c pkcs11.h pkcs11_backend.h \
 	pkcs11_openssl.c \
 	pkcs11_mbedtls.c \
-	openvpn.c openvpn.h \
+	spotify.c spotify.h \
 	options.c options.h \
 	options_util.c options_util.h \
 	otime.c otime.h \
@@ -147,7 +147,7 @@ openvpn_SOURCES = \
 	win32.h win32.c \
 	win32-util.h win32-util.c \
 	cryptoapi.h cryptoapi.c
-openvpn_LDADD = \
+spotify_LDADD = \
 	$(top_builddir)/src/compat/libcompat.la \
 	$(SOCKETS_LIBS) \
 	$(OPTIONAL_LIBCAPNG_LIBS) \
@@ -161,6 +161,6 @@ openvpn_LDADD = \
 	$(OPTIONAL_DL_LIBS) \
 	$(OPTIONAL_INOTIFY_LIBS)
 if WIN32
-openvpn_SOURCES += openvpn_win32_resources.rc wfp_block.c wfp_block.h ring_buffer.h
-openvpn_LDADD += -lgdi32 -lws2_32 -lwininet -lcrypt32 -liphlpapi -lwinmm -lfwpuclnt -lrpcrt4 -lncrypt -lsetupapi -lbcrypt
+spotify_SOURCES += spotify_win32_resources.rc wfp_block.c wfp_block.h ring_buffer.h
+spotify_LDADD += -lgdi32 -lws2_32 -lwininet -lcrypt32 -liphlpapi -lwinmm -lfwpuclnt -lrpcrt4 -lncrypt -lsetupapi -lbcrypt
 endif

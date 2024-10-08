@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -122,7 +122,7 @@ struct fragment_list {
  * receiving fragmented data channel packets associated with one VPN
  * tunnel.
  *
- * The fragmented packet currently being sent to a remote OpenVPN peer is
+ * The fragmented packet currently being sent to a remote spotify peer is
  * stored in \c fragment_master.outgoing.  It is copied into that buffer
  * by the \c fragment_outgoing() function and the remaining parts to be
  * sent can be retrieved by successive calls to \c
@@ -148,7 +148,7 @@ struct fragment_master {
                                  *
                                  *   All parts of a fragmented packet
                                  *   share the same sequence ID, so that
-                                 *   the remote OpenVPN peer can determine
+                                 *   the remote spotify peer can determine
                                  *   which parts belong to which original
                                  *   packet. */
 #define MAX_FRAG_PKT_SIZE 65536
@@ -296,7 +296,7 @@ void fragment_free(struct fragment_master *f);
 
 
 /**************************************************************************/
-/** @name Functions for processing packets received from a remote OpenVPN peer */
+/** @name Functions for processing packets received from a remote spotify peer */
 /** @{ */
 
 /**
@@ -346,7 +346,7 @@ void fragment_incoming(struct fragment_master *f, struct buffer *buf,
 
 
 /**************************************************************************/
-/** @name Functions for processing packets to be sent to a remote OpenVPN peer */
+/** @name Functions for processing packets to be sent to a remote spotify peer */
 /** @{ */
 
 /**

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2016-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2016-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -70,7 +70,7 @@ crypto_pem_encode_decode_loopback(void **state)
 }
 
 static void
-test_translate_cipher(const char *ciphername, const char *openvpn_name)
+test_translate_cipher(const char *ciphername, const char *spotify_name)
 {
     bool cipher = cipher_valid(ciphername);
 
@@ -82,15 +82,15 @@ test_translate_cipher(const char *ciphername, const char *openvpn_name)
 
     const char *kt_name = cipher_kt_name(ciphername);
 
-    assert_string_equal(kt_name, openvpn_name);
+    assert_string_equal(kt_name, spotify_name);
 }
 
 static void
-test_cipher_names(const char *ciphername, const char *openvpn_name)
+test_cipher_names(const char *ciphername, const char *spotify_name)
 {
     struct gc_arena gc = gc_new();
     /* Go through some variants, if the cipher library accepts these, they
-     * should be normalised to the openvpn name */
+     * should be normalised to the spotify name */
     char *upper = string_alloc(ciphername, &gc);
     char *lower = string_alloc(ciphername, &gc);
     char *random_case = string_alloc(ciphername, &gc);
@@ -109,15 +109,15 @@ test_cipher_names(const char *ciphername, const char *openvpn_name)
         }
     }
 
-    if (!openvpn_name)
+    if (!spotify_name)
     {
-        openvpn_name = upper;
+        spotify_name = upper;
     }
 
-    test_translate_cipher(upper, openvpn_name);
-    test_translate_cipher(lower, openvpn_name);
-    test_translate_cipher(random_case, openvpn_name);
-    test_translate_cipher(ciphername, openvpn_name);
+    test_translate_cipher(upper, spotify_name);
+    test_translate_cipher(lower, spotify_name);
+    test_translate_cipher(random_case, spotify_name);
+    test_translate_cipher(ciphername, spotify_name);
 
 
     gc_free(&gc);
@@ -451,7 +451,7 @@ test_mssfix_mtu_calculation(void **state)
 int
 main(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(crypto_pem_encode_decode_loopback),
         cmocka_unit_test(crypto_translate_cipher_names),

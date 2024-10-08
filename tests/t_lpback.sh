@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# t_lpback.sh - script to test OpenVPN's crypto loopback
+# t_lpback.sh - script to test spotify's crypto loopback
 # Copyright (C) 2005  Matthias Andree
 # Copyright (C) 2014  Steffan Karger
 #
@@ -21,7 +21,7 @@
 
 set -eu
 top_builddir="${top_builddir:-..}"
-openvpn="${openvpn:-${top_builddir}/src/openvpn/openvpn}"
+spotify="${spotify:-${top_builddir}/src/spotify/spotify}"
 trap "rm -f key.$$ tc-server-key.$$ tc-client-key.$$ log.$$ ; trap 0 ; exit 77" 1 2 15
 trap "rm -f key.$$ tc-server-key.$$ tc-client-key.$$ log.$$ ; exit 1" 0 3
 
@@ -71,8 +71,8 @@ if [ "$V" = 1  ] ; then
 fi
 
 
-# Get list of supported ciphers from openvpn --show-ciphers output
-CIPHERS=$(${openvpn} --show-ciphers | \
+# Get list of supported ciphers from spotify --show-ciphers output
+CIPHERS=$(${spotify} --show-ciphers | \
             sed -e '/The following/,/^$/d' -e s'/ .*//' -e '/^[[:space:]]*$/d')
 
 # SK, 2014-06-04: currently the DES-EDE3-CFB1 implementation of OpenSSL is
@@ -84,30 +84,30 @@ CIPHERS=$(echo "$CIPHERS" | egrep -v '^(DES-EDE3-CFB1|DES-CFB1|RC5-)' )
 
 e=0
 if [ -z "$CIPHERS" ] ; then
-    echo "'openvpn --show-ciphers' FAILED (empty list)"
+    echo "'spotify --show-ciphers' FAILED (empty list)"
     e=1
 fi
 
 # Also test cipher 'none'
 CIPHERS=${CIPHERS}$(printf "\nnone")
 
-"${openvpn}" --genkey secret key.$$
+"${spotify}" --genkey secret key.$$
 set +e
 
 for cipher in ${CIPHERS}
 do
     test_start "Testing cipher ${cipher}... "
-    ( "${openvpn}" --test-crypto --secret key.$$  --allow-deprecated-insecure-static-crypto --cipher ${cipher} ) >log.$$ 2>&1
+    ( "${spotify}" --test-crypto --secret key.$$  --allow-deprecated-insecure-static-crypto --cipher ${cipher} ) >log.$$ 2>&1
     test_end $? log.$$
 done
 
 test_start "Testing tls-crypt-v2 server key generation... "
-"${openvpn}" \
+"${spotify}" \
     --genkey tls-crypt-v2-server tc-server-key.$$ >log.$$ 2>&1
 test_end $? log.$$
 
 test_start "Testing tls-crypt-v2 key generation (no metadata)... "
-"${openvpn}" --tls-crypt-v2 tc-server-key.$$ \
+"${spotify}" --tls-crypt-v2 tc-server-key.$$ \
     --genkey tls-crypt-v2-client tc-client-key.$$ >log.$$ 2>&1
 test_end $? log.$$
 
@@ -119,7 +119,7 @@ while [ $i -lt 732 ]; do
     i=$(expr $i + 1)
 done
 test_start "Testing tls-crypt-v2 key generation (max length metadata)... "
-"${openvpn}" --tls-crypt-v2 tc-server-key.$$ \
+"${spotify}" --tls-crypt-v2 tc-server-key.$$ \
     --genkey tls-crypt-v2-client tc-client-key.$$ "${METADATA}" \
     >log.$$ 2>&1
 test_end $? log.$$

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -48,14 +48,14 @@
  * security parameters of the packet's VPN tunnel.  The \link data_control
  * Data Channel Control module\endlink uses the following interface
  * functions:
- *  - For packets which will be sent to a remote OpenVPN peer:
+ *  - For packets which will be sent to a remote spotify peer:
  *     - \c tls_pre_encrypt()
- *     - \c openvpn_encrypt()
+ *     - \c spotify_encrypt()
  *     - \c tls_post_encrypt()
- *  - For packets which have been received from a remote OpenVPN peer:
+ *  - For packets which have been received from a remote spotify peer:
  *     - \c tls_pre_decrypt() (documented as part of the \link
  *       external_multiplexer External Multiplexer\endlink)
- *     - \c openvpn_decrypt()
+ *     - \c spotify_decrypt()
  *
  * @par Settings that control this module's activity
  * How the data channel processes packets received from the \link data_control

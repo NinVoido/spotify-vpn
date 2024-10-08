@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -699,7 +699,7 @@ struct options
 
     struct pull_filter_list *pull_filter_list;
 
-    /* Useful when packets sent by openvpn itself are not subject
+    /* Useful when packets sent by spotify itself are not subject
      * to the routing tables that would move packets into the tunnel. */
     bool allow_recursive_routing;
 
@@ -813,7 +813,7 @@ const char *options_string_version(const char *s, struct gc_arena *gc);
 char *options_string(const struct options *o,
                      const struct frame *frame,
                      struct tuntap *tt,
-                     openvpn_net_ctx_t *ctx,
+                     spotify_net_ctx_t *ctx,
                      bool remote,
                      struct gc_arena *gc);
 
@@ -826,7 +826,7 @@ bool options_cmp_equal(char *actual, const char *expected);
 void options_warning(char *actual, const char *expected);
 
 /**
- * Given an OpenVPN options string, extract the value of an option.
+ * Given an spotify options string, extract the value of an option.
  *
  * @param options_string        Zero-terminated, comma-separated options string
  * @param opt_name              The name of the option to extract

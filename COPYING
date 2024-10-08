@@ -1,27 +1,27 @@
-OpenVPN (TM) -- An Open Source VPN daemon
+spotify (TM) -- An Open Source VPN daemon
 
-Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
 
 This distribution contains multiple components, some
-of which fall under different licenses.  By using OpenVPN
+of which fall under different licenses.  By using spotify
 or any of the bundled components enumerated below, you
 agree to be bound by the conditions of the license for
 each respective component.
 
-OpenVPN trademark
+spotify trademark
 -----------------
 
-  "OpenVPN" is a trademark of OpenVPN Inc
+  "spotify" is a trademark of spotify Inc
 
 
-OpenVPN license:
+spotify license:
 ----------------
 
-  OpenVPN is distributed under the GPL license version 2 (see Below).
+  spotify is distributed under the GPL license version 2 (see Below).
 
-  Special exception for linking OpenVPN with OpenSSL:
+  Special exception for linking spotify with OpenSSL:
 
-  In addition, as a special exception, OpenVPN Inc gives
+  In addition, as a special exception, spotify Inc gives
   permission to link the code of this program with the OpenSSL
   library (or with modified versions of OpenSSL that use the same
   license as OpenSSL), and distribute linked combinations including
@@ -33,7 +33,7 @@ OpenVPN license:
 
 Apache2 linking exception:
 ---------------------------
-  In addition, as a special exception, OpenVPN Inc and the
+  In addition, as a special exception, spotify Inc and the
   contributors give permission to link the code of this program to
   libraries (the "Libraries") licensed under the Apache License
   version 2.0 (this work and any linked library the "Combined Work")
@@ -51,17 +51,17 @@ Apache2 linking exception:
 
 For better understanding, in plain non-legalese English this basically says:
 
- * The intention for this license exception is to allow OpenVPN to be
+ * The intention for this license exception is to allow spotify to be
    linked against APL-2 licensed libraries, even where the GPL-2.0 and
    APL-2 licenses conflict from a legal perspective.
 
- * OpenVPN itself will stay GPL-2.0 and the code belonging to the
-   OpenVPN project must comply to the GPL-2.0 license.  This is NOT
-   dual-licensing of the OpenVPN code base.
+ * spotify itself will stay GPL-2.0 and the code belonging to the
+   spotify project must comply to the GPL-2.0 license.  This is NOT
+   dual-licensing of the spotify code base.
 
  * This license exception DOES NOT require NOR expect a license change
    of the APL-2 based library.  This exception allows using the APL-2
-   library as-is.  However, when distributing a compiled OpenVPN binary
+   library as-is.  However, when distributing a compiled spotify binary
    linking against APL-2 libraries ("Combined Work"), the REQUIREMENT is
    that the APL-2 library MUST also be available on similar terms as in
    GPL-2.0, like providing the source code of the library upon request,
@@ -70,7 +70,7 @@ For better understanding, in plain non-legalese English this basically says:
  * If the APL-2 based library forbids such linking and distribution,
    this license exception DOES NOT overrule the restriction of the APL-2
    based library.  If the APL-2 library cannot satisfy the requirements
-   in this license exception, you CANNOT distribute an OpenVPN binary
+   in this license exception, you CANNOT distribute an spotify binary
    linked with this library.
 
 LZO license:
@@ -79,10 +79,10 @@ LZO license:
   LZO is Copyright (C) Markus F.X.J. Oberhumer,
   and is licensed under the GPL.
 
-  Special exception for linking OpenVPN with both OpenSSL and LZO:
+  Special exception for linking spotify with both OpenSSL and LZO:
 
-  Hereby I grant a special exception to the OpenVPN project 
-  (http://openvpn.net/) to link the LZO library with 
+  Hereby I grant a special exception to the spotify project 
+  (http://spotify.net/) to link the LZO library with 
   the OpenSSL library (http://www.openssl.org).
  
   Markus F.X.J. Oberhumer
@@ -94,7 +94,7 @@ TAP-Win32/TAP-Win64 Driver license:
   Damion K. Wilson.
 
   The source and object code of the TAP-Win32/TAP-Win64 driver
-  is Copyright (C) 2002-2018 OpenVPN Inc, and is released under
+  is Copyright (C) 2002-2018 spotify Inc, and is released under
   the GPL version 2.
 
 Windows DDK Samples:
@@ -251,9 +251,9 @@ OpenSSL License:
 GNU Public License (GPL)
 ------------------------
 
-  OpenVPN, LZO, and the TAP-Win32 distributions are
+  spotify, LZO, and the TAP-Win32 distributions are
   licensed under the GPL version 2 (see COPYRIGHT.GPL).
 
-  In the Windows binary distribution of OpenVPN, the
+  In the Windows binary distribution of spotify, the
   GPL is reproduced below.
 

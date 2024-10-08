@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -37,7 +37,7 @@ void set_nonblock(socket_descriptor_t fd);
 void set_cloexec(socket_descriptor_t fd);
 
 static inline void
-openvpn_fd_set(socket_descriptor_t fd, fd_set *setp)
+spotify_fd_set(socket_descriptor_t fd, fd_set *setp)
 {
 #ifndef _WIN32 /* The Windows FD_SET() implementation does not overflow */
     ASSERT(fd >= 0 && fd < FD_SETSIZE);

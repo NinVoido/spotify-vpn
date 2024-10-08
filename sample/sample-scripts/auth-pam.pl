@@ -1,10 +1,10 @@
 #!/usr/bin/perl -t
 
-# OpenVPN PAM AUTHENTICATON
+# spotify PAM AUTHENTICATON
 #   This script can be used to add PAM-based authentication
-#   to OpenVPN 2.0.  The OpenVPN client must provide
+#   to spotify 2.0.  The spotify client must provide
 #   a username/password, using the --auth-user-pass directive.
-#   The OpenVPN server should specify --auth-user-pass-verify
+#   The spotify server should specify --auth-user-pass-verify
 #   with this script as the argument and the 'via-file' method
 #   specified.  The server can also optionally specify
 #   --client-cert-not-required and/or --username-as-common-name.
@@ -23,7 +23,7 @@
 
 # NOTES
 #   * This script is provided mostly as a demonstration of the
-#     --auth-user-pass-verify script capability in OpenVPN.
+#     --auth-user-pass-verify script capability in spotify.
 #     For real world usage, see the auth-pam module in the plugin
 #     folder.
 

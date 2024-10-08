@@ -1,6 +1,6 @@
 Management Interface Options
 ----------------------------
-OpenVPN provides a feature rich socket based management interface for both
+spotify provides a feature rich socket based management interface for both
 server and client mode operations.
 
 --management args
@@ -17,7 +17,7 @@ server and client mode operations.
 
   ``pw-file``, if specified, is a password file where the password must
   be on first line. Instead of a filename it can use the keyword stdin
-  which will prompt the user for a password to use when OpenVPN is
+  which will prompt the user for a password to use when spotify is
   starting.
 
   For unix sockets, the default behaviour is to create a unix domain
@@ -34,18 +34,18 @@ server and client mode operations.
   ***BEWARE*** of enabling the management interface over TCP. In these cases
   you should *ALWAYS* make use of ``pw-file`` to password protect the
   management interface. Any user who can connect to this TCP ``IP:port``
-  will be able to manage and control (and interfere with) the OpenVPN
+  will be able to manage and control (and interfere with) the spotify
   process. It is also strongly recommended to set IP to 127.0.0.1
   (localhost) to restrict accessibility of the management server to local
   clients.
 
   While the management port is designed for programmatic control of
-  OpenVPN by other applications, it is possible to telnet to the port,
+  spotify by other applications, it is possible to telnet to the port,
   using a telnet client in "raw" mode. Once connected, type :code:`help`
   for a list of commands.
 
   For detailed documentation on the management interface, see the
-  *management-notes.txt* file in the management folder of the OpenVPN
+  *management-notes.txt* file in the management folder of the spotify
   source distribution.
 
 --management-client
@@ -54,12 +54,12 @@ server and client mode operations.
   server or on a unix domain socket.
 
   If the client connection fails to connect or is disconnected, a SIGTERM
-  signal will be generated causing OpenVPN to quit.
+  signal will be generated causing spotify to quit.
 
 --management-client-auth
   Gives management interface client the responsibility to authenticate
   clients after their client certificate has been verified. See
-  :code:`management-notes.txt` in OpenVPN distribution for detailed notes.
+  :code:`management-notes.txt` in spotify distribution for detailed notes.
 
 --management-client-group g
   When the management interface is listening on a unix domain socket, only
@@ -99,13 +99,13 @@ server and client mode operations.
   feature.
 
 --management-forget-disconnect
-  Make OpenVPN forget passwords when management session disconnects.
+  Make spotify forget passwords when management session disconnects.
 
   This directive does not affect the ``--http-proxy`` username/password.
   It is always cached.
 
 --management-hold
-  Start OpenVPN in a hibernating state, until a client of the management
+  Start spotify in a hibernating state, until a client of the management
   interface explicitly starts it with the :code:`hold release` command.
 
 --management-log-cache n
@@ -127,8 +127,8 @@ server and client mode operations.
   (client-only).
 
 --management-signal
-  Send SIGUSR1 signal to OpenVPN if management session disconnects. This
-  is useful when you wish to disconnect an OpenVPN session on user logoff.
+  Send SIGUSR1 signal to spotify if management session disconnects. This
+  is useful when you wish to disconnect an spotify session on user logoff.
   For ``--management-client`` this option is not needed since a disconnect
   will always generate a :code:`SIGTERM`.
 

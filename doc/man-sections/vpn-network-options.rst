@@ -20,7 +20,7 @@ routing.
 
   For this option to make sense you actually have to route traffic to the
   tun interface. The following example config block would send all IPv6
-  traffic to OpenVPN and answer all requests with no route to host,
+  traffic to spotify and answer all requests with no route to host,
   effectively blocking IPv6 (to avoid IPv6 connections from dual-stacked
   clients leaking around IPv4-only VPN services).
 
@@ -74,7 +74,7 @@ routing.
 
   On most platforms, :code:`tunN` (e.g. tun2, tun30) and :code:`tapN`
   (e.g. tap3) will create a numbered tun/tap interface with the number
-  specified - this is useful if multiple OpenVPN instances are active,
+  specified - this is useful if multiple spotify instances are active,
   and the instance-to-device mapping needs to be known.  Some platforms
   do not support "numbered tap", so trying ``--dev tap3`` will fail.
 
@@ -83,7 +83,7 @@ routing.
   (for both ``tun`` and ``tap`` devices, DCO and tun/tap driver).
 
   If such a device name starts with ``tun`` or ``tap`` (e.g. ``tun-home``),
-  OpenVPN will choose the right device type automatically.  Otherwise the
+  spotify will choose the right device type automatically.  Otherwise the
   desired device type needs to be specified with ``--dev-type tun`` or
   ``--dev-type tap``.
 
@@ -103,7 +103,7 @@ routing.
   Darwin tun kernel support. Use ``--dev-node utunN`` to select a specific
   utun instance. To force using the :code:`tun.kext` (:code:`/dev/tunX`)
   use ``--dev-node tun``. When not specifying a ``--dev-node`` option
-  openvpn will first try to open utun, and fall back to tun.kext.
+  spotify will first try to open utun, and fall back to tun.kext.
 
   On Windows systems, select the TAP-Win32 adapter which is named ``node``
   in the Network Connections Control Panel or the raw GUID of the adapter
@@ -113,19 +113,19 @@ routing.
   TAP-Win32 adapter.
 
   On other platforms, ``--dev-node node`` will influence the naming of the
-  created tun/tap device, if supported on that platform.  If OpenVPN cannot
+  created tun/tap device, if supported on that platform.  If spotify cannot
   figure out whether ``node`` is a TUN or TAP device based on the name,
   you should also specify ``--dev-type tun`` or ``--dev-type tap``.
 
-  If ``node`` starts with the string ``unix:`` openvpn will treat the rest
+  If ``node`` starts with the string ``unix:`` spotify will treat the rest
   of the argument as a program.
-  OpenVPN will start the program and create a temporary unix domain socket that
+  spotify will start the program and create a temporary unix domain socket that
   will be passed to the program together with the tun configuration as
   environment variables.  The temporary unix domain socket  will be be passed
   in the environment variable :code:`TUNTAP_SOCKET_FD`.
 
   This ``unix:`` mode is designed mainly to use with the lwipovpn network
-  emulator (https://github.com/OpenVPN/lwipovpn).
+  emulator (https://github.com/spotify/lwipovpn).
 
 --dev-type device-type
   Which device type are we using? ``device-type`` should be :code:`tun`
@@ -136,9 +136,9 @@ routing.
 --dhcp-option args
   Set additional network parameters on supported platforms. May be specified
   on the client or pushed from the server. On Windows these options are
-  handled by the ``tap-windows6`` driver by default or directly by OpenVPN
+  handled by the ``tap-windows6`` driver by default or directly by spotify
   if dhcp is disabled or the ``wintun`` driver is in use. The
-  ``OpenVPN for Android`` client also handles them internally.
+  ``spotify for Android`` client also handles them internally.
 
   On all other platforms these options are only saved in the client's
   environment under the name :code:`foreign_option_{n}` before the
@@ -220,7 +220,7 @@ routing.
   :code: `PROXY_HTTP` ``host`` ``port``
         Sets a HTTP proxy that should be used when connected to the VPN.
 
-        This option currently only works on OpenVPN for Android and requires
+        This option currently only works on spotify for Android and requires
         Android 10 or later.
 
 --ifconfig args
@@ -334,7 +334,7 @@ routing.
   Option flags:
 
   :code:`local`
-      Add the :code:`local` flag if both OpenVPN peers are directly
+      Add the :code:`local` flag if both spotify peers are directly
       connected via a common subnet, such as with wireless. The
       :code:`local` flag will cause step ``(1)`` above to be omitted.
 
@@ -396,7 +396,7 @@ routing.
 
   This option is intended as a convenience proxy for the ``route``\(8)
   shell command, while at the same time providing portable semantics
-  across OpenVPN's platform space.
+  across spotify's platform space.
 
   ``netmask``
         defaults to :code:`255.255.255.255` when not given
@@ -425,7 +425,7 @@ routing.
       routing table (not supported on all OSes).
 
   :code:`remote_host`
-      The ``--remote`` address if OpenVPN is being run in
+      The ``--remote`` address if spotify is being run in
       client mode, and is undefined in server mode.
 
 --route-delay args
@@ -453,7 +453,7 @@ routing.
 
 --route-ipv6 args
   Setup IPv6 routing in the system to send the specified IPv6 network into
-  OpenVPN's *tun*.
+  spotify's *tun*.
 
   Valid syntax:
   ::
@@ -468,7 +468,7 @@ routing.
   Specify a default *gateway* for use with ``--route``.
 
   If :code:`dhcp` is specified as the parameter, the gateway address will
-  be extracted from a DHCP negotiation with the OpenVPN server-side LAN.
+  be extracted from a DHCP negotiation with the spotify server-side LAN.
 
   Valid syntaxes:
   ::
@@ -552,7 +552,7 @@ routing.
 
   The MTU (Maximum Transmission Units) is the maximum datagram size in
   bytes that can be sent unfragmented over a particular network path.
-  OpenVPN requires that packets on the control and data channels be sent
+  spotify requires that packets on the control and data channels be sent
   unfragmented.
 
   MTU problems often manifest themselves as connections which hang during
@@ -576,7 +576,7 @@ routing.
   than the ``--tun-mtu`` size on read. This parameter defaults to 0, which
   is sufficient for most TUN devices. TAP devices may introduce additional
   overhead in excess of the MTU size, and a setting of 32 is the default
-  when TAP devices are used. This parameter only controls internal OpenVPN
+  when TAP devices are used. This parameter only controls internal spotify
   buffer sizing, so there is no transmission overhead associated with
   using a larger value.
 
@@ -591,17 +591,17 @@ These two standalone operations will require ``--dev`` and optionally
   such as Linux. Normally TUN/TAP tunnels exist only for the period of
   time that an application has them open. This option takes advantage of
   the TUN/TAP driver's ability to build persistent tunnels that live
-  through multiple instantiations of OpenVPN and die only when they are
+  through multiple instantiations of spotify and die only when they are
   deleted or the machine is rebooted.
 
   One of the advantages of persistent tunnels is that they eliminate the
   need for separate ``--up`` and ``--down`` scripts to run the appropriate
   ``ifconfig``\(8) and ``route``\(8) commands. These commands can be
   placed in the same shell script which starts or terminates an
-  OpenVPN session.
+  spotify session.
 
   Another advantage is that open connections through the TUN/TAP-based
-  tunnel will not be reset if the OpenVPN peer restarts. This can be
+  tunnel will not be reset if the spotify peer restarts. This can be
   useful to provide uninterrupted connectivity through the tunnel in the
   event of a DHCP reset of the peer's public IP address (see the
   ``--ipchange`` option above).

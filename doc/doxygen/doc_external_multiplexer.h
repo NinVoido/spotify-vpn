@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -31,8 +31,8 @@
  * @addtogroup external_multiplexer External Multiplexer module
  *
  * The External Multiplexer is the link between the external network
- * interface and the other OpenVPN modules.  It reads packets from the
- * external network interface, determines which remote OpenVPN peer and
+ * interface and the other spotify modules.  It reads packets from the
+ * external network interface, determines which remote spotify peer and
  * VPN tunnel they are associated with, and whether they are data channel
  * or control channel packets.  It then passes the packets on to the
  * appropriate processing module.

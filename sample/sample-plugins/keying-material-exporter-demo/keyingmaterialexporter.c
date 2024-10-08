@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -22,7 +22,7 @@
  */
 
 /*
- * This file implements a Sample (HTTP) SSO OpenVPN plugin module
+ * This file implements a Sample (HTTP) SSO spotify plugin module
  *
  * See the README file for build instructions.
  */
@@ -32,7 +32,7 @@
 #include <strings.h>
 #include <stdlib.h>
 
-#include "openvpn-plugin.h"
+#include "spotify-plugin.h"
 
 #ifndef MAXPATH
 #define MAXPATH 1024
@@ -86,31 +86,31 @@ get_env(const char *name, const char *envp[])
     return NULL;
 }
 
-OPENVPN_EXPORT int
-openvpn_plugin_open_v3(const int version,
-                       struct openvpn_plugin_args_open_in const *args,
-                       struct openvpn_plugin_args_open_return *rv)
+spotify_EXPORT int
+spotify_plugin_open_v3(const int version,
+                       struct spotify_plugin_args_open_in const *args,
+                       struct spotify_plugin_args_open_return *rv)
 {
     struct plugin *plugin = calloc(1, sizeof(*plugin));
 
     if (plugin == NULL)
     {
         printf("PLUGIN: allocating memory for context failed\n");
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     plugin->type = get_env("remote_1", args->envp) ? CLIENT : SERVER;
     plugin->log  = args->callbacks->plugin_log;
 
-    plugin->mask  = OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_TLS_FINAL);
-    plugin->mask |= OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_TLS_VERIFY);
+    plugin->mask  = spotify_PLUGIN_MASK(spotify_PLUGIN_TLS_FINAL);
+    plugin->mask |= spotify_PLUGIN_MASK(spotify_PLUGIN_TLS_VERIFY);
 
     ovpn_note("vpn endpoint type=%s", plugin->type == CLIENT ? "client" : "server");
 
     rv->type_mask = plugin->mask;
     rv->handle = (void *)plugin;
 
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
 static void
@@ -163,7 +163,7 @@ session_user_set(struct session *sess, X509 *x509)
 }
 
 static int
-tls_verify(struct openvpn_plugin_args_func_in const *args)
+tls_verify(struct spotify_plugin_args_func_in const *args)
 {
     struct plugin *plugin = (struct plugin  *)args->handle;
     struct session *sess  = (struct session *)args->per_client_context;
@@ -171,18 +171,18 @@ tls_verify(struct openvpn_plugin_args_func_in const *args)
     /* we store cert subject for the server end point only */
     if (plugin->type != SERVER)
     {
-        return OPENVPN_PLUGIN_FUNC_SUCCESS;
+        return spotify_PLUGIN_FUNC_SUCCESS;
     }
 
     if (!args->current_cert)
     {
         ovpn_err("this example plugin requires client certificate");
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     session_user_set(sess, args->current_cert);
 
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
 static void
@@ -199,31 +199,31 @@ file_store(char *file, char *content)
 }
 
 static void
-server_store(struct openvpn_plugin_args_func_in const *args)
+server_store(struct spotify_plugin_args_func_in const *args)
 {
     struct plugin *plugin = (struct plugin  *)args->handle;
     struct session *sess  = (struct session *)args->per_client_context;
 
     char file[MAXPATH];
-    snprintf(file, sizeof(file) - 1, "/tmp/openvpn_sso_%s", sess->key);
+    snprintf(file, sizeof(file) - 1, "/tmp/spotify_sso_%s", sess->key);
     ovpn_note("app session file: %s", file);
     file_store(file, sess->user);
 }
 
 static void
-client_store(struct openvpn_plugin_args_func_in const *args)
+client_store(struct spotify_plugin_args_func_in const *args)
 {
     struct plugin *plugin = (struct plugin  *)args->handle;
     struct session *sess  = (struct session *)args->per_client_context;
 
-    char *file = "/tmp/openvpn_sso_user";
+    char *file = "/tmp/spotify_sso_user";
     ovpn_note("app session file: %s", file);
     file_store(file, sess->key);
 }
 
 static int
-tls_final(struct openvpn_plugin_args_func_in const *args,
-          struct openvpn_plugin_args_func_return *rv)
+tls_final(struct spotify_plugin_args_func_in const *args,
+          struct spotify_plugin_args_func_return *rv)
 {
     struct plugin *plugin = (struct plugin  *)args->handle;
     struct session *sess  = (struct session *)args->per_client_context;
@@ -231,7 +231,7 @@ tls_final(struct openvpn_plugin_args_func_in const *args,
     const char *key;
     if (!(key = get_env("exported_keying_material", args->envp)))
     {
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     strncpy(sess->key, key, sizeof(sess->key) - 1);
@@ -245,31 +245,31 @@ tls_final(struct openvpn_plugin_args_func_in const *args,
 
         case CLIENT:
             client_store(args);
-            return OPENVPN_PLUGIN_FUNC_SUCCESS;
+            return spotify_PLUGIN_FUNC_SUCCESS;
     }
 
     ovpn_note("app session user: %s", sess->user);
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
-OPENVPN_EXPORT int
-openvpn_plugin_func_v3(const int version,
-                       struct openvpn_plugin_args_func_in const *args,
-                       struct openvpn_plugin_args_func_return *rv)
+spotify_EXPORT int
+spotify_plugin_func_v3(const int version,
+                       struct spotify_plugin_args_func_in const *args,
+                       struct spotify_plugin_args_func_return *rv)
 {
     switch (args->type)
     {
-        case OPENVPN_PLUGIN_TLS_VERIFY:
+        case spotify_PLUGIN_TLS_VERIFY:
             return tls_verify(args);
 
-        case OPENVPN_PLUGIN_TLS_FINAL:
+        case spotify_PLUGIN_TLS_FINAL:
             return tls_final(args, rv);
     }
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
-OPENVPN_EXPORT void *
-openvpn_plugin_client_constructor_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void *
+spotify_plugin_client_constructor_v1(spotify_plugin_handle_t handle)
 {
     struct plugin *plugin = (struct plugin *)handle;
     struct session *sess  = calloc(1, sizeof(*sess));
@@ -279,8 +279,8 @@ openvpn_plugin_client_constructor_v1(openvpn_plugin_handle_t handle)
     return (void *)sess;
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_client_destructor_v1(openvpn_plugin_handle_t handle, void *ctx)
+spotify_EXPORT void
+spotify_plugin_client_destructor_v1(spotify_plugin_handle_t handle, void *ctx)
 {
     struct plugin *plugin = (struct plugin *)handle;
     struct session *sess  = (struct session *)ctx;
@@ -291,8 +291,8 @@ openvpn_plugin_client_destructor_v1(openvpn_plugin_handle_t handle, void *ctx)
     free(sess);
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_close_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void
+spotify_plugin_close_v1(spotify_plugin_handle_t handle)
 {
     struct plugin *plugin = (struct plugin *)handle;
     free(plugin);

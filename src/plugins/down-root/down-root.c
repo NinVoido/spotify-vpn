@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *  Copyright (C) 2013      David Sommerseth <davids@redhat.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
  */
 
 /*
- * OpenVPN plugin module to do privileged down-script execution.
+ * spotify plugin module to do privileged down-script execution.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -43,7 +43,7 @@
 #include <errno.h>
 #include <err.h>
 
-#include <openvpn-plugin.h>
+#include <spotify-plugin.h>
 
 #define DEBUG(verb) ((verb) >= 7)
 
@@ -71,7 +71,7 @@ struct down_root_context
     /* Process ID of background process */
     pid_t background_pid;
 
-    /* Verbosity level of OpenVPN */
+    /* Verbosity level of spotify */
     int verb;
 
     /* down command */
@@ -277,8 +277,8 @@ run_script(char *const *argv, char *const *envp)
     return ret;
 }
 
-OPENVPN_EXPORT openvpn_plugin_handle_t
-openvpn_plugin_open_v1(unsigned int *type_mask, const char *argv[], const char *envp[])
+spotify_EXPORT spotify_plugin_handle_t
+spotify_plugin_open_v1(unsigned int *type_mask, const char *argv[], const char *envp[])
 {
     struct down_root_context *context;
     int i = 0;
@@ -297,7 +297,7 @@ openvpn_plugin_open_v1(unsigned int *type_mask, const char *argv[], const char *
     /*
      * Intercept the --up and --down callbacks
      */
-    *type_mask = OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_UP) | OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_DOWN);
+    *type_mask = spotify_PLUGIN_MASK(spotify_PLUGIN_UP) | spotify_PLUGIN_MASK(spotify_PLUGIN_DOWN);
 
     /*
      * Make sure we have two string arguments: the first is the .so name,
@@ -336,19 +336,19 @@ openvpn_plugin_open_v1(unsigned int *type_mask, const char *argv[], const char *
         }
     }
 
-    return (openvpn_plugin_handle_t) context;
+    return (spotify_plugin_handle_t) context;
 
 error:
     free_context(context);
     return NULL;
 }
 
-OPENVPN_EXPORT int
-openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const char *argv[], const char *envp[])
+spotify_EXPORT int
+spotify_plugin_func_v1(spotify_plugin_handle_t handle, const int type, const char *argv[], const char *envp[])
 {
     struct down_root_context *context = (struct down_root_context *) handle;
 
-    if (type == OPENVPN_PLUGIN_UP && context->foreground_fd == -1) /* fork off a process to hold onto root */
+    if (type == spotify_PLUGIN_UP && context->foreground_fd == -1) /* fork off a process to hold onto root */
     {
         pid_t pid;
         int fd[2];
@@ -360,7 +360,7 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
         if (socketpair(PF_UNIX, SOCK_DGRAM, 0, fd) == -1)
         {
             warn("DOWN-ROOT: socketpair call failed");
-            return OPENVPN_PLUGIN_FUNC_ERROR;
+            return spotify_PLUGIN_FUNC_ERROR;
         }
 
         /*
@@ -393,7 +393,7 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
             if (status == RESPONSE_INIT_SUCCEEDED)
             {
                 context->foreground_fd = fd[0];
-                return OPENVPN_PLUGIN_FUNC_SUCCESS;
+                return spotify_PLUGIN_FUNC_SUCCESS;
             }
         }
         else
@@ -419,7 +419,7 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
             return 0; /* NOTREACHED */
         }
     }
-    else if (type == OPENVPN_PLUGIN_DOWN && context->foreground_fd >= 0)
+    else if (type == spotify_PLUGIN_DOWN && context->foreground_fd >= 0)
     {
         if (send_control(context->foreground_fd, COMMAND_RUN_SCRIPT) == -1)
         {
@@ -430,7 +430,7 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
             const int status = recv_control(context->foreground_fd);
             if (status == RESPONSE_SCRIPT_SUCCEEDED)
             {
-                return OPENVPN_PLUGIN_FUNC_SUCCESS;
+                return spotify_PLUGIN_FUNC_SUCCESS;
             }
             if (status == -1)
             {
@@ -438,11 +438,11 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
             }
         }
     }
-    return OPENVPN_PLUGIN_FUNC_ERROR;
+    return spotify_PLUGIN_FUNC_ERROR;
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_close_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void
+spotify_plugin_close_v1(spotify_plugin_handle_t handle)
 {
     struct down_root_context *context = (struct down_root_context *) handle;
 
@@ -472,8 +472,8 @@ openvpn_plugin_close_v1(openvpn_plugin_handle_t handle)
     free_context(context);
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_abort_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void
+spotify_plugin_abort_v1(spotify_plugin_handle_t handle)
 {
     struct down_root_context *context = (struct down_root_context *) handle;
 

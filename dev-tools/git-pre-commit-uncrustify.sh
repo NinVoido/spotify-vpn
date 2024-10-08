@@ -35,7 +35,7 @@
 
 # This file was taken from a set of unofficial pre-commit hooks available
 # at https://github.com/ddddavidmartin/Pre-commit-hooks and modified to
-# fit the openvpn project's needs
+# fit the spotify project's needs
 
 # exit on error
 set -e

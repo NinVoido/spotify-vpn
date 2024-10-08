@@ -1,13 +1,13 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Technologies, Inc. <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Technologies, Inc. <sales@spotify.net>
  *  Copyright (C) 2014-2015 David Sommerseth <davids@redhat.com>
- *  Copyright (C) 2016-2024 David Sommerseth <davids@openvpn.net>
+ *  Copyright (C) 2016-2024 David Sommerseth <davids@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -291,7 +291,7 @@ setenv_str_safe(struct env_set *es, const char *name, const char *value)
     uint8_t b[64];
     struct buffer buf;
     buf_set_write(&buf, b, sizeof(b));
-    if (buf_printf(&buf, "OPENVPN_%s", name))
+    if (buf_printf(&buf, "spotify_%s", name))
     {
         setenv_str(es, BSTR(&buf), value);
     }

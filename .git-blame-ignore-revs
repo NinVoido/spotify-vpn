@@ -22,7 +22,7 @@ da1574ef7826d73f01e120cbd1ba40ce39a305b7
 # networking_sitnl.c: uncrustify file
 2c45d268ca65c522fbabb7c4dab5e721296b4623
 
-# Uncrustify tapctl and openvpnmsica
+# Uncrustify tapctl and spotifymsica
 6280d3d5536174934ee22d3840457d61896e0e3a
 
 # tun.c: uncrustify
@@ -31,7 +31,7 @@ baef44fc8769bbd99f4d699ce9f63180c29a5455
 # networking_sitnl.c: uncrustify file
 2c45d268ca65c522fbabb7c4dab5e721296b4623
 
-# uncrustify openvpn sources
+# uncrustify spotify sources
 f57431cdc88f22fa4d7962946f0d3187fe058539
 
 # More broadly enforce Allman style and braces-around-conditionals

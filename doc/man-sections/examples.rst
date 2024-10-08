@@ -1,9 +1,9 @@
 EXAMPLES
 ========
 
-Prior to running these examples, you should have OpenVPN installed on
+Prior to running these examples, you should have spotify installed on
 two machines with network connectivity between them. If you have not yet
-installed OpenVPN, consult the INSTALL file included in the OpenVPN
+installed spotify, consult the INSTALL file included in the spotify
 distribution.
 
 
@@ -11,10 +11,10 @@ Firewall Setup:
 ---------------
 
 If firewalls exist between the two machines, they should be set to
-forward the port OpenVPN is configured to use, in both directions.
-The default for OpenVPN is 1194/udp.  If you do not have control
+forward the port spotify is configured to use, in both directions.
+The default for spotify is 1194/udp.  If you do not have control
 over the firewalls between the two machines, you may still be able to
-use OpenVPN by adding ``--ping 15`` to each of the ``openvpn`` commands
+use spotify by adding ``--ping 15`` to each of the ``spotify`` commands
 used below in the examples (this will cause each peer to send out a UDP
 ping to its remote peer once every 15 seconds which will cause many
 stateful firewalls to forward packets in both directions without an
@@ -65,12 +65,12 @@ Example 1: A simple tunnel without security (not recommended)
 
 On bob::
 
-   openvpn --remote alice.example.com --dev tun1 \
+   spotify --remote alice.example.com --dev tun1 \
             --ifconfig 10.4.0.1 10.4.0.2 --verb 9
 
 On alice::
 
-   openvpn --remote bob.example.com --dev tun1 \
+   spotify --remote bob.example.com --dev tun1 \
             --ifconfig 10.4.0.2 10.4.0.1 --verb 9
 
 Now verify the tunnel is working by pinging across the tunnel.
@@ -84,7 +84,7 @@ On alice::
    ping 10.4.0.1
 
 The ``--verb 9`` option will produce verbose output, similar to the
-``tcpdump``\(8) program. Omit the ``--verb 9`` option to have OpenVPN run
+``tcpdump``\(8) program. Omit the ``--verb 9`` option to have spotify run
 quietly.
 
 
@@ -111,13 +111,13 @@ the ``scp``\(1) or ``ssh``\(1) program.
 
 On bob::
 
-   openvpn --ifconfig 10.4.0.1 10.4.0.2 --tls-server --dev tun --dh none \
+   spotify --ifconfig 10.4.0.1 10.4.0.2 --tls-server --dev tun --dh none \
            --cert bob.pem --key bob.pem --cipher AES-256-GCM \
            --peer-fingerprint "$fingerprint_of_alices_cert"
 
 On alice::
 
-   openvpn --remote bob.example.com --tls-client --dev tun1   \
+   spotify --remote bob.example.com --tls-client --dev tun1   \
            --ifconfig 10.4.0.2 10.4.0.1 --cipher AES-256-GCM  \
            --cert alice.pem --key alice.pem                   \
            --peer-fingerprint "$fingerprint_of_bobs_cert"
@@ -143,7 +143,7 @@ as the TLS server.
 
 *Note:*
     The client or server designation only has
-    meaning for the TLS subsystem. It has no bearing on OpenVPN's
+    meaning for the TLS subsystem. It has no bearing on spotify's
     peer-to-peer, UDP-based communication model.*
 
 First, build a separate certificate/key pair for both bob and alice (see
@@ -159,12 +159,12 @@ For Diffie Hellman parameters you can use the included file
 
 *WARNING:*
     All client, server, and certificate authority certificates
-    and keys included in the OpenVPN distribution are totally
+    and keys included in the spotify distribution are totally
     insecure and should be used for testing only.
 
 On bob::
 
-   openvpn --remote alice.example.com --dev tun1    \
+   spotify --remote alice.example.com --dev tun1    \
            --ifconfig 10.4.0.1 10.4.0.2             \
            --tls-client --ca ca.crt                 \
            --cert client.crt --key client.key       \
@@ -172,7 +172,7 @@ On bob::
 
 On alice::
 
-   openvpn --remote bob.example.com --dev tun1      \
+   spotify --remote bob.example.com --dev tun1      \
            --ifconfig 10.4.0.2 10.4.0.1             \
            --tls-server --dh dh1024.pem --ca ca.crt \
            --cert server.crt --key server.key       \
@@ -188,14 +188,14 @@ On alice::
 
    ping 10.4.0.1
 
-Notice the ``--reneg-sec 60`` option we used above. That tells OpenVPN
+Notice the ``--reneg-sec 60`` option we used above. That tells spotify
 to renegotiate the data channel keys every minute. Since we used
 ``--verb 5`` above, you will see status information on each new key
 negotiation.
 
 For production operations, a key renegotiation interval of 60 seconds is
 probably too frequent. Omit the ``--reneg-sec 60`` option to use
-OpenVPN's default key renegotiation interval of one hour.
+spotify's default key renegotiation interval of one hour.
 
 
 Routing:
@@ -219,7 +219,7 @@ persistent through system boots.
 
 If your system is configured with a firewall.  Please see your operating
 systems guide on how to configure the firewall.  You typically want to
-allow traffic coming from and going to the tun/tap adapter OpenVPN is
+allow traffic coming from and going to the tun/tap adapter spotify is
 configured to use.
 
 On bob::

@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -37,14 +37,14 @@
 
 #include <versionhelpers.h>
 
-#include "openvpn-msg.h"
+#include "spotify-msg.h"
 #include "validate.h"
 #include "wfp_block.h"
 #include "ring_buffer.h"
 
 #define IO_TIMEOUT  2000 /*ms*/
 
-#define ERROR_OPENVPN_STARTUP        0x20000000
+#define ERROR_spotify_STARTUP        0x20000000
 #define ERROR_STARTUP_DATA           0x20000001
 #define ERROR_MESSAGE_DATA           0x20000002
 #define ERROR_MESSAGE_TYPE           0x20000003
@@ -58,7 +58,7 @@ static HANDLE rdns_semaphore = NULL;
 
 #define TUN_IOCTL_REGISTER_RINGS CTL_CODE(51820U, 0x970U, METHOD_BUFFERED, FILE_READ_DATA | FILE_WRITE_DATA)
 
-openvpn_service_t interactive_service = {
+spotify_service_t interactive_service = {
     interactive,
     TEXT(PACKAGE_NAME "ServiceInteractive"),
     TEXT(PACKAGE_NAME " Interactive Service"),
@@ -327,7 +327,7 @@ ReturnError(HANDLE pipe, DWORD error, LPCWSTR func, DWORD count, LPHANDLE events
         (DWORD_PTR) ""
     };
 
-    if (error != ERROR_OPENVPN_STARTUP)
+    if (error != ERROR_spotify_STARTUP)
     {
         FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM
                        |FORMAT_MESSAGE_ALLOCATE_BUFFER
@@ -344,7 +344,7 @@ ReturnError(HANDLE pipe, DWORD error, LPCWSTR func, DWORD count, LPHANDLE events
     WritePipeAsync(pipe, result, (DWORD)(wcslen(result) * 2), count, events);
     MsgToEventLog(MSG_FLAGS_ERROR, result);
 
-    if (error != ERROR_OPENVPN_STARTUP)
+    if (error != ERROR_spotify_STARTUP)
     {
         LocalFree((LPVOID) args[2]);
     }
@@ -862,7 +862,7 @@ AddWfpBlock(const wfp_block_message_t *msg, undo_lists_t *lists)
                 /* for IPv6, we intentionally ignore errors, because
                  * otherwise block-dns activation will fail if a user or
                  * admin has disabled IPv6 on the tun/tap/dco interface
-                 * (if OpenVPN wants IPv6 ifconfig, we'll fail there)
+                 * (if spotify wants IPv6 ifconfig, we'll fail there)
                  */
                 set_interface_metric(msg->iface.index, AF_INET6,
                                      WFP_BLOCK_IFACE_METRIC);
@@ -1792,7 +1792,7 @@ Undo(undo_lists_t *lists)
 }
 
 static DWORD WINAPI
-RunOpenvpn(LPVOID p)
+Runspotify(LPVOID p)
 {
     HANDLE pipe = p;
     HANDLE ovpn_pipe = NULL, svc_pipe = NULL;
@@ -1917,7 +1917,7 @@ RunOpenvpn(LPVOID p)
         goto out;
     }
 
-    /* OpenVPN process DACL entry for access by service and user */
+    /* spotify process DACL entry for access by service and user */
     ea[0].grfAccessPermissions = SPECIFIC_RIGHTS_ALL | STANDARD_RIGHTS_ALL;
     ea[0].grfAccessMode = SET_ACCESS;
     ea[0].grfInheritance = NO_INHERITANCE;
@@ -1932,7 +1932,7 @@ RunOpenvpn(LPVOID p)
     ea[1].Trustee.TrusteeType = TRUSTEE_IS_UNKNOWN;
     ea[1].Trustee.ptstrName = (LPTSTR) ovpn_user->User.Sid;
 
-    /* Set owner and DACL of OpenVPN security descriptor */
+    /* Set owner and DACL of spotify security descriptor */
     if (!SetSecurityDescriptorOwner(&ovpn_sd, svc_user->User.Sid, FALSE))
     {
         ReturnLastError(pipe, L"SetSecurityDescriptorOwner");
@@ -1956,7 +1956,7 @@ RunOpenvpn(LPVOID p)
         goto out;
     }
 
-    /* use /dev/null for stdout of openvpn (client should use --log for output) */
+    /* use /dev/null for stdout of spotify (client should use --log for output) */
     stdout_write = CreateFile(_T("NUL"), GENERIC_WRITE, FILE_SHARE_WRITE,
                               &inheritable, OPEN_EXISTING, 0, NULL);
     if (stdout_write == INVALID_HANDLE_VALUE)
@@ -2008,7 +2008,7 @@ RunOpenvpn(LPVOID p)
     /* there seem to be no common printf specifier that works on all
      * mingw/msvc platforms without trickery, so convert to void* and use
      * PRIuPTR to print that as best compromise */
-    swprintf(cmdline, cmdline_size, L"openvpn %ls --msg-channel %" PRIuPTR,
+    swprintf(cmdline, cmdline_size, L"spotify %ls --msg-channel %" PRIuPTR,
              sud.options, (uintptr_t)svc_pipe);
 
     if (!CreateEnvironmentBlock(&user_env, imp_token, FALSE))
@@ -2068,7 +2068,7 @@ RunOpenvpn(LPVOID p)
         if (bytes > sizeof(pipe_message_t))
         {
             /* process at the other side of the pipe is misbehaving, shut it down */
-            MsgToEventLog(MSG_FLAGS_ERROR, TEXT("OpenVPN process sent too large payload length to the pipe (%lu bytes), it will be terminated"), bytes);
+            MsgToEventLog(MSG_FLAGS_ERROR, TEXT("spotify process sent too large payload length to the pipe (%lu bytes), it will be terminated"), bytes);
             break;
         }
 
@@ -2085,8 +2085,8 @@ RunOpenvpn(LPVOID p)
     {
         WCHAR buf[256];
         swprintf(buf, _countof(buf),
-                 L"OpenVPN exited with error: exit code = %lu", exit_code);
-        ReturnError(pipe, ERROR_OPENVPN_STARTUP, buf, 1, &exit_event);
+                 L"spotify exited with error: exit code = %lu", exit_code);
+        ReturnError(pipe, ERROR_spotify_STARTUP, buf, 1, &exit_event);
     }
     Undo(&undo_lists);
 
@@ -2283,8 +2283,8 @@ ServiceStartInteractive(DWORD dwArgc, LPTSTR *lpszArgv)
     status.dwWaitHint = 3000;
     ReportStatusToSCMgr(service, &status);
 
-    /* Read info from registry in key HKLM\SOFTWARE\OpenVPN */
-    error = GetOpenvpnSettings(&settings);
+    /* Read info from registry in key HKLM\SOFTWARE\spotify */
+    error = GetspotifySettings(&settings);
     if (error != ERROR_SUCCESS)
     {
         goto out;
@@ -2336,7 +2336,7 @@ ServiceStartInteractive(DWORD dwArgc, LPTSTR *lpszArgv)
         {
             /* Client connected, spawn a worker thread for it */
             HANDLE next_pipe = CreateClientPipeInstance();
-            HANDLE thread = CreateThread(NULL, 0, RunOpenvpn, pipe, CREATE_SUSPENDED, NULL);
+            HANDLE thread = CreateThread(NULL, 0, Runspotify, pipe, CREATE_SUSPENDED, NULL);
             if (thread)
             {
                 error = AddListItem(&threads, thread);

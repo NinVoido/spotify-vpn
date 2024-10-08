@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -33,13 +33,13 @@
  * I've put together a suppressions file
  * in debug/valgrind-suppress.
  *
- * Also, grep for VALGRIND_MAKE_READABLE in the OpenVPN source.
+ * Also, grep for VALGRIND_MAKE_READABLE in the spotify source.
  * Because valgrind thinks that some of the data passed from
- * OpenSSL back to OpenVPN is tainted due to being sourced
+ * OpenSSL back to spotify is tainted due to being sourced
  * from uninitialized data, we need to untaint it before use --
  * otherwise we will get a lot of useless warnings.
  *
- *   valgrind --tool=memcheck --error-limit=no --suppressions=debug/valgrind-suppress --gen-suppressions=yes ./openvpn ...
+ *   valgrind --tool=memcheck --error-limit=no --suppressions=debug/valgrind-suppress --gen-suppressions=yes ./spotify ...
  */
 
 #ifdef USE_VALGRIND
@@ -65,7 +65,7 @@
  *     http://dmalloc.com/
  *
  * When dmalloc is installed and enabled,
- * use this command prior to running openvpn:
+ * use this command prior to running spotify:
  *
  *    dmalloc -l dlog -i 100 low -p log-unknown
  *
@@ -86,7 +86,7 @@
 
 #include <dmalloc.h>
 
-#define openvpn_dmalloc(file, line, size) dmalloc_malloc((file), (line), (size), DMALLOC_FUNC_MALLOC, 0, 0)
+#define spotify_dmalloc(file, line, size) dmalloc_malloc((file), (line), (size), DMALLOC_FUNC_MALLOC, 0, 0)
 
 /*
  * This #define will put the line number of the log
@@ -99,7 +99,7 @@
  */
 #if 0
 #undef malloc
-#define malloc(size) openvpn_dmalloc("logfile", x_msg_line_num, (size))
+#define malloc(size) spotify_dmalloc("logfile", x_msg_line_num, (size))
 #endif
 
 #endif /* DMALLOC */

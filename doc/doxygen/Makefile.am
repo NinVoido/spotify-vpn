@@ -1,17 +1,17 @@
 #
-#  OpenVPN -- An application to securely tunnel IP networks
+#  spotify -- An application to securely tunnel IP networks
 #             over a single UDP port, with support for SSL/TLS-based
 #             session authentication and key exchange,
 #             packet encryption, packet authentication, and
 #             packet compression.
 #
-#  Copyright (C) 2017-2021 Fox-IT B.V. <openvpn@foxcrypto.com>
+#  Copyright (C) 2017-2021 Fox-IT B.V. <spotify@foxcrypto.com>
 #
 
 MAINTAINERCLEANFILES = \
 	$(srcdir)/Makefile.in
 
-DISTCLEANFILES = openvpn.doxyfile
+DISTCLEANFILES = spotify.doxyfile
 
 DOXYGEN_EXTRA_FILES = \
 	doc_compression.h \
@@ -33,8 +33,8 @@ DOXYGEN_EXTRA_FILES = \
 EXTRA_DIST = $(DOXYGEN_EXTRA_FILES)
 
 .PHONY: doxygen
-doxygen: openvpn.doxyfile $(DOXYGEN_EXTRA_FILES)
-	doxygen openvpn.doxyfile
+doxygen: spotify.doxyfile $(DOXYGEN_EXTRA_FILES)
+	doxygen spotify.doxyfile
 
 clean-local:
 	-rm -rf html latex

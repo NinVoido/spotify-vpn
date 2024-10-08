@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -62,14 +62,14 @@
  */
 
 static void
-openvpn_encrypt_aead(struct buffer *buf, struct buffer work,
+spotify_encrypt_aead(struct buffer *buf, struct buffer work,
                      struct crypto_options *opt)
 {
     struct gc_arena gc;
     int outlen = 0;
     const struct key_ctx *ctx = &opt->key_ctx_bi.encrypt;
     uint8_t *mac_out = NULL;
-    const int mac_len = OPENVPN_AEAD_TAG_LENGTH;
+    const int mac_len = spotify_AEAD_TAG_LENGTH;
 
     /* IV, packet-ID and implicit IV required for this mode. */
     ASSERT(ctx->cipher);
@@ -80,10 +80,10 @@ openvpn_encrypt_aead(struct buffer *buf, struct buffer work,
     /* Prepare IV */
     {
         struct buffer iv_buffer;
-        uint8_t iv[OPENVPN_MAX_IV_LENGTH] = {0};
+        uint8_t iv[spotify_MAX_IV_LENGTH] = {0};
         const int iv_len = cipher_ctx_iv_length(ctx->cipher);
 
-        ASSERT(iv_len >= OPENVPN_AEAD_MIN_IV_LEN && iv_len <= OPENVPN_MAX_IV_LENGTH);
+        ASSERT(iv_len >= spotify_AEAD_MIN_IV_LEN && iv_len <= spotify_MAX_IV_LENGTH);
 
         buf_set_write(&iv_buffer, iv, iv_len);
 
@@ -164,7 +164,7 @@ err:
 }
 
 static void
-openvpn_encrypt_v1(struct buffer *buf, struct buffer work,
+spotify_encrypt_v1(struct buffer *buf, struct buffer work,
                    struct crypto_options *opt)
 {
     struct gc_arena gc;
@@ -179,7 +179,7 @@ openvpn_encrypt_v1(struct buffer *buf, struct buffer work,
         /* Do Encrypt from buf -> work */
         if (ctx->cipher)
         {
-            uint8_t iv_buf[OPENVPN_MAX_IV_LENGTH] = {0};
+            uint8_t iv_buf[spotify_MAX_IV_LENGTH] = {0};
             const int iv_size = cipher_ctx_iv_length(ctx->cipher);
             int outlen;
 
@@ -254,7 +254,7 @@ openvpn_encrypt_v1(struct buffer *buf, struct buffer work,
             ASSERT(buf_inc_len(&work, outlen));
 
             /* For all CBC mode ciphers, check the last block is complete */
-            ASSERT(cipher_ctx_mode(ctx->cipher) != OPENVPN_MODE_CBC
+            ASSERT(cipher_ctx_mode(ctx->cipher) != spotify_MODE_CBC
                    || outlen == iv_size);
         }
         else                            /* No Encryption */
@@ -305,18 +305,18 @@ err:
 }
 
 void
-openvpn_encrypt(struct buffer *buf, struct buffer work,
+spotify_encrypt(struct buffer *buf, struct buffer work,
                 struct crypto_options *opt)
 {
     if (buf->len > 0 && opt)
     {
         if (cipher_ctx_mode_aead(opt->key_ctx_bi.encrypt.cipher))
         {
-            openvpn_encrypt_aead(buf, work, opt);
+            spotify_encrypt_aead(buf, work, opt);
         }
         else
         {
-            openvpn_encrypt_v1(buf, work, opt);
+            spotify_encrypt_v1(buf, work, opt);
         }
     }
 }
@@ -359,7 +359,7 @@ crypto_check_replay(struct crypto_options *opt,
  * On success, buf is set to point to plaintext, true is returned.
  */
 static bool
-openvpn_decrypt_aead(struct buffer *buf, struct buffer work,
+spotify_decrypt_aead(struct buffer *buf, struct buffer work,
                      struct crypto_options *opt, const struct frame *frame,
                      const uint8_t *ad_start)
 {
@@ -388,7 +388,7 @@ openvpn_decrypt_aead(struct buffer *buf, struct buffer work,
 
     /* Combine IV from explicit part from packet and implicit part from context */
     {
-        uint8_t iv[OPENVPN_MAX_IV_LENGTH] = { 0 };
+        uint8_t iv[spotify_MAX_IV_LENGTH] = { 0 };
         const int iv_len = cipher_ctx_iv_length(ctx->cipher);
         const size_t packet_iv_len = iv_len - ctx->implicit_iv_len;
 
@@ -417,7 +417,7 @@ openvpn_decrypt_aead(struct buffer *buf, struct buffer work,
     }
 
     /* keep the tag value to feed in later */
-    const int tag_size = OPENVPN_AEAD_TAG_LENGTH;
+    const int tag_size = spotify_AEAD_TAG_LENGTH;
     if (buf->len < tag_size + 1)
     {
         CRYPT_ERROR("missing tag or no payload");
@@ -499,7 +499,7 @@ error_exit:
  * On success, buf is set to point to plaintext, true is returned.
  */
 static bool
-openvpn_decrypt_v1(struct buffer *buf, struct buffer work,
+spotify_decrypt_v1(struct buffer *buf, struct buffer work,
                    struct crypto_options *opt, const struct frame *frame)
 {
     static const char error_prefix[] = "Authenticate/Decrypt packet error";
@@ -549,7 +549,7 @@ openvpn_decrypt_v1(struct buffer *buf, struct buffer work,
         if (ctx->cipher)
         {
             const int iv_size = cipher_ctx_iv_length(ctx->cipher);
-            uint8_t iv_buf[OPENVPN_MAX_IV_LENGTH] = { 0 };
+            uint8_t iv_buf[spotify_MAX_IV_LENGTH] = { 0 };
             int outlen;
 
             /* initialize work buffer with buf.headroom bytes of prepend capacity */
@@ -663,7 +663,7 @@ error_exit:
 
 
 bool
-openvpn_decrypt(struct buffer *buf, struct buffer work,
+spotify_decrypt(struct buffer *buf, struct buffer work,
                 struct crypto_options *opt, const struct frame *frame,
                 const uint8_t *ad_start)
 {
@@ -673,11 +673,11 @@ openvpn_decrypt(struct buffer *buf, struct buffer work,
     {
         if (cipher_ctx_mode_aead(opt->key_ctx_bi.decrypt.cipher))
         {
-            ret = openvpn_decrypt_aead(buf, work, opt, frame, ad_start);
+            ret = spotify_decrypt_aead(buf, work, opt, frame, ad_start);
         }
         else
         {
-            ret = openvpn_decrypt_v1(buf, work, opt, frame);
+            ret = spotify_decrypt_v1(buf, work, opt, frame);
         }
     }
     else
@@ -739,9 +739,9 @@ calculate_crypto_overhead(const struct key_type *kt,
 unsigned int
 crypto_max_overhead(void)
 {
-    return packet_id_size(true) + OPENVPN_MAX_IV_LENGTH
-           +OPENVPN_MAX_CIPHER_BLOCK_SIZE
-           +max_int(OPENVPN_MAX_HMAC_SIZE, OPENVPN_AEAD_TAG_LENGTH);
+    return packet_id_size(true) + spotify_MAX_IV_LENGTH
+           +spotify_MAX_CIPHER_BLOCK_SIZE
+           +max_int(spotify_MAX_HMAC_SIZE, spotify_AEAD_TAG_LENGTH);
 }
 
 static void
@@ -753,7 +753,7 @@ warn_insecure_key_type(const char *ciphername)
             " bit (%d bit).  This allows attacks like SWEET32.  Mitigate by "
             "using a --cipher with a larger block size (e.g. AES-256-CBC). "
             "Support for these insecure ciphers will be removed in "
-            "OpenVPN 2.7.",
+            "spotify 2.7.",
             ciphername, cipher_kt_block_size(ciphername)*8);
     }
 }
@@ -791,7 +791,7 @@ init_key_type(struct key_type *kt, const char *ciphername,
             msg(M_FATAL, "Cipher '%s' mode not supported", ciphername);
         }
 
-        if (OPENVPN_MAX_CIPHER_BLOCK_SIZE < cipher_kt_block_size(kt->cipher))
+        if (spotify_MAX_CIPHER_BLOCK_SIZE < cipher_kt_block_size(kt->cipher))
         {
             msg(M_FATAL, "Cipher '%s' not allowed: block size too big.", ciphername);
         }
@@ -821,7 +821,7 @@ init_key_type(struct key_type *kt, const char *ciphername,
         {
             int hmac_length = md_kt_size(kt->digest);
 
-            if (OPENVPN_MAX_HMAC_SIZE < hmac_length)
+            if (spotify_MAX_HMAC_SIZE < hmac_length)
             {
                 msg(M_FATAL, "HMAC '%s' not allowed: digest size too big.", authname);
             }
@@ -897,11 +897,11 @@ init_key_ctx_bi(struct key_ctx_bi *ctx, const struct key2 *key2,
 
     snprintf(log_prefix, sizeof(log_prefix), "Outgoing %s", name);
     init_key_ctx(&ctx->encrypt, &key2->keys[kds.out_key], kt,
-                 OPENVPN_OP_ENCRYPT, log_prefix);
+                 spotify_OP_ENCRYPT, log_prefix);
 
     snprintf(log_prefix, sizeof(log_prefix), "Incoming %s", name);
     init_key_ctx(&ctx->decrypt, &key2->keys[kds.in_key], kt,
-                 OPENVPN_OP_DECRYPT, log_prefix);
+                 spotify_OP_DECRYPT, log_prefix);
 
     ctx->initialized = true;
 }
@@ -1037,16 +1037,16 @@ test_crypto(struct crypto_options *co, struct frame *frame)
         if (cipher_ctx_mode_aead(cipher))
         {
             size_t impl_iv_len = cipher_ctx_iv_length(cipher) - sizeof(packet_id_type);
-            ASSERT(cipher_ctx_iv_length(cipher) <= OPENVPN_MAX_IV_LENGTH);
-            ASSERT(cipher_ctx_iv_length(cipher) >= OPENVPN_AEAD_MIN_IV_LEN);
+            ASSERT(cipher_ctx_iv_length(cipher) <= spotify_MAX_IV_LENGTH);
+            ASSERT(cipher_ctx_iv_length(cipher) >= spotify_AEAD_MIN_IV_LEN);
 
             /* Generate dummy implicit IV */
             ASSERT(rand_bytes(co->key_ctx_bi.encrypt.implicit_iv,
-                              OPENVPN_MAX_IV_LENGTH));
+                              spotify_MAX_IV_LENGTH));
             co->key_ctx_bi.encrypt.implicit_iv_len = impl_iv_len;
 
             memcpy(co->key_ctx_bi.decrypt.implicit_iv,
-                   co->key_ctx_bi.encrypt.implicit_iv, OPENVPN_MAX_IV_LENGTH);
+                   co->key_ctx_bi.encrypt.implicit_iv, spotify_MAX_IV_LENGTH);
             co->key_ctx_bi.decrypt.implicit_iv_len = impl_iv_len;
         }
     }
@@ -1076,10 +1076,10 @@ test_crypto(struct crypto_options *co, struct frame *frame)
         ASSERT(buf_init(&encrypt_workspace, frame->buf.headroom));
 
         /* encrypt */
-        openvpn_encrypt(&buf, encrypt_workspace, co);
+        spotify_encrypt(&buf, encrypt_workspace, co);
 
         /* decrypt */
-        openvpn_decrypt(&buf, decrypt_workspace, co, frame, BPTR(&buf));
+        spotify_decrypt(&buf, decrypt_workspace, co, frame, BPTR(&buf));
 
         /* compare */
         if (buf.len != src.len)
@@ -1112,7 +1112,7 @@ print_key_filename(const char *str, bool is_inline)
 }
 
 void
-crypto_read_openvpn_key(const struct key_type *key_type,
+crypto_read_spotify_key(const struct key_type *key_type,
                         struct key_ctx_bi *ctx, const char *key_file,
                         bool key_inline, const int key_direction,
                         const char *key_name, const char *opt_name,
@@ -1130,7 +1130,7 @@ crypto_read_openvpn_key(const struct key_type *key_type,
 
     if (key2.n != 2)
     {
-        msg(M_ERR, "File '%s' does not have OpenVPN Static Key format.  Using "
+        msg(M_ERR, "File '%s' does not have spotify Static Key format.  Using "
             "free-form passphrase file is not supported anymore.",
             print_key_filename(key_file, key_inline));
     }
@@ -1152,8 +1152,8 @@ crypto_read_openvpn_key(const struct key_type *key_type,
 }
 
 /* header and footer for static key file */
-static const char static_key_head[] = "-----BEGIN OpenVPN Static key V1-----";
-static const char static_key_foot[] = "-----END OpenVPN Static key V1-----";
+static const char static_key_head[] = "-----BEGIN spotify Static key V1-----";
+static const char static_key_foot[] = "-----END spotify Static key V1-----";
 
 static const char printable_char_fmt[] =
     "Non-Hex character ('%c') found at line %d in key file '%s' (%d/%d/%d bytes found/min/max)";
@@ -1381,7 +1381,7 @@ write_key_file(const int nkeys, const char *filename)
     const int bytes_per_line = 16;
 
     /* write header */
-    buf_printf(&out, "#\n# %d bit OpenVPN static key\n#\n", nbits);
+    buf_printf(&out, "#\n# %d bit spotify static key\n#\n", nbits);
     buf_printf(&out, "%s\n", static_key_head);
 
     for (int i = 0; i < nkeys; ++i)
@@ -1680,7 +1680,7 @@ get_cipher_name_pair(const char *cipher_name)
     for (; i < cipher_name_translation_table_count; i++)
     {
         pair = &cipher_name_translation_table[i];
-        if (0 == strcmp(cipher_name, pair->openvpn_name)
+        if (0 == strcmp(cipher_name, pair->spotify_name)
             || 0 == strcmp(cipher_name, pair->lib_name))
         {
             return pair;
@@ -1692,7 +1692,7 @@ get_cipher_name_pair(const char *cipher_name)
 }
 
 const char *
-translate_cipher_name_from_openvpn(const char *cipher_name)
+translate_cipher_name_from_spotify(const char *cipher_name)
 {
     const cipher_name_pair *pair = get_cipher_name_pair(cipher_name);
 
@@ -1705,7 +1705,7 @@ translate_cipher_name_from_openvpn(const char *cipher_name)
 }
 
 const char *
-translate_cipher_name_to_openvpn(const char *cipher_name)
+translate_cipher_name_to_spotify(const char *cipher_name)
 {
     const cipher_name_pair *pair = get_cipher_name_pair(cipher_name);
 
@@ -1714,7 +1714,7 @@ translate_cipher_name_to_openvpn(const char *cipher_name)
         return cipher_name;
     }
 
-    return pair->openvpn_name;
+    return pair->spotify_name;
 }
 
 void
@@ -1817,7 +1817,7 @@ check_tls_prf_working(void)
 {
     /* Modern TLS libraries might no longer support the TLS 1.0 PRF with
      * MD5+SHA1. This allows us to establish connections only
-     * with other 2.6.0+ OpenVPN peers.
+     * with other 2.6.0+ spotify peers.
      * Do a simple dummy test here to see if it works. */
     const char *seed = "tls1-prf-test";
     const char *secret = "tls1-prf-test-secret";

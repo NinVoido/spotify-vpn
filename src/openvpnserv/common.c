@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -53,7 +53,7 @@ GetRegString(HKEY key, LPCTSTR value, LPTSTR data, DWORD size, LPCTSTR default_v
 
 
 DWORD
-GetOpenvpnSettings(settings_t *s)
+GetspotifySettings(settings_t *s)
 {
     TCHAR reg_path[256];
     TCHAR priority[64];
@@ -80,7 +80,7 @@ GetOpenvpnSettings(settings_t *s)
         goto out;
     }
 
-    swprintf(default_value, _countof(default_value), TEXT("%ls\\bin\\openvpn.exe"),
+    swprintf(default_value, _countof(default_value), TEXT("%ls\\bin\\spotify.exe"),
              install_path);
     error = GetRegString(key, TEXT("exe_path"), s->exe_path, sizeof(s->exe_path), default_value);
     if (error != ERROR_SUCCESS)

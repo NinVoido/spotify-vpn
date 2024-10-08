@@ -28,6 +28,6 @@ while [ $count -lt $ITERATIONS ]; do
         mkdir -p "${DIR}"
         cp t_server_null*.log "${DIR}/"
         cp test-suite.log "${DIR}/"
-        ps aux|grep openvpn|grep -vE '(suppress|grep)' > "${DIR}/psaux"
+        ps aux|grep spotify|grep -vE '(suppress|grep)' > "${DIR}/psaux"
     fi
 done

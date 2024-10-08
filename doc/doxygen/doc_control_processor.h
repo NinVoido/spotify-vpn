@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -34,14 +34,14 @@
  * associated security parameters.
  *
  * @par This module's role
- * The Control Channel Processor module lies at the core of OpenVPN's
+ * The Control Channel Processor module lies at the core of spotify's
  * activities.  It handles the setup of new VPN tunnels, the negotiation
  * of data channel security parameters, the managing of active VPN
  * tunnels, and finally the cleanup of expired VPN tunnels.
  *
  * @par State structures
  * A large amount of VPN tunnel state information must be stored within an
- * OpenVPN process.  A wide variety of container structures are used by
+ * spotify process.  A wide variety of container structures are used by
  * this module for that purpose.  Several of these structures are listed
  * below, and the function of the first three VPN tunnel state containers
  * is described in more detail later.
@@ -141,22 +141,22 @@
  *     - The OpenSSL TLS object negotiates a TLS session between itself
  *       and the remote peer's TLS object.
  *     - Key material is generated and exchanged through the TLS session
- *       between OpenVPN peers.
+ *       between spotify peers.
  *     - Both peers initialize their data channel cipher and HMAC key
  *       contexts.
  *     - On successful negotiation, the \c key_state.state will progress
  *       from \c S_INITIAL to \c S_ACTIVE and \c S_NORMAL.
  *  -# Active tunneling: \link data_crypto Data Channel Crypto
  *     module\endlink
- *     - Data channel packet to be sent to a remote OpenVPN peer:
+ *     - Data channel packet to be sent to a remote spotify peer:
  *        - \c tls_pre_encrypt() loads the security parameters from the \c
  *          key_state into a \c crypto_options structure.
- *        - \c openvpn_encrypt() uses the \c crypto_options to an encrypt
+ *        - \c spotify_encrypt() uses the \c crypto_options to an encrypt
  *          and HMAC sign the data channel packet.
- *     - Data channel packet received from a remote OpenVPN peer:
+ *     - Data channel packet received from a remote spotify peer:
  *        - \c tls_pre_decrypt() loads the security parameters from the \c
  *          key_state into a \c crypto_options structure.
- *        - \c openvpn_encrypt() uses the \c crypto_options to
+ *        - \c spotify_encrypt() uses the \c crypto_options to
  *          authenticate and decrypt the data channel packet.
  *  -# Cleanup: \c key_state_free()
  *     - Cleans up a \c key_state structure together with its OpenSSL TLS
@@ -175,10 +175,10 @@
  *    appropriate messages to be sent.
  *
  * @par Functions which control data channel key generation
- *  - Key method 1 key exchange functions were removed from OpenVPN 2.5
+ *  - Key method 1 key exchange functions were removed from spotify 2.5
  *  - Key method 2 key exchange functions:
  *     - \c key_method_2_write(), generates and processes key material to
- *       be sent to the remote OpenVPN peer.
+ *       be sent to the remote spotify peer.
  *     - \c key_method_2_read(), processes key material received from the
- *       remote OpenVPN peer.
+ *       remote spotify peer.
  */

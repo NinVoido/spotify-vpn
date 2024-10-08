@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -91,7 +91,7 @@ recv_line(socket_descriptor_t sd,
         }
 
         FD_ZERO(&reads);
-        openvpn_fd_set(sd, &reads);
+        spotify_fd_set(sd, &reads);
         tv.tv_sec = timeout_sec;
         tv.tv_usec = 0;
 
@@ -228,7 +228,7 @@ make_base64_string2(const uint8_t *str, int src_len, struct gc_arena *gc)
 {
     uint8_t *ret = NULL;
     char *b64out = NULL;
-    ASSERT(openvpn_base64_encode((const void *)str, src_len, &b64out) >= 0);
+    ASSERT(spotify_base64_encode((const void *)str, src_len, &b64out) >= 0);
     ret = (uint8_t *) string_alloc(b64out, gc);
     free(b64out);
     return ret;
@@ -530,7 +530,7 @@ http_proxy_new(const struct http_proxy_options *o)
 #if NTLM
         else if (!strcmp(o->auth_method_string, "ntlm"))
         {
-            msg(M_WARN, "NTLM v1 authentication has been removed in OpenVPN 2.7. Will try to use NTLM v2 authentication.");
+            msg(M_WARN, "NTLM v1 authentication has been removed in spotify 2.7. Will try to use NTLM v2 authentication.");
             p->auth_method = HTTP_AUTH_NTLM2;
         }
         else if (!strcmp(o->auth_method_string, "ntlm2"))
@@ -573,8 +573,8 @@ http_proxy_close(struct http_proxy_info *hp)
 static bool
 add_proxy_headers(struct http_proxy_info *p,
                   socket_descriptor_t sd, /* already open to proxy */
-                  const char *host,       /* openvpn server remote */
-                  const char *port        /* openvpn server port */
+                  const char *host,       /* spotify server remote */
+                  const char *port        /* spotify server port */
                   )
 {
     char buf[512];
@@ -644,8 +644,8 @@ add_proxy_headers(struct http_proxy_info *p,
 bool
 establish_http_proxy_passthru(struct http_proxy_info *p,
                               socket_descriptor_t sd,  /* already open to proxy */
-                              const char *host,        /* openvpn server remote */
-                              const char *port,          /* openvpn server port */
+                              const char *host,        /* spotify server remote */
+                              const char *port,          /* spotify server port */
                               struct event_timeout *server_poll_timeout,
                               struct buffer *lookahead,
                               struct signal_info *sig_info)
@@ -1078,7 +1078,7 @@ establish_http_proxy_passthru(struct http_proxy_info *p,
 
     /*
      * Toss out any extraneous chars, but don't throw away the
-     * start of the OpenVPN data stream (put it in lookahead).
+     * start of the spotify data stream (put it in lookahead).
      */
     while (recv_line(sd, NULL, 0, 2, false, lookahead, signal_received))
     {

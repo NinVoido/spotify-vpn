@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -121,7 +121,7 @@ void free_tls_pre_decrypt_state(struct tls_pre_decrypt_state *state);
  *
  * This function receives the initial incoming packet from a client that
  * wishes to establish a new VPN tunnel, and determines the packet is a
- * valid initial packet.  It is only used when OpenVPN is running in
+ * valid initial packet.  It is only used when spotify is running in
  * server mode.
  *
  * The tests performed by this function are whether the packet's opcode is
@@ -157,7 +157,7 @@ tls_pre_decrypt_lite(const struct tls_auth_standalone *tas,
  * session id.
  *
  * We do not support loading this from a config file since continuing session
- * between restarts of OpenVPN has never been supported and that includes
+ * between restarts of spotify has never been supported and that includes
  * early session setup.
  */
 hmac_ctx_t *session_id_hmac_init(void);
@@ -175,7 +175,7 @@ hmac_ctx_t *session_id_hmac_init(void);
  */
 struct session_id
 calculate_session_id_hmac(struct session_id client_sid,
-                          const struct openvpn_sockaddr *from,
+                          const struct spotify_sockaddr *from,
                           hmac_ctx_t *hmac,
                           int handwindow, int offset);
 
@@ -190,7 +190,7 @@ calculate_session_id_hmac(struct session_id client_sid,
  */
 bool
 check_session_id_hmac(struct tls_pre_decrypt_state *state,
-                      const struct openvpn_sockaddr *from,
+                      const struct spotify_sockaddr *from,
                       hmac_ctx_t *hmac,
                       int handwindow);
 
@@ -298,7 +298,7 @@ packet_opcode_name(int op)
 static inline struct tls_wrap_ctx *
 tls_session_get_tls_wrap(struct tls_session *session, int key_id)
 {
-    /* OpenVPN has the hardcoded assumption in its protocol that
+    /* spotify has the hardcoded assumption in its protocol that
      * key-id 0 is always first session and renegotiations use key-id
      * 1 to 7 and wrap around to 1 after that. So key-id > 0 is equivalent
      * to "this is a renegotiation"

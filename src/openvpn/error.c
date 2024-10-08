@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -43,8 +43,8 @@
 
 
 #if SYSLOG_CAPABILITY
-#ifndef LOG_OPENVPN
-#define LOG_OPENVPN LOG_DAEMON
+#ifndef LOG_spotify
+#define LOG_spotify LOG_DAEMON
 #endif
 #endif
 
@@ -61,7 +61,7 @@ static int mute_category;   /* GLOBAL */
  *
  *  (1) --log-x overrides everything
  *  (2) syslog is used if --daemon is defined and not --log-x
- *  (3) if OPENVPN_DEBUG_COMMAND_LINE is defined, output
+ *  (3) if spotify_DEBUG_COMMAND_LINE is defined, output
  *      to constant logfile name.
  *  (4) Output to stdout.
  */
@@ -88,7 +88,7 @@ static char *pgmname_syslog;  /* GLOBAL */
 /* If non-null, messages should be written here (used for debugging only) */
 static FILE *msgfp;         /* GLOBAL */
 
-/* If true, we forked from main OpenVPN process */
+/* If true, we forked from main spotify process */
 static bool forked;         /* GLOBAL */
 
 /* our default output targets */
@@ -167,16 +167,16 @@ error_reset(void)
     mute_cutoff = 0;
     mute_count = 0;
     mute_category = 0;
-    default_out = OPENVPN_MSG_FP;
-    default_err = OPENVPN_MSG_FP;
+    default_out = spotify_MSG_FP;
+    default_err = spotify_MSG_FP;
 
-#ifdef OPENVPN_DEBUG_COMMAND_LINE
-    msgfp = fopen(OPENVPN_DEBUG_FILE, "w");
+#ifdef spotify_DEBUG_COMMAND_LINE
+    msgfp = fopen(spotify_DEBUG_FILE, "w");
     if (!msgfp)
     {
-        openvpn_exit(OPENVPN_EXIT_STATUS_CANNOT_OPEN_DEBUG_FILE); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_CANNOT_OPEN_DEBUG_FILE); /* exit point */
     }
-#else  /* ifdef OPENVPN_DEBUG_COMMAND_LINE */
+#else  /* ifdef spotify_DEBUG_COMMAND_LINE */
     msgfp = NULL;
 #endif
 }
@@ -184,7 +184,7 @@ error_reset(void)
 void
 errors_to_stderr(void)
 {
-    default_err = OPENVPN_ERROR_FP;
+    default_err = spotify_ERROR_FP;
 }
 
 /*
@@ -200,7 +200,7 @@ msg_fp(const unsigned int flags)
     }
     if (!fp)
     {
-        openvpn_exit(OPENVPN_EXIT_STATUS_CANNOT_OPEN_DEBUG_FILE); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_CANNOT_OPEN_DEBUG_FILE); /* exit point */
     }
     return fp;
 }
@@ -219,7 +219,7 @@ x_msg(const unsigned int flags, const char *format, ...)
 }
 
 static const char *
-openvpn_strerror(int err, bool crt_error, struct gc_arena *gc)
+spotify_strerror(int err, bool crt_error, struct gc_arena *gc)
 {
 #ifdef _WIN32
     if (!crt_error)
@@ -253,7 +253,7 @@ x_msg_va(const unsigned int flags, const char *format, va_list arglist)
     }
 
     bool crt_error = false;
-    e = openvpn_errno_maybe_crt(&crt_error);
+    e = spotify_errno_maybe_crt(&crt_error);
 
     /*
      * Apply muting filter.
@@ -275,7 +275,7 @@ x_msg_va(const unsigned int flags, const char *format, va_list arglist)
     if ((flags & M_ERRNO) && e)
     {
         snprintf(m2, ERR_BUF_SIZE, "%s: %s (errno=%d)",
-                 m1, openvpn_strerror(e, crt_error, &gc), e);
+                 m1, spotify_strerror(e, crt_error, &gc), e);
         SWAP;
     }
 
@@ -389,7 +389,7 @@ x_msg_va(const unsigned int flags, const char *format, va_list arglist)
 
     if (flags & M_FATAL)
     {
-        openvpn_exit(OPENVPN_EXIT_STATUS_ERROR); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_ERROR); /* exit point */
 
     }
     if (flags & M_USAGE_SMALL)
@@ -472,7 +472,7 @@ open_syslog(const char *pgmname, bool stdio_to_null)
         if (!use_syslog)
         {
             pgmname_syslog = string_alloc(pgmname ? pgmname : PACKAGE, NULL);
-            openlog(pgmname_syslog, LOG_PID, LOG_OPENVPN);
+            openlog(pgmname_syslog, LOG_PID, LOG_spotify);
             use_syslog = true;
 
             /* Better idea: somehow pipe stdout/stderr output to msg() */
@@ -657,7 +657,7 @@ x_check_status(int status,
     const char *extended_msg = NULL;
 
     bool crt_error = false;
-    int my_errno = openvpn_errno_maybe_crt(&crt_error);
+    int my_errno = spotify_errno_maybe_crt(&crt_error);
 
     msg(x_cs_verbose_level, "%s %s returned %d",
         sock ? proto2ascii(sock->info.proto, sock->info.af, true) : "",
@@ -695,14 +695,14 @@ x_check_status(int status,
             {
                 msg(x_cs_info_level, "%s %s [%s]: %s (fd=" SOCKET_PRINTF ",code=%d)", description,
                     sock ? proto2ascii(sock->info.proto, sock->info.af, true) : "",
-                    extended_msg, openvpn_strerror(my_errno, crt_error, &gc),
+                    extended_msg, spotify_strerror(my_errno, crt_error, &gc),
                     sock ? sock->sd : -1, my_errno);
             }
             else
             {
                 msg(x_cs_info_level, "%s %s: %s (fd=" SOCKET_PRINTF ",code=%d)", description,
                     sock ? proto2ascii(sock->info.proto, sock->info.af, true) : "",
-                    openvpn_strerror(my_errno, crt_error, &gc),
+                    spotify_strerror(my_errno, crt_error, &gc),
                     sock ? sock->sd : -1, my_errno);
             }
 
@@ -732,7 +732,7 @@ const struct virtual_output *x_msg_virtual_output; /* GLOBAL */
  */
 
 void
-openvpn_exit(const int status)
+spotify_exit(const int status)
 {
     if (!forked)
     {
@@ -761,13 +761,13 @@ openvpn_exit(const int status)
 #endif
 
 #ifdef ABORT_ON_ERROR
-        if (status == OPENVPN_EXIT_STATUS_ERROR)
+        if (status == spotify_EXIT_STATUS_ERROR)
         {
             abort();
         }
 #endif
 
-        if (status == OPENVPN_EXIT_STATUS_GOOD)
+        if (status == spotify_EXIT_STATUS_GOOD)
         {
             perf_output_results();
         }

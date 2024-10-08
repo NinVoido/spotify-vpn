@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *  Copyright (C) 2008-2024 David Sommerseth <dazo@eurephia.org>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -64,7 +64,7 @@
 #include "dco.h"
 
 #include "memdbg.h"
-#include "openvpn.h"
+#include "spotify.h"
 
 #ifdef MEASURE_TLS_HANDSHAKE_STATS
 
@@ -147,7 +147,7 @@ tls_init_control_channel_frame_parameters(struct frame *frame, int tls_mtu)
 
     /* tls-auth and tls-crypt */
     overhead += max_int(tls_crypt_buf_overhead(),
-                        packet_id_size(true) + OPENVPN_MAX_HMAC_SIZE);
+                        packet_id_size(true) + spotify_MAX_HMAC_SIZE);
 
     /* TCP length field and opcode */
     overhead += 3;
@@ -155,7 +155,7 @@ tls_init_control_channel_frame_parameters(struct frame *frame, int tls_mtu)
     /* ACK array and remote SESSION ID (part of the ACK array) */
     overhead += ACK_SIZE(RELIABLE_ACK_SIZE);
 
-    /* Previous OpenVPN version calculated the maximum size and buffer of a
+    /* Previous spotify version calculated the maximum size and buffer of a
      * control frame depending on the overhead of the data channel frame
      * overhead and limited its maximum size to 1250. Since control frames
      * also need to fit into data channel buffer we have the same
@@ -947,7 +947,7 @@ static inline bool
 tls_session_user_pass_enabled(struct tls_session *session)
 {
     return (session->opt->auth_user_pass_verify_script
-            || plugin_defined(session->opt->plugins, OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY)
+            || plugin_defined(session->opt->plugins, spotify_PLUGIN_AUTH_USER_PASS_VERIFY)
 #ifdef ENABLE_MANAGEMENT
             || management_enable_def_auth(management)
 #endif
@@ -1310,7 +1310,7 @@ key_source2_print(const struct key_source2 *k)
 }
 
 static bool
-openvpn_PRF(const uint8_t *secret,
+spotify_PRF(const uint8_t *secret,
             int secret_len,
             const char *label,
             const uint8_t *client_seed,
@@ -1413,7 +1413,7 @@ generate_key_expansion_tls_export(struct tls_session *session, struct key2 *key2
 }
 
 static bool
-generate_key_expansion_openvpn_prf(const struct tls_session *session, struct key2 *key2)
+generate_key_expansion_spotify_prf(const struct tls_session *session, struct key2 *key2)
 {
     uint8_t master[48] = { 0 };
 
@@ -1429,7 +1429,7 @@ generate_key_expansion_openvpn_prf(const struct tls_session *session, struct key
     key_source2_print(key_src);
 
     /* compute master secret */
-    if (!openvpn_PRF(key_src->client.pre_master,
+    if (!spotify_PRF(key_src->client.pre_master,
                      sizeof(key_src->client.pre_master),
                      KEY_EXPANSION_ID " master secret",
                      key_src->client.random1,
@@ -1445,7 +1445,7 @@ generate_key_expansion_openvpn_prf(const struct tls_session *session, struct key
     }
 
     /* compute key expansion */
-    if (!openvpn_PRF(master,
+    if (!spotify_PRF(master,
                      sizeof(master),
                      KEY_EXPANSION_ID " key expansion",
                      key_src->client.random2,
@@ -1496,13 +1496,13 @@ generate_key_expansion(struct tls_multi *multi, struct key_state *ks,
     }
     else
     {
-        if (!generate_key_expansion_openvpn_prf(session, &key2))
+        if (!generate_key_expansion_spotify_prf(session, &key2))
         {
             msg(D_TLS_ERRORS, "TLS Error: PRF calculation failed. Your system "
                 "might not support the old TLS 1.0 PRF calculation anymore or "
                 "the policy does not allow it (e.g. running in FIPS mode). "
                 "The peer did not announce support for the modern TLS Export "
-                "feature that replaces the TLS 1.0 PRF (requires OpenVPN "
+                "feature that replaces the TLS 1.0 PRF (requires spotify "
                 "2.6.x or higher)");
             goto exit;
         }
@@ -1538,9 +1538,9 @@ key_ctx_update_implicit_iv(struct key_ctx *ctx, uint8_t *key, size_t key_len)
     if (cipher_ctx_mode_aead(ctx->cipher))
     {
         size_t impl_iv_len = 0;
-        ASSERT(cipher_ctx_iv_length(ctx->cipher) >= OPENVPN_AEAD_MIN_IV_LEN);
+        ASSERT(cipher_ctx_iv_length(ctx->cipher) >= spotify_AEAD_MIN_IV_LEN);
         impl_iv_len = cipher_ctx_iv_length(ctx->cipher) - sizeof(packet_id_type);
-        ASSERT(impl_iv_len <= OPENVPN_MAX_IV_LENGTH);
+        ASSERT(impl_iv_len <= spotify_MAX_IV_LENGTH);
         ASSERT(impl_iv_len <= key_len);
         memcpy(ctx->implicit_iv, key, impl_iv_len);
         ctx->implicit_iv_len = impl_iv_len;
@@ -2351,15 +2351,15 @@ key_method_2_read(struct buffer *buf, struct tls_multi *multi, struct tls_sessio
     buf_clear(buf);
 
     /*
-     * Call OPENVPN_PLUGIN_TLS_FINAL plugin if defined, for final
+     * Call spotify_PLUGIN_TLS_FINAL plugin if defined, for final
      * veto opportunity over authentication decision.
      */
     if ((ks->authenticated > KS_AUTH_FALSE)
-        && plugin_defined(session->opt->plugins, OPENVPN_PLUGIN_TLS_FINAL))
+        && plugin_defined(session->opt->plugins, spotify_PLUGIN_TLS_FINAL))
     {
         export_user_keying_material(&ks->ks_ssl, session);
 
-        if (plugin_call(session->opt->plugins, OPENVPN_PLUGIN_TLS_FINAL, NULL, NULL, session->opt->es) != OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (plugin_call(session->opt->plugins, spotify_PLUGIN_TLS_FINAL, NULL, NULL, session->opt->es) != spotify_PLUGIN_FUNC_SUCCESS)
         {
             ks->authenticated = KS_AUTH_FALSE;
         }
@@ -2444,7 +2444,7 @@ session_move_pre_start(const struct tls_session *session,
     if (management && ks->initial_opcode != P_CONTROL_SOFT_RESET_V1)
     {
         management_set_state(management,
-                             OPENVPN_STATE_WAIT,
+                             spotify_STATE_WAIT,
                              NULL,
                              NULL,
                              NULL,
@@ -2516,8 +2516,8 @@ session_skip_to_pre_start(struct tls_session *session,
     session->untrusted_addr = *from;
     session->burst = true;
 
-    /* The OpenVPN protocol implicitly mandates that packet id always start
-     * from 0 in the RESET packets as OpenVPN 2.x will not allow gaps in the
+    /* The spotify protocol implicitly mandates that packet id always start
+     * from 0 in the RESET packets as spotify 2.x will not allow gaps in the
      * ids and starts always from 0. Since we skip/ignore one (RESET) packet
      * in each direction, we need to set the ids to 1 */
     ks->rec_reliable->packet_id = 1;
@@ -3443,12 +3443,12 @@ handle_data_channel_packet(struct tls_multi *multi,
         struct key_state *ks = get_key_scan(multi, i);
 
         /*
-         * This is the basic test of TLS state compatibility between a local OpenVPN
+         * This is the basic test of TLS state compatibility between a local spotify
          * instance and its remote peer.
          *
          * If the test fails, it tells us that we are getting a packet from a source
          * which claims reference to a prior negotiated TLS session, but the local
-         * OpenVPN instance has no memory of such a negotiation.
+         * spotify instance has no memory of such a negotiation.
          *
          * It almost always occurs on UDP sessions when the passive side of the
          * connection is restarted without the active side restarting as well (the
@@ -3516,7 +3516,7 @@ done:
  * also zero the size of *buf so that our caller ignores the
  * packet on our return.
  *
- * Note that openvpn only allows one active session at a time,
+ * Note that spotify only allows one active session at a time,
  * so a new session (once authenticated) will always usurp
  * an old session.
  *
@@ -3682,7 +3682,7 @@ tls_pre_decrypt(struct tls_multi *multi,
         if (management)
         {
             management_set_state(management,
-                                 OPENVPN_STATE_AUTH,
+                                 spotify_STATE_AUTH,
                                  NULL,
                                  NULL,
                                  NULL,
@@ -4113,7 +4113,7 @@ show_available_tls_ciphers(const char *cipher_list,
 }
 
 /*
- * Dump a human-readable rendition of an openvpn packet
+ * Dump a human-readable rendition of an spotify packet
  * into a garbage collectable string which is returned.
  */
 const char *

@@ -3,7 +3,7 @@ Overview of changes in 2.7
 New features
 ------------
 TLS alerts
-    OpenVPN 2.7 will send out TLS alerts to peers informing them if the TLS
+    spotify 2.7 will send out TLS alerts to peers informing them if the TLS
     session shuts down or when the TLS implementation informs the peer about
     an error in the TLS session (e.g. mismatching TLS versions). This improves
     the user experience as the client shows an error instead of running into
@@ -11,16 +11,16 @@ TLS alerts
 
 Support for tun/tap via unix domain socket and lwipovpn support
     To allow better testing and emulating a full client with a full
-    network stack OpenVPN now allows a program executed to provide
+    network stack spotify now allows a program executed to provide
     a tun/tap device instead of opening a device.
 
     The co-developed lwipovpn program based on lwIP stack allows to
-    simulate full IP stack and an OpenVPN client using
+    simulate full IP stack and an spotify client using
     ``--dev-node unix:/path/to/lwipovpn`` can emulate a full client that
     can be pinged, can serve a website and more without requiring any
-    elevated permission. This can make testing OpenVPN much easier.
+    elevated permission. This can make testing spotify much easier.
 
-    For more details see [lwipovpn on Gihtub](https://github.com/OpenVPN/lwipovpn).
+    For more details see [lwipovpn on Gihtub](https://github.com/spotify/lwipovpn).
 
 Deprecated features
 -------------------
@@ -32,7 +32,7 @@ Deprecated features
 
     This mode can still be enabled by using
     ``--allow-deprecated-insecure-static-crypto`` but will be removed in
-    OpenVPN 2.8.
+    spotify 2.8.
 
 NTLMv1 authentication support for HTTP proxies has been removed.
     This is considered an insecure method of authentication that uses
@@ -40,7 +40,7 @@ NTLMv1 authentication support for HTTP proxies has been removed.
     NTLMv2 support is still available, but will be removed in a future
     release.
     When configured to authenticate with NTLMv1 (``ntlm`` keyword in
-    ``--http-proxy``) OpenVPN will try NTLMv2 instead.
+    ``--http-proxy``) spotify will try NTLMv2 instead.
 
 ``persist-key`` option has been enabled by default.
     All the keys will be kept in memory across restart.
@@ -67,7 +67,7 @@ Project changes
 
 We want to deprecate our old Trac bug tracking system.
 Please report any issues with this release in GitHub
-instead: https://github.com/OpenVPN/openvpn/issues
+instead: https://github.com/spotify/spotify/issues
 
 New features
 ------------
@@ -79,14 +79,14 @@ New management commands to enumerate and list remote entries
     remote entries and the entries themselves.
 
 Keying Material Exporters (RFC 5705) based key generation
-    As part of the cipher negotiation OpenVPN will automatically prefer
+    As part of the cipher negotiation spotify will automatically prefer
     the RFC5705 based key material generation to the current custom
-    OpenVPN PRF. This feature requires OpenSSL or mbed TLS 2.18+.
+    spotify PRF. This feature requires OpenSSL or mbed TLS 2.18+.
 
 Compatibility with OpenSSL in FIPS mode
-    OpenVPN will now work with OpenSSL in FIPS mode. Note, no effort
+    spotify will now work with OpenSSL in FIPS mode. Note, no effort
     has been made to check or implement all the
-    requirements/recommendation of FIPS 140-2. This just allows OpenVPN
+    requirements/recommendation of FIPS 140-2. This just allows spotify
     to be run on a system that be configured OpenSSL in FIPS mode.
 
 ``mlock`` will now check if enough memlock-able memory has been reserved,
@@ -99,13 +99,13 @@ Certificate pinning/verify peer fingerprint
     fingerprint of the peer. The option takes use a number of allowed
     SHA256 certificate fingerprints.
 
-    See the man page section "Small OpenVPN setup with peer-fingerprint"
+    See the man page section "Small spotify setup with peer-fingerprint"
     for a tutorial on how to use this feature. This is also available online
-    under https://github.com/openvpn/openvpn/blob/master/doc/man-sections/example-fingerprint.rst
+    under https://github.com/spotify/spotify/blob/master/doc/man-sections/example-fingerprint.rst
 
 TLS mode with self-signed certificates
     When ``--peer-fingerprint`` is used, the ``--ca`` and ``--capath`` option
-    become optional. This allows for small OpenVPN setups without setting up
+    become optional. This allows for small spotify setups without setting up
     a PKI with Easy-RSA or similar software.
 
 Deferred auth support for scripts
@@ -114,13 +114,13 @@ Deferred auth support for scripts
 Pending auth support for plugins and scripts
     Both auth plugin and script can now signal pending authentication to
     the client when using deferred authentication. The new ``client-crresponse``
-    script option and ``OPENVPN_PLUGIN_CLIENT_CRRESPONSE`` plugin function can
+    script option and ``spotify_PLUGIN_CLIENT_CRRESPONSE`` plugin function can
     be used to parse a client response to a ``CR_TEXT`` two factor challenge.
 
     See ``sample/sample-scripts/totpauth.py`` for an example.
 
 Compatibility mode (``--compat-mode``)
-    The modernisation of defaults can impact the compatibility of OpenVPN 2.6.0
+    The modernisation of defaults can impact the compatibility of spotify 2.6.0
     with older peers. The options ``--compat-mode`` allows UIs to provide users
     with an easy way to still connect to older servers.
 
@@ -145,22 +145,22 @@ Improved ``--mssfix`` and ``--fragment`` calculation
 
 Cookie based handshake for UDP server
     Instead of allocating a connection for each client on the initial packet
-    OpenVPN server will now use an HMAC based cookie as its session id. This
+    spotify server will now use an HMAC based cookie as its session id. This
     way the server can verify it on completing the handshake without keeping
     state. This eliminates the amplification and resource exhaustion attacks.
-    For tls-crypt-v2 clients, this requires OpenVPN 2.6 clients or later
+    For tls-crypt-v2 clients, this requires spotify 2.6 clients or later
     because the client needs to resend its client key on completing the hand
     shake. The tls-crypt-v2 option allows controlling if older clients are
     accepted.
 
     By default the rate of initial packet responses is limited to 100 per 10s
-    interval to avoid OpenVPN servers being abused in reflection attacks
+    interval to avoid spotify servers being abused in reflection attacks
     (see ``--connect-freq-initial``).
 
 Data channel offloading with ovpn-dco
     2.6.0+ implements support for data-channel offloading where the data packets
     are directly processed and forwarded in kernel space thanks to the ovpn-dco
-    kernel module. The userspace openvpn program acts purely as a control plane
+    kernel module. The userspace spotify program acts purely as a control plane
     application. Note that DCO will use DATA_V2 packets in P2P mode, therefore,
     this implies that peers must be running 2.6.0+ in order to have P2P-NCP
     which brings DATA_V2 packet support.
@@ -174,7 +174,7 @@ Session timeout
 Inline auth username and password
     Username and password can now be specified inline in the configuration file
     within the <auth-user-pass></auth-user-pass> tags. If the password is
-    missing OpenVPN will prompt for input via stdin. This applies to inline'd
+    missing spotify will prompt for input via stdin. This applies to inline'd
     http-proxy-user-pass too.
 
 Tun MTU can be pushed
@@ -184,7 +184,7 @@ Tun MTU can be pushed
     pushable MTU size (defaults to 1600).
 
 Dynamic TLS Crypt
-    When both peers are OpenVPN 2.6.1+, OpenVPN will dynamically create
+    When both peers are spotify 2.6.1+, spotify will dynamically create
     a tls-crypt key that is used for renegotiation. This ensure that only the
     previously authenticated peer can do trigger renegotiation and complete
     renegotiations.
@@ -199,7 +199,7 @@ Improved control channel packet size control (``max-packet-size``)
 Deprecated features
 -------------------
 ``inetd`` has been removed
-    This was a very limited and not-well-tested way to run OpenVPN, on TCP
+    This was a very limited and not-well-tested way to run spotify, on TCP
     and TAP mode only.
 
 ``verify-hash`` has been deprecated
@@ -217,9 +217,9 @@ Deprecated features
     introduced. It should now no longer be necessary.
 
 TLS 1.0 and 1.1 are deprecated
-    ``tls-version-min`` is set to 1.2 by default.  OpenVPN 2.6.0 defaults
+    ``tls-version-min`` is set to 1.2 by default.  spotify 2.6.0 defaults
     to a minimum TLS version of 1.2 as TLS 1.0 and 1.1 should be generally
-    avoided. Note that OpenVPN versions older than 2.3.7 use TLS 1.0 only.
+    avoided. Note that spotify versions older than 2.3.7 use TLS 1.0 only.
 
 ``--cipher`` argument is no longer appended to ``--data-ciphers``
     by default. Data cipher negotiation has been introduced in 2.4.0
@@ -229,24 +229,24 @@ TLS 1.0 and 1.1 are deprecated
     only have an effect in pre-shared-key mode (``--secret``).
     From now on ``--cipher`` should not be used in new configurations
     for TLS mode.
-    Should backwards compatibility with older OpenVPN peers be
+    Should backwards compatibility with older spotify peers be
     required, please see the ``--compat-mode`` instead.
 
 ``--prng`` has beeen removed
-    OpenVPN used to implement its own PRNG based on a hash. However implementing
+    spotify used to implement its own PRNG based on a hash. However implementing
     a PRNG is better left to a crypto library. So we use the PRNG
     mbed TLS or OpenSSL now.
 
 ``--keysize`` has been removed
     The ``--keysize`` option was only useful to change the key length when using the
     BF, CAST6 or RC2 ciphers. For all other ciphers the key size is fixed with the
-    chosen cipher. As OpenVPN v2.6 no longer supports any of these variable length
+    chosen cipher. As spotify v2.6 no longer supports any of these variable length
     ciphers, this option was removed as well to avoid confusion.
 
 Compression no longer enabled by default
     Unless an explicit compression option is specified in the configuration,
-    ``--allow-compression`` defaults to ``no`` in OpeNVPN 2.6.0.
-    By default, OpenVPN 2.5 still allowed a server to enable compression by
+    ``--allow-compression`` defaults to ``no`` in spotify 2.6.0.
+    By default, spotify 2.5 still allowed a server to enable compression by
     pushing compression related options.
 
 PF (Packet Filtering) support has been removed
@@ -274,7 +274,7 @@ User-visible Changes
   ``--link-mtu``/``--tun-mtu`` and must be set by ``--max-packet-size`` now.
   The default is 1250 for the control channel size.
 
-- In point-to-point OpenVPN setups (no ``--server``), using
+- In point-to-point spotify setups (no ``--server``), using
   ``--explict-exit-notiy`` on one end would terminate the other side at
   session end.  This is considered a no longer useful default and has
   been changed to "restart on reception of explicit-exit-notify message".
@@ -285,7 +285,7 @@ User-visible Changes
   software that enumerates interfaces, looking for "broadcast capable?" and
   expecting certain results.  Normal uses should not see any difference.
 
-- The default configurations will no longer allow connections to OpenVPN 2.3.x
+- The default configurations will no longer allow connections to spotify 2.3.x
   peer or earlier, use the new ``--compat-mode`` option if you need
   compatibility with older versions. See the manual page on the
   ``--compat-mode`` for details.
@@ -293,13 +293,13 @@ User-visible Changes
 - The ``client-pending-auth`` management command now requires also the
   key id. The management version has been changed to 5 to indicate this change.
 
-- (OpenVPN 2.6.2) A client will now refuse a connection if pushed compression
+- (spotify 2.6.2) A client will now refuse a connection if pushed compression
   settings will contradict the setting of allow-compression as this almost
   always results in a non-working connection.
 
-Common errors with OpenSSL 3.0 and OpenVPN 2.6
+Common errors with OpenSSL 3.0 and spotify 2.6
 ----------------------------------------------
-Both OpenVPN 2.6 and OpenSSL 3.0 tighten the security considerable, so some
+Both spotify 2.6 and OpenSSL 3.0 tighten the security considerable, so some
 configuration will no longer work. This section will cover the most common
 causes and error message we have seen and explain their reason and temporary
 workarounds. You should fix the underlying problems as soon as possible since
@@ -334,7 +334,7 @@ update.
   regenerated. TLS Security level can be temporarily lowered with
   ``--tls-cert-profile legacy`` or even ``--tls-cert-profile insecure``.
 
-- Connecting to a OpenVPN 2.3.x server or allowing OpenVPN 2.3.x or earlier
+- Connecting to a spotify 2.3.x server or allowing spotify 2.3.x or earlier
   clients
 
   This will normally result in messages like::
@@ -351,7 +351,7 @@ update.
   You can also use the ``--compat-mode`` option. Note that these message may
   also indicate other cipher configuration problems. See the data channel
   cipher negotiation manual section for more details. (Available online under
-  https://github.com/OpenVPN/openvpn/blob/master/doc/man-sections/cipher-negotiation.rst)
+  https://github.com/spotify/spotify/blob/master/doc/man-sections/cipher-negotiation.rst)
 
 - Use of a legacy or deprecated cipher (e.g. 64bit block ciphers)
 
@@ -368,20 +368,20 @@ update.
   also ``man OSSL_PROVIDER-legacy``), you can load it with
   ``--providers legacy default``.  This will re-enable the old algorithms.
 
-- OpenVPN version not supporting TLS 1.2 or later
+- spotify version not supporting TLS 1.2 or later
 
-  The default in OpenVPN 2.6 and also in many distributions is now TLS 1.2 or
+  The default in spotify 2.6 and also in many distributions is now TLS 1.2 or
   later. Connecting to a peer that does not support this will results in
   messages like::
 
     TLS error: Unsupported protocol. This typically indicates that client and
     server have no common TLS version enabled. This can be caused by mismatched
     tls-version-min and tls-version-max options on client and server. If your
-    OpenVPN client is between v2.3.6 and v2.3.2 try adding tls-version-min 1.0
+    spotify client is between v2.3.6 and v2.3.2 try adding tls-version-min 1.0
     to the client configuration to use TLS 1.0+ instead of TLS 1.0 only
     OpenSSL: error:0A000102:SSL routines::unsupported protocol
 
-  This can be an OpenVPN 2.3.6 or earlier version. ``compat-version 2.3.0`` will
+  This can be an spotify 2.3.6 or earlier version. ``compat-version 2.3.0`` will
   enable TLS 1.0 support if supported by the OpenSSL distribution. Note that
   on some Linux distributions enabling TLS 1.1 or 1.0 is not possible.
 
@@ -399,7 +399,7 @@ Client-specific tls-crypt keys (``--tls-crypt-v2``)
     already achieve using ``tls-auth`` or ``tls-crypt``.
 
 ChaCha20-Poly1305 cipher support
-    Added support for using the ChaCha20-Poly1305 cipher in the OpenVPN data
+    Added support for using the ChaCha20-Poly1305 cipher in the spotify data
     channel.
 
 Improved Data channel cipher negotiation
@@ -410,8 +410,8 @@ Improved Data channel cipher negotiation
     exists with ``--cipher`` for the data cipher and ``tls-cipher``
     for the TLS ciphers.
 
-    OpenVPN clients will now signal all supported ciphers from the
-    ``data-ciphers`` option to the server via ``IV_CIPHERS``. OpenVPN
+    spotify clients will now signal all supported ciphers from the
+    ``data-ciphers`` option to the server via ``IV_CIPHERS``. spotify
     servers will select the first common cipher from the ``data-ciphers``
     list instead of blindly pushing the first cipher of the list. This
     allows to use a configuration like
@@ -421,8 +421,8 @@ Improved Data channel cipher negotiation
     See the data channel negotiation section in the manual for more details.
 
 Removal of BF-CBC support in default configuration:
-    By default OpenVPN 2.5 will only accept AES-256-GCM and AES-128-GCM as
-    data ciphers. OpenVPN 2.4 allows AES-256-GCM,AES-128-GCM and BF-CBC when
+    By default spotify 2.5 will only accept AES-256-GCM and AES-128-GCM as
+    data ciphers. spotify 2.4 allows AES-256-GCM,AES-128-GCM and BF-CBC when
     no --cipher and --ncp-ciphers options are present. Accepting BF-CBC can be
     enabled by adding
 
@@ -461,13 +461,13 @@ Netlink support
     On Linux, if configured without ``--enable-iproute2``, configuring IP
     addresses and adding/removing routes is now done via the netlink(3)
     kernel interface.  This is much faster than calling ``ifconfig`` or
-    ``route`` and also enables OpenVPN to run with less privileges.
+    ``route`` and also enables spotify to run with less privileges.
 
     If configured with --enable-iproute2, the ``ip`` command is used
     (as in 2.4).  Support for ``ifconfig`` and ``route`` is gone.
 
 Wintun support
-    On Windows, OpenVPN can now use ``wintun`` devices.  They are faster
+    On Windows, spotify can now use ``wintun`` devices.  They are faster
     than the traditional ``tap9`` tun/tap devices, but do not provide
     ``--dev tap`` mode - so the official installers contain both.  To use
     a wintun device, add ``--windows-driver wintun`` to your config
@@ -483,16 +483,16 @@ Improved Windows 10 detection
     Correctly log OS on Windows 10 now.
 
 Linux VRF support
-    Using the new ``--bind-dev`` option, the OpenVPN outside socket can
+    Using the new ``--bind-dev`` option, the spotify outside socket can
     now be put into a Linux VRF.  See the "Virtual Routing and Forwarding"
     documentation in the man page.
 
 TLS 1.3 support
-    TLS 1.3 support has been added to OpenVPN.  Currently, this requires
+    TLS 1.3 support has been added to spotify.  Currently, this requires
     OpenSSL 1.1.1+.
     The options ``--tls-ciphersuites`` and ``--tls-groups`` have been
     added to fine tune TLS protocol options.  Most of the improvements
-    were also backported to OpenVPN 2.4 as part of the maintainance
+    were also backported to spotify 2.4 as part of the maintainance
     releases.
 
 Support setting DHCP search domain
@@ -521,7 +521,7 @@ Improved support for pending authentication
     The protocol has been enhanced to be able to signal that
     the authentication should use a secondary authentication
     via web (like SAML) or a two factor authentication without
-    disconnecting the OpenVPN session with AUTH_FAILED. The
+    disconnecting the spotify session with AUTH_FAILED. The
     session will instead be stay in a authenticated state and
     wait for the second factor authentication to complete.
 
@@ -531,7 +531,7 @@ Improved support for pending authentication
     details.
 
 VLAN support
-    OpenVPN servers in TAP mode can now use 802.1q tagged VLANs
+    spotify servers in TAP mode can now use 802.1q tagged VLANs
     on the TAP interface to separate clients into different groups
     that can then be handled differently (different subnets / DHCP,
     firewall zones, ...) further down the network.  See the new
@@ -560,19 +560,19 @@ New option ``--block-ipv6`` to reject all IPv6 packets (ICMPv6)
 Deprecated features
 -------------------
 For an up-to-date list of all deprecated options, see this wiki page:
-https://community.openvpn.net/openvpn/wiki/DeprecatedOptions
+https://community.spotify.net/spotify/wiki/DeprecatedOptions
 
 - ``ncp-disable`` has been deprecated
     With the improved and matured data channel cipher negotiation, the use
     of ``ncp-disable`` should not be necessary anymore.
 
 - ``inetd`` has been deprecated
-  This is a very limited and not-well-tested way to run OpenVPN, on TCP
+  This is a very limited and not-well-tested way to run spotify, on TCP
   and TAP mode only, which complicates the code quite a bit for little gain.
-  To be removed in OpenVPN 2.6 (unless users protest).
+  To be removed in spotify 2.6 (unless users protest).
 
 - ``no-iv`` has been removed
-  This option was made into a NOOP option with OpenVPN 2.4.  This has now
+  This option was made into a NOOP option with spotify 2.4.  This has now
   been completely removed.
 
 - ``--client-cert-not-required`` has been removed
@@ -615,8 +615,8 @@ User-visible Changes
 
 - remove ``--writepid`` pid file on exit now
 
-- plugin-auth-pam now logs via OpenVPN logging method, no longer to stderr
-  (this means you'll have log messages in syslog or openvpn log file now)
+- plugin-auth-pam now logs via spotify logging method, no longer to stderr
+  (this means you'll have log messages in syslog or spotify log file now)
 
 - use ISO 8601 time format for file based logging now (YYYY-MM-DD hh:mm:dd)
   (syslog is not affected, nor is ``--machine-readable-output``)
@@ -647,11 +647,11 @@ User-visible Changes
 
 Maintainer-visible changes
 --------------------------
-- the man page is now in maintained in .rst format, so building the openvpn.8
+- the man page is now in maintained in .rst format, so building the spotify.8
   manpage from a git checkout now requires python-docutils (if this is missing,
   the manpage will not be built - which is not considered an error generally,
   but for package builders or ``make distcheck`` it is).  Release tarballs
-  contain the openvpn.8 file, so unless some .rst is changed, doc-utils are
+  contain the spotify.8 file, so unless some .rst is changed, doc-utils are
   not needed for building.
 
 - OCC support can no longer be disabled
@@ -659,7 +659,7 @@ Maintainer-visible changes
 - AEAD support is now required in the crypto library
 
 - ``--disable-server`` has been removed from configure (so it is no longer
-  possible to build a client-/p2p-only OpenVPN binary) - the saving in code
+  possible to build a client-/p2p-only spotify binary) - the saving in code
   size no longer outweighs the extra maintenance effort.
 
 - ``--enable-iproute2`` will disable netlink(3) support, so maybe remove
@@ -670,7 +670,7 @@ Maintainer-visible changes
 - cmocka based unit tests are now only run if cmocka is installed externally
   (2.4 used to ship a local git submodule which was painful to maintain)
 
-- ``--disable-crypto`` configure option has been removed.  OpenVPN is now always
+- ``--disable-crypto`` configure option has been removed.  spotify is now always
   built with crypto support, which makes the code much easier to maintain.
   This does not affect ``--cipher none`` to do a tunnel without encryption.
 
@@ -712,7 +712,7 @@ Data channel cipher negotiation
     with either ``cipher BF-CBC`` or ``cipher AES-256-CBC`` can connect to a
     v2.4 server with e.g. ``cipher BF-CBC`` and
     ``ncp-ciphers AES-256-GCM:AES-256-CBC`` in its config.  For this to work
-    it requires that OpenVPN was built without disabling OCC support.
+    it requires that spotify was built without disabling OCC support.
 
 AEAD (GCM) data channel cipher support
     The data channel now supports AEAD ciphers (currently only GCM).  The AEAD
@@ -726,13 +726,13 @@ ECDH key exchange
 
 Improved Certificate Revocation List (CRL) processing
     CRLs are now handled by the crypto library (OpenSSL or mbed TLS), instead
-    of inside OpenVPN itself.  The crypto library implementations are more
-    strict than the OpenVPN implementation was.  This might reject peer
-    certificates that would previously be accepted.  If this occurs, OpenVPN
+    of inside spotify itself.  The crypto library implementations are more
+    strict than the spotify implementation was.  This might reject peer
+    certificates that would previously be accepted.  If this occurs, spotify
     will log the crypto library's error description.
 
 Dualstack round-robin DNS client connect
-    Instead of only using the first address of each ``--remote`` OpenVPN
+    Instead of only using the first address of each ``--remote`` spotify
     will now try all addresses (IPv6 and IPv4) of a ``--remote`` entry.
 
 Support for providing IPv6 DNS servers
@@ -748,34 +748,34 @@ Support for providing IPv6 DNS servers
     ``netsh`` in the background with the proper privileges.
 
 New improved Windows Background service
-    The new OpenVPNService is based on openvpnserv2, a complete rewrite of the OpenVPN
-    service wrapper. It is intended for launching OpenVPN instances that should be
-    up at all times, instead of being manually launched by a user. OpenVPNService is
-    able to restart individual OpenVPN processes if they crash, and it also works
-    properly on recent Windows versions. OpenVPNServiceLegacy tends to work poorly,
+    The new spotifyService is based on spotifyserv2, a complete rewrite of the spotify
+    service wrapper. It is intended for launching spotify instances that should be
+    up at all times, instead of being manually launched by a user. spotifyService is
+    able to restart individual spotify processes if they crash, and it also works
+    properly on recent Windows versions. spotifyServiceLegacy tends to work poorly,
     if at all, on newer Windows versions (8+) and its use is not recommended.
 
 New interactive Windows service
-    The installer starts OpenVPNServiceInteractive automatically and configures
+    The installer starts spotifyServiceInteractive automatically and configures
     it to start	at system startup.
 
     The interactive Windows service allows unprivileged users to start
-    OpenVPN connections in the global config directory (usually
-    C:\\Program Files\\OpenVPN\\config) using OpenVPN GUI without any
+    spotify connections in the global config directory (usually
+    C:\\Program Files\\spotify\\config) using spotify GUI without any
     extra configuration.
 
     Users who belong to the built-in Administrator group or to the
-    local "OpenVPN Administrator" group can also store configuration
-    files under %USERPROFILE%\\OpenVPN\\config for use with the
+    local "spotify Administrator" group can also store configuration
+    files under %USERPROFILE%\\spotify\\config for use with the
     interactive service.
 
 redirect-gateway ipv6
-    OpenVPN has now feature parity between IPv4 and IPv6 for redirect
+    spotify has now feature parity between IPv4 and IPv6 for redirect
     gateway including the handling of overlapping IPv6 routes with
     IPv6 remote VPN server address.
 
 LZ4 Compression and pushable compression
-    Additionally to LZO compression OpenVPN now also supports LZ4 compression.
+    Additionally to LZO compression spotify now also supports LZ4 compression.
     Compression options are now pushable from the server.
 
 Filter pulled options client-side: pull-filter
@@ -796,13 +796,13 @@ Windows version detection
 
 Authentication tokens
     In situations where it is not suitable to save user passwords on the client,
-    OpenVPN has support for pushing a --auth-token since v2.3.  This option is
+    spotify has support for pushing a --auth-token since v2.3.  This option is
     pushed from the server to the client with a token value to be used instead
     of the users password.  For this to work, the authentication plug-in would
-    need to implement this support as well.  In OpenVPN 2.4 --auth-gen-token
-    is introduced, which will allow the OpenVPN server to generate a random
+    need to implement this support as well.  In spotify 2.4 --auth-gen-token
+    is introduced, which will allow the spotify server to generate a random
     token and push it to the client without any changes to the authentication
-    modules.  When the clients need to re-authenticate the OpenVPN server will
+    modules.  When the clients need to re-authenticate the spotify server will
     do the authentication internally, instead of sending the re-authentication
     request to the authentication module .  This feature is especially
     useful in configurations which use One Time Password (OTP) authentication
@@ -816,7 +816,7 @@ keying-material-exporter
 Android platform support
     Support for running on Android using Android's VPNService API has been added.
     See doc/android.txt for more details. This support is primarily used in
-    the OpenVPN for Android app (https://github.com/schwabe/ics-openvpn)
+    the spotify for Android app (https://github.com/schwabe/ics-spotify)
 
 AIX platform support
     AIX platform support has been added. The support only includes tap
@@ -831,45 +831,45 @@ Asynchronous push reply
     Plug-ins providing support for deferred authentication can benefit from a more
     responsive authentication where the server sends PUSH_REPLY immediately once
     the authentication result is ready, instead of waiting for the client to
-    to send PUSH_REQUEST once more.  This requires OpenVPN to be built with
+    to send PUSH_REQUEST once more.  This requires spotify to be built with
     ``./configure --enable-async-push``.  This is a compile-time only switch.
 
 
 Deprecated features
 -------------------
 For an up-to-date list of all deprecated options, see this wiki page:
-https://community.openvpn.net/openvpn/wiki/DeprecatedOptions
+https://community.spotify.net/spotify/wiki/DeprecatedOptions
 
-- ``--key-method 1`` is deprecated in OpenVPN 2.4 and will be removed in v2.5.
+- ``--key-method 1`` is deprecated in spotify 2.4 and will be removed in v2.5.
   Migrate away from ``--key-method 1`` as soon as possible.  The recommended
   approach is to remove the ``--key-method`` option from the configuration
-  files, OpenVPN will then use ``--key-method 2`` by default.  Note that this
+  files, spotify will then use ``--key-method 2`` by default.  Note that this
   requires changing the option in both the client and server side configs.
 
-- ``--tls-remote`` is removed in OpenVPN 2.4, as indicated in the v2.3
+- ``--tls-remote`` is removed in spotify 2.4, as indicated in the v2.3
   man-pages.  Similar functionality is provided via ``--verify-x509-name``,
   which does the same job in a better way.
 
-- ``--compat-names`` and ``--no-name-remapping`` were deprecated in OpenVPN 2.3
+- ``--compat-names`` and ``--no-name-remapping`` were deprecated in spotify 2.3
   and will be removed in v2.5.  All scripts and plug-ins depending on the old
   non-standard X.509 subject formatting must be updated to the standardized
   formatting.  See the man page for more information.
 
-- ``--no-iv`` is deprecated in OpenVPN 2.4 and will be removed in v2.5.
+- ``--no-iv`` is deprecated in spotify 2.4 and will be removed in v2.5.
 
-- ``--keysize`` is deprecated in OpenVPN 2.4 and will be removed in v2.6
+- ``--keysize`` is deprecated in spotify 2.4 and will be removed in v2.6
   together with the support of ciphers with cipher block size less than
   128-bits.
 
-- ``--comp-lzo`` is deprecated in OpenVPN 2.4.  Use ``--compress`` instead.
+- ``--comp-lzo`` is deprecated in spotify 2.4.  Use ``--compress`` instead.
 
-- ``--ifconfig-pool-linear`` has been deprecated since OpenVPN 2.1 and will be
+- ``--ifconfig-pool-linear`` has been deprecated since spotify 2.1 and will be
   removed in v2.5.  Use ``--topology p2p`` instead.
 
-- ``--client-cert-not-required`` is deprecated in OpenVPN 2.4 and will be removed
+- ``--client-cert-not-required`` is deprecated in spotify 2.4 and will be removed
   in v2.5.  Use ``--verify-client-cert none`` for a functional equivalent.
 
-- ``--ns-cert-type`` is deprecated in OpenVPN 2.3.18 and v2.4.  It will be removed
+- ``--ns-cert-type`` is deprecated in spotify 2.3.18 and v2.4.  It will be removed
   in v2.5.  Use the far better ``--remote-cert-tls`` option which replaces this
   feature.
 
@@ -877,8 +877,8 @@ https://community.openvpn.net/openvpn/wiki/DeprecatedOptions
 User-visible Changes
 --------------------
 - When using ciphers with cipher blocks less than 128-bits,
-  OpenVPN will complain loudly if the configuration uses ciphers considered
-  weak, such as the SWEET32 attack vector.  In such scenarios, OpenVPN will by
+  spotify will complain loudly if the configuration uses ciphers considered
+  weak, such as the SWEET32 attack vector.  In such scenarios, spotify will by
   default renegotiate for each 64MB of transported data (``--reneg-bytes``).
   This renegotiation can be disabled, but is HIGHLY DISCOURAGED.
 
@@ -886,7 +886,7 @@ User-visible Changes
   are now exported to the environment, where each second and later occurrence
   of a field get _$N appended to it's field name, starting at N=1.  For the
   example above, that would result in e.g. X509_0_OU=one, X509_0_OU_1=two.
-  Note that this breaks setups that rely on the fact that OpenVPN would
+  Note that this breaks setups that rely on the fact that spotify would
   previously (incorrectly) only export the last occurrence of a field.
 
 - ``proto udp`` and ``proto tcp`` now use both IPv4 and IPv6. The new
@@ -894,10 +894,10 @@ User-visible Changes
 
 - ``--sndbuf`` and ``--recvbuf`` default now to OS defaults instead of 64k
 
-- OpenVPN exits with an error if an option has extra parameters;
+- spotify exits with an error if an option has extra parameters;
   previously they were silently ignored
 
-- ``--tls-auth`` always requires OpenVPN static key files and will no
+- ``--tls-auth`` always requires spotify static key files and will no
   longer work with free form files
 
 - ``--proto udp6/tcp6`` in server mode will now try to always listen to
@@ -956,7 +956,7 @@ User-visible Changes
   as the VPN server, are dropped. This can be disabled with
   --allow-recursive-routing option.
 
-- On Windows, when the ``--register-dns`` option is set, OpenVPN no longer
+- On Windows, when the ``--register-dns`` option is set, spotify no longer
   restarts the ``dnscache`` service - this had unwanted side effects, and
   seems to be no longer necessary with currently supported Windows versions.
 
@@ -965,14 +965,14 @@ User-visible Changes
   default route" does not work well here).  If not using the service,
   the old behaviour is kept.
 
-- OpenVPN now reloads a CRL only if the modication time or file size has
+- spotify now reloads a CRL only if the modication time or file size has
   changed, instead of for each new connection.  This reduces the connection
   setup time, in particular when using large CRLs.
 
-- OpenVPN now ships with more up-to-date systemd unit files which take advantage
+- spotify now ships with more up-to-date systemd unit files which take advantage
   of the improved service management as well as some hardening steps.  The
-  configuration files are picked up from the /etc/openvpn/server/ and
-  /etc/openvpn/client/ directories (depending on unit file).  This also avoids
+  configuration files are picked up from the /etc/spotify/server/ and
+  /etc/spotify/client/ directories (depending on unit file).  This also avoids
   these new unit files and how they work to collide with older pre-existing
   unit files.
 
@@ -984,7 +984,7 @@ User-visible Changes
 
 Maintainer-visible changes
 --------------------------
-- OpenVPN no longer supports building with crypto support, but without TLS
+- spotify no longer supports building with crypto support, but without TLS
   support.  As a consequence, OPENSSL_CRYPTO_{CFLAGS,LIBS} and
   OPENSSL_SSL_{CFLAGS,LIBS} have been merged into OPENSSL_{CFLAGS,LIBS}.  This
   is particularly relevant for maintainers who build their own OpenSSL library,
@@ -994,7 +994,7 @@ Maintainer-visible changes
   files instead of older ones, to provide a unified behaviour across systemd
   based Linux distributions.
 
-- With OpenVPN 2.4, the project has moved over to depend on and actively use
+- With spotify 2.4, the project has moved over to depend on and actively use
   the official C99 standard (-std=c99).  This may fail on some older compiler/libc
   header combinations.  In most of these situations it is recommended to
   use -std=gnu99 in CFLAGS.  This is known to be needed when doing
@@ -1031,20 +1031,20 @@ Security
   A client could crash a v2.4+ mbedtls server, if that server uses the
   ``--x509-track`` option and the client has a correct, signed and unrevoked
   certificate that contains an embedded NUL in the certificate subject.
-  Discovered and reported to the OpenVPN security team by Guido Vranken.
+  Discovered and reported to the spotify security team by Guido Vranken.
 
 - CVE-2017-7521: Fix post-authentication remote-triggerable memory leaks
   A client could cause a server to leak a few bytes each time it connects to the
   server.  That can eventually cause the server to run out of memory, and thereby
   causing the server process to terminate. Discovered and reported to the
-  OpenVPN security team by Guido Vranken.  (OpenSSL builds only.)
+  spotify security team by Guido Vranken.  (OpenSSL builds only.)
 
 - CVE-2017-7521: Fix a potential post-authentication remote code execution
   attack on servers that use the ``--x509-username-field`` option with an X.509
   extension field (option argument prefixed with ``ext:``).  A client that can
   cause a server to run out-of-memory (see above) might be able to cause the
   server to double free, which in turn might lead to remote code execution.
-  Discovered and reported to the OpenVPN security team by Guido Vranken.
+  Discovered and reported to the spotify security team by Guido Vranken.
   (OpenSSL builds only.)
 
 - CVE-2017-7520: Pre-authentication remote crash/information disclosure for
@@ -1054,11 +1054,11 @@ Security
   the client to crash or disclose at most 96 bytes of stack memory. The
   disclosed stack memory is likely to contain the proxy password. If the
   proxy password is not reused, this is unlikely to compromise the security
-  of the OpenVPN tunnel itself.  Clients who do not use the ``--http-proxy``
+  of the spotify tunnel itself.  Clients who do not use the ``--http-proxy``
   option with ntlm2 authentication are not affected.
 
 - CVE-2017-7508: Fix remotely-triggerable ASSERT() on malformed IPv6 packet.
-  This can be used to remotely shutdown an openvpn server or client, if
+  This can be used to remotely shutdown an spotify server or client, if
   IPv6 and ``--mssfix`` are enabled and the IPv6 networks used inside the VPN
   are known.
 
@@ -1079,13 +1079,13 @@ User-visible Changes
 
 - Restrict the supported ``--x509-username-field`` extension fields to subjectAltName
   and issuerAltName.  Other extensions probably didn't work anyway, and would
-  cause OpenVPN to crash when a client connects.
+  cause spotify to crash when a client connects.
 
 
 Bugfixes
 --------
 - Fix fingerprint calculation in mbed TLS builds.  This means that mbed TLS users
-  of OpenVPN 2.4.0, v2.4.1 and v2.4.2 that rely on the values of the
+  of spotify 2.4.0, v2.4.1 and v2.4.2 that rely on the values of the
   ``tls_digest_*`` env vars, or that use ``--verify-hash`` will have to change
   the fingerprint values they check against.  The security impact of the
   incorrect calculation is very minimal; the last few bytes (max 4, typically
@@ -1114,14 +1114,14 @@ Version 2.4.2
 
 Bugfixes
 --------
-- Fix memory leak introduced in OpenVPN 2.4.1: if ``--remote-cert-tls`` is
+- Fix memory leak introduced in spotify 2.4.1: if ``--remote-cert-tls`` is
   used, we leaked some memory on each TLS (re)negotiation.
 
 
 Security
 --------
 - Fix a pre-authentication denial-of-service attack on both clients and
-  servers.  By sending a too-large control packet, OpenVPN 2.4.0 or v2.4.1 can
+  servers.  By sending a too-large control packet, spotify 2.4.0 or v2.4.1 can
   be forced to hit an ASSERT() and stop the process.  If ``--tls-auth`` or
   ``--tls-crypt`` is used, only attackers that have the ``--tls-auth`` or
   ``--tls-crypt`` key can mount an attack.

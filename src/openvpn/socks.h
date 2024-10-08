@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -31,7 +31,7 @@
 
 #include "buffer.h"
 
-struct openvpn_sockaddr;
+struct spotify_sockaddr;
 struct link_socket_actual;
 
 struct socks_proxy_info {
@@ -50,15 +50,15 @@ void socks_proxy_close(struct socks_proxy_info *sp);
 
 void establish_socks_proxy_passthru(struct socks_proxy_info *p,
                                     socket_descriptor_t sd,  /* already open to proxy */
-                                    const char *host,        /* openvpn server remote */
-                                    const char *servname,          /* openvpn server port */
+                                    const char *host,        /* spotify server remote */
+                                    const char *servname,          /* spotify server port */
                                     struct event_timeout *server_poll_timeout,
                                     struct signal_info *sig_info);
 
 void establish_socks_proxy_udpassoc(struct socks_proxy_info *p,
                                     socket_descriptor_t ctrl_sd,  /* already open to proxy */
                                     socket_descriptor_t udp_sd,
-                                    struct openvpn_sockaddr *relay_addr,
+                                    struct spotify_sockaddr *relay_addr,
                                     struct event_timeout *server_poll_timeout,
                                     struct signal_info *sig_info);
 

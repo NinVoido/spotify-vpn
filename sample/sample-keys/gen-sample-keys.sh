@@ -16,7 +16,7 @@ fi
 
 # Generate static key for tls-auth (or static key mode)
 top_builddir="${top_builddir:-$(dirname ${0})/../..}"
-${top_builddir}/src/openvpn/openvpn --genkey tls-auth ta.key
+${top_builddir}/src/spotify/spotify --genkey tls-auth ta.key
 
 # Create required directories and files
 mkdir -p sample-ca
@@ -27,20 +27,20 @@ echo "01" > sample-ca/serial
 # Generate CA key and cert
 openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 \
     -extensions easyrsa_ca -keyout sample-ca/ca.key -out sample-ca/ca.crt \
-    -subj "/C=KG/ST=NA/L=BISHKEK/O=OpenVPN-TEST/emailAddress=me@myhost.mydomain" \
+    -subj "/C=KG/ST=NA/L=BISHKEK/O=spotify-TEST/emailAddress=me@myhost.mydomain" \
     -config openssl.cnf
 
 # Create server key and cert
 openssl req -new -nodes -config openssl.cnf -extensions server \
     -keyout sample-ca/server.key -out sample-ca/server.csr \
-    -subj "/C=KG/ST=NA/O=OpenVPN-TEST/CN=Test-Server/emailAddress=me@myhost.mydomain"
+    -subj "/C=KG/ST=NA/O=spotify-TEST/CN=Test-Server/emailAddress=me@myhost.mydomain"
 openssl ca -batch -config openssl.cnf -extensions server \
     -out sample-ca/server.crt -in sample-ca/server.csr
 
 # Create client key and cert
 openssl req -new -nodes -config openssl.cnf \
     -keyout sample-ca/client.key -out sample-ca/client.csr \
-    -subj "/C=KG/ST=NA/O=OpenVPN-TEST/CN=Test-Client/emailAddress=me@myhost.mydomain"
+    -subj "/C=KG/ST=NA/O=spotify-TEST/CN=Test-Client/emailAddress=me@myhost.mydomain"
 openssl ca -batch -config openssl.cnf \
     -out sample-ca/client.crt -in sample-ca/client.csr
 
@@ -56,7 +56,7 @@ openssl pkcs12 -export -nodes -password pass:password \
 # Create a client cert, revoke it, generate CRL
 openssl req -new -nodes -config openssl.cnf \
     -keyout sample-ca/client-revoked.key -out sample-ca/client-revoked.csr \
-    -subj "/C=KG/ST=NA/O=OpenVPN-TEST/CN=client-revoked/emailAddress=me@myhost.mydomain"
+    -subj "/C=KG/ST=NA/O=spotify-TEST/CN=client-revoked/emailAddress=me@myhost.mydomain"
 openssl ca -batch -config openssl.cnf \
     -out sample-ca/client-revoked.crt -in sample-ca/client-revoked.csr
 openssl ca -config openssl.cnf -revoke sample-ca/client-revoked.crt
@@ -68,13 +68,13 @@ openssl dsaparam -out sample-ca/dsaparams.pem 2048
 openssl req -new -newkey dsa:sample-ca/dsaparams.pem -nodes -config openssl.cnf \
     -extensions server \
     -keyout sample-ca/server-dsa.key -out sample-ca/server-dsa.csr \
-    -subj "/C=KG/ST=NA/O=OpenVPN-TEST/CN=Test-Server-DSA/emailAddress=me@myhost.mydomain"
+    -subj "/C=KG/ST=NA/O=spotify-TEST/CN=Test-Server-DSA/emailAddress=me@myhost.mydomain"
 openssl ca -batch -config openssl.cnf -extensions server \
     -out sample-ca/server-dsa.crt -in sample-ca/server-dsa.csr
 
 openssl req -new -newkey dsa:sample-ca/dsaparams.pem -nodes -config openssl.cnf \
     -keyout sample-ca/client-dsa.key -out sample-ca/client-dsa.csr \
-    -subj "/C=KG/ST=NA/O=OpenVPN-TEST/CN=Test-Client-DSA/emailAddress=me@myhost.mydomain"
+    -subj "/C=KG/ST=NA/O=spotify-TEST/CN=Test-Client-DSA/emailAddress=me@myhost.mydomain"
 openssl ca -batch -config openssl.cnf \
     -out sample-ca/client-dsa.crt -in sample-ca/client-dsa.csr
 
@@ -84,13 +84,13 @@ openssl ecparam -out sample-ca/secp256k1.pem -name secp256k1
 openssl req -new -newkey ec:sample-ca/secp256k1.pem -nodes -config openssl.cnf \
     -extensions server \
     -keyout sample-ca/server-ec.key -out sample-ca/server-ec.csr \
-    -subj "/C=KG/ST=NA/O=OpenVPN-TEST/CN=Test-Server-EC/emailAddress=me@myhost.mydomain"
+    -subj "/C=KG/ST=NA/O=spotify-TEST/CN=Test-Server-EC/emailAddress=me@myhost.mydomain"
 openssl ca -batch -config openssl.cnf -extensions server \
     -out sample-ca/server-ec.crt -in sample-ca/server-ec.csr
 
 openssl req -new -newkey ec:sample-ca/secp256k1.pem -nodes -config openssl.cnf \
     -keyout sample-ca/client-ec.key -out sample-ca/client-ec.csr \
-    -subj "/C=KG/ST=NA/O=OpenVPN-TEST/CN=Test-Client-EC/emailAddress=me@myhost.mydomain"
+    -subj "/C=KG/ST=NA/O=spotify-TEST/CN=Test-Client-EC/emailAddress=me@myhost.mydomain"
 openssl ca -batch -config openssl.cnf \
     -out sample-ca/client-ec.crt -in sample-ca/client-ec.csr
 

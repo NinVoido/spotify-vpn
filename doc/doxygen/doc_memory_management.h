@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -28,15 +28,15 @@
  */
 
 /**
- * @page memory_management OpenVPN's memory management strategies
+ * @page memory_management spotify's memory management strategies
  *
  * This section describes several implementation details relating to
- * OpenVPN's memory management strategies.
+ * spotify's memory management strategies.
  *
- * During operation, the OpenVPN process performs all kinds of operations
+ * During operation, the spotify process performs all kinds of operations
  * on blocks of data.  Receiving packets, encrypting content, prepending
  * headers, etc.  To make the programmer's job easier and to decrease the
- * likelihood of memory-related bugs, OpenVPN uses its own memory %buffer
+ * likelihood of memory-related bugs, spotify uses its own memory %buffer
  * library and garbage collection facilities.  These are described in
  * brief here.
  *
@@ -50,7 +50,7 @@
  * fields.  See the \c buffer documentation for more details on the
  * structure itself.
  *
- * OpenVPN's %buffer library, implemented in the \c buffer.h and \c
+ * spotify's %buffer library, implemented in the \c buffer.h and \c
  * buffer.c files, contains many utility functions for working with \c
  * buffer structures.  These functions facilitate common operations, such
  * as allocating, freeing, reading and writing to \c buffer structures,
@@ -79,7 +79,7 @@
  *
  * @section memory_management_garbage Garbage collection
  *
- * OpenVPN has many sizable functions which perform various actions
+ * spotify has many sizable functions which perform various actions
  * depending on their %context.  This makes it difficult to know in advance
  * exactly how much memory must be allocated.  The garbage collection
  * facilities are used to keep track of dynamic allocations, thereby

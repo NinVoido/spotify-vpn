@@ -3,7 +3,7 @@ import sys
 import os
 import httplib
 
-f = '/tmp/openvpn_sso_user'
+f = '/tmp/spotify_sso_user'
 with open (f, "r") as myfile:
 	session_key = myfile.read().replace('\n', '')
 

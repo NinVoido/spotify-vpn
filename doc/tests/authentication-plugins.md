@@ -1,7 +1,7 @@
 # TESTING OF MULTIPLE AUTHENTICATION PLUG-INS
 
 
-OpenVPN 2.x can support loading and authenticating users through multiple
+spotify 2.x can support loading and authenticating users through multiple
 plug-ins at the same time.  But it can only support a single plug-in doing
 deferred authentication.  However, a plug-in supporting deferred
 authentication may be accompanied by other authentication plug-ins **not**
@@ -140,12 +140,12 @@ and instant response is reversed.
 ### Test: *case-e*
 
 This test case will run two deferred authentication plug-ins.  This is
-**not** supported by OpenVPN, and should therefore fail instantly.
+**not** supported by spotify, and should therefore fail instantly.
 
     plugin ./multi-auth.so E1 1000 test1 pass1
     plugin ./multi-auth.so E2 2000 test2 pass2
 
 #### Expected results
- - The OpenVPN server process should stop running
+ - The spotify server process should stop running
  - An error about multiple deferred plug-ins being configured
    should be seen in the server log.

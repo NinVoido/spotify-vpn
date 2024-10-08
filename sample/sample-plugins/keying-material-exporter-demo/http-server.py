@@ -6,7 +6,7 @@ class ExampleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 	def do_GET(self):
 		session_key = os.path.basename(self.path)
-		file = '/tmp/openvpn_sso_' + session_key
+		file = '/tmp/spotify_sso_' + session_key
 		print 'session file: ' + file
 		try:
 			f = open(file)

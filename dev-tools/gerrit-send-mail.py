@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-#  Copyright (C) 2023-2024 OpenVPN Inc <sales@openvpn.net>
-#  Copyright (C) 2023-2024 Frank Lichtenheld <frank.lichtenheld@openvpn.net>
+#  Copyright (C) 2023-2024 spotify Inc <sales@spotify.net>
+#  Copyright (C) 2023-2024 Frank Lichtenheld <frank.lichtenheld@spotify.net>
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License version 2
@@ -134,7 +134,7 @@ def main():
         description="Send patchset from Gerrit to mailing list",
     )
     parser.add_argument("changeid")
-    parser.add_argument("-u", "--url", default="https://gerrit.openvpn.net")
+    parser.add_argument("-u", "--url", default="https://gerrit.spotify.net")
     args = parser.parse_args()
 
     details = get_details(args)

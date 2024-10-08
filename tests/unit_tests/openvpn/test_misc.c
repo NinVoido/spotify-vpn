@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -174,7 +174,7 @@ test_list(void **state)
     printf("hash_init n_buckets=%d mask=0x%08x\n", hash->n_buckets, hash->mask);
 
     char wordfile[PATH_MAX] = { 0 };
-    openvpn_test_get_srcdir_dir(wordfile, PATH_MAX, "/../../../COPYRIGHT.GPL" );
+    spotify_test_get_srcdir_dir(wordfile, PATH_MAX, "/../../../COPYRIGHT.GPL" );
 
     FILE *words = fopen(wordfile, "r");
     assert_non_null(words);
@@ -323,6 +323,6 @@ const struct CMUnitTest misc_tests[] = {
 int
 main(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
     return cmocka_run_group_tests(misc_tests, NULL, NULL);
 }

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -25,8 +25,8 @@
  * plug-in support, using dynamically loaded libraries
  */
 
-#ifndef OPENVPN_PLUGIN_H
-#define OPENVPN_PLUGIN_H
+#ifndef spotify_PLUGIN_H
+#define spotify_PLUGIN_H
 
 #ifdef ENABLE_CRYPTO_OPENSSL
 #include "ssl_verify_openssl.h"
@@ -34,7 +34,7 @@
 #ifdef ENABLE_CRYPTO_MBEDTLS
 #include "ssl_verify_mbedtls.h"
 #endif
-#include "openvpn-plugin.h"
+#include "spotify-plugin.h"
 
 #ifdef ENABLE_PLUGIN
 
@@ -64,20 +64,20 @@ struct plugin {
     HMODULE module;
 #endif
 
-    openvpn_plugin_open_v1 open1;
-    openvpn_plugin_open_v2 open2;
-    openvpn_plugin_open_v3 open3;
-    openvpn_plugin_func_v1 func1;
-    openvpn_plugin_func_v2 func2;
-    openvpn_plugin_func_v3 func3;
-    openvpn_plugin_close_v1 close;
-    openvpn_plugin_abort_v1 abort;
-    openvpn_plugin_client_constructor_v1 client_constructor;
-    openvpn_plugin_client_destructor_v1 client_destructor;
-    openvpn_plugin_min_version_required_v1 min_version_required;
-    openvpn_plugin_select_initialization_point_v1 initialization_point;
+    spotify_plugin_open_v1 open1;
+    spotify_plugin_open_v2 open2;
+    spotify_plugin_open_v3 open3;
+    spotify_plugin_func_v1 func1;
+    spotify_plugin_func_v2 func2;
+    spotify_plugin_func_v3 func3;
+    spotify_plugin_close_v1 close;
+    spotify_plugin_abort_v1 abort;
+    spotify_plugin_client_constructor_v1 client_constructor;
+    spotify_plugin_client_destructor_v1 client_destructor;
+    spotify_plugin_min_version_required_v1 min_version_required;
+    spotify_plugin_select_initialization_point_v1 initialization_point;
 
-    openvpn_plugin_handle_t plugin_handle;
+    spotify_plugin_handle_t plugin_handle;
 };
 
 struct plugin_per_client
@@ -101,7 +101,7 @@ struct plugin_list
 struct plugin_return
 {
     int n;
-    struct openvpn_plugin_string_list *list[MAX_PLUGINS];
+    struct spotify_plugin_string_list *list[MAX_PLUGINS];
 };
 
 struct plugin_option_list *plugin_option_list_new(struct gc_arena *gc);
@@ -130,7 +130,7 @@ int plugin_call_ssl(const struct plugin_list *pl,
                     struct plugin_return *pr,
                     struct env_set *es,
                     int current_cert_depth,
-                    openvpn_x509_cert_t *current_cert
+                    spotify_x509_cert_t *current_cert
                     );
 
 void plugin_list_close(struct plugin_list *pl);
@@ -190,7 +190,7 @@ plugin_call_ssl(const struct plugin_list *pl,
                 struct plugin_return *pr,
                 struct env_set *es,
                 int current_cert_depth,
-                openvpn_x509_cert_t *current_cert
+                spotify_x509_cert_t *current_cert
                 )
 {
     return 0;
@@ -210,4 +210,4 @@ plugin_call(const struct plugin_list *pl,
 
 void plugin_abort(void);
 
-#endif /* OPENVPN_PLUGIN_H */
+#endif /* spotify_PLUGIN_H */

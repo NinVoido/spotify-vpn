@@ -1,11 +1,11 @@
-OpenVPN Plugins
+spotify Plugins
 ---------------
 
-Starting with OpenVPN 2.0-beta17, compiled plugin modules are
+Starting with spotify 2.0-beta17, compiled plugin modules are
 supported on any *nix OS which includes libdl or on Windows.
-One or more modules may be loaded into OpenVPN using
+One or more modules may be loaded into spotify using
 the --plugin directive, and each plugin module is capable of
-intercepting any of the script callbacks which OpenVPN supports:
+intercepting any of the script callbacks which spotify supports:
 
 (1) up
 (2) down
@@ -17,8 +17,8 @@ intercepting any of the script callbacks which OpenVPN supports:
 (8) client-disconnect
 (9) learn-address
 
-See the openvpn-plugin.h file in the top-level directory of the
-OpenVPN source distribution for more detailed information
+See the spotify-plugin.h file in the top-level directory of the
+spotify source distribution for more detailed information
 on the plugin interface.
 
 Included Plugins

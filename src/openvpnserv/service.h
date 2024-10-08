@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -53,15 +53,15 @@
 typedef enum {
     interactive,
     _service_max
-} openvpn_service_type;
+} spotify_service_type;
 
 typedef struct {
-    openvpn_service_type type;
+    spotify_service_type type;
     TCHAR *name;
     TCHAR *display_name;
     TCHAR *dependencies;
     DWORD start_type;
-} openvpn_service_t;
+} spotify_service_t;
 
 #define MAX_NAME 256
 typedef struct {
@@ -74,14 +74,14 @@ typedef struct {
     BOOL append;
 } settings_t;
 
-extern openvpn_service_t interactive_service;
+extern spotify_service_t interactive_service;
 extern LPCTSTR service_instance;
 
 VOID WINAPI ServiceStartInteractiveOwn(DWORD argc, LPTSTR *argv);
 
 VOID WINAPI ServiceStartInteractive(DWORD argc, LPTSTR *argv);
 
-DWORD GetOpenvpnSettings(settings_t *s);
+DWORD GetspotifySettings(settings_t *s);
 
 BOOL ReportStatusToSCMgr(SERVICE_STATUS_HANDLE service, SERVICE_STATUS *status);
 

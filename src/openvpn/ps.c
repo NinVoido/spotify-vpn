@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -61,7 +61,7 @@ struct port_share *port_share = NULL; /* GLOBAL */
 #define IOSTAT_GOOD             4 /* nothing to report */
 
 /*
- * A foreign (non-OpenVPN) connection we are proxying,
+ * A foreign (non-spotify) connection we are proxying,
  * usually HTTPS
  */
 struct proxy_connection {
@@ -91,7 +91,7 @@ close_socket_if_defined(const socket_descriptor_t sd)
 {
     if (socket_defined(sd))
     {
-        openvpn_close_socket(sd);
+        spotify_close_socket(sd);
     }
 }
 
@@ -114,7 +114,7 @@ close_fds_except(int keep)
     {
         if (i != keep)
         {
-            openvpn_close_socket(i);
+            spotify_close_socket(i);
         }
     }
 }
@@ -262,7 +262,7 @@ proxy_entry_close_sd(struct proxy_connection *pc, struct event_set *es)
         {
             event_del(es, pc->sd);
         }
-        openvpn_close_socket(pc->sd);
+        spotify_close_socket(pc->sd);
         pc->sd = SOCKET_UNDEFINED;
     }
 }
@@ -338,7 +338,7 @@ static void
 journal_add(const char *journal_dir, struct proxy_connection *pc, struct proxy_connection *cp)
 {
     struct gc_arena gc = gc_new();
-    struct openvpn_sockaddr from, to;
+    struct spotify_sockaddr from, to;
     socklen_t slen, dlen;
     int fnlen;
     char *jfn;
@@ -349,8 +349,8 @@ journal_add(const char *journal_dir, struct proxy_connection *pc, struct proxy_c
     if (!getpeername(pc->sd, (struct sockaddr *) &from.addr.sa, &slen)
         && !getsockname(cp->sd, (struct sockaddr *) &to.addr.sa, &dlen))
     {
-        const char *f = print_openvpn_sockaddr(&from, &gc);
-        const char *t = print_openvpn_sockaddr(&to, &gc);
+        const char *f = print_spotify_sockaddr(&from, &gc);
+        const char *t = print_spotify_sockaddr(&to, &gc);
         fnlen =  strlen(journal_dir) + strlen(t) + 2;
         jfn = (char *) malloc(fnlen);
         check_malloc_return(jfn);
@@ -430,11 +430,11 @@ proxy_entry_new(struct proxy_connection **list,
         msg(M_WARN|M_ERRNO, "PORT SHARE PROXY: cannot create socket");
         return false;
     }
-    status = openvpn_connect(sd_server, (const struct sockaddr *)  &server_addr, 5, NULL);
+    status = spotify_connect(sd_server, (const struct sockaddr *)  &server_addr, 5, NULL);
     if (status)
     {
         msg(M_WARN, "PORT SHARE PROXY: connect to port-share server failed");
-        openvpn_close_socket(sd_server);
+        spotify_close_socket(sd_server);
         return false;
     }
     dmsg(D_PS_PROXY_DEBUG, "PORT SHARE PROXY: connect to port-share server succeeded");
@@ -558,13 +558,13 @@ control_message_from_parent(const socket_descriptor_t sd_control,
                 }
                 else
                 {
-                    openvpn_close_socket(received_fd);
+                    spotify_close_socket(received_fd);
                 }
             }
             else if (status >= 1 && command == COMMAND_EXIT)
             {
                 dmsg(D_PS_PROXY_DEBUG, "PORT SHARE PROXY: RECEIVED COMMAND_EXIT");
-                openvpn_close_socket(received_fd); /* null socket */
+                spotify_close_socket(received_fd); /* null socket */
                 ret = false;
             }
         }
@@ -811,7 +811,7 @@ done:
 }
 
 /*
- * Called from the main OpenVPN process to enable the port
+ * Called from the main spotify process to enable the port
  * share proxy.
  */
 struct port_share *
@@ -835,7 +835,7 @@ port_share_open(const char *host,
      * Get host's IP address
      */
 
-    status = openvpn_getaddrinfo(GETADDR_RESOLVE|GETADDR_FATAL,
+    status = spotify_getaddrinfo(GETADDR_RESOLVE|GETADDR_FATAL,
                                  host, port,  0, NULL, AF_INET, &ai);
     ASSERT(status==0);
     hostaddr = *((struct sockaddr_in *) ai->ai_addr);
@@ -867,7 +867,7 @@ port_share_open(const char *host,
         ps->background_pid = pid;
 
         /* close our copy of child's socket */
-        openvpn_close_socket(fd[1]);
+        spotify_close_socket(fd[1]);
 
         /* don't let future subprocesses inherit child socket */
         set_cloexec(fd[0]);
@@ -914,7 +914,7 @@ port_share_open(const char *host,
         /* execute the event loop */
         port_share_proxy(hostaddr, fd[1], max_initial_buf, journal_dir);
 
-        openvpn_close_socket(fd[1]);
+        spotify_close_socket(fd[1]);
 
         exit(0);
         return NULL; /* NOTREACHED */
@@ -943,7 +943,7 @@ port_share_close(struct port_share *ps)
             }
             dmsg(D_PS_PROXY_DEBUG, "PORT SHARE: background process exited");
 
-            openvpn_close_socket(ps->foreground_fd);
+            spotify_close_socket(ps->foreground_fd);
             ps->foreground_fd = -1;
         }
 
@@ -960,7 +960,7 @@ port_share_abort(struct port_share *ps)
         if (ps->foreground_fd >= 0)
         {
             send_control(ps->foreground_fd, COMMAND_EXIT);
-            openvpn_close_socket(ps->foreground_fd);
+            spotify_close_socket(ps->foreground_fd);
             ps->foreground_fd = -1;
         }
     }
@@ -968,11 +968,11 @@ port_share_abort(struct port_share *ps)
 
 /*
  * Given either the first 2 or 3 bytes of an initial client -> server
- * data payload, return true if the protocol is that of an OpenVPN
- * client attempting to connect with an OpenVPN server.
+ * data payload, return true if the protocol is that of an spotify
+ * client attempting to connect with an spotify server.
  */
 bool
-is_openvpn_protocol(const struct buffer *buf)
+is_spotify_protocol(const struct buffer *buf)
 {
     const unsigned char *p = (const unsigned char *) BSTR(buf);
     const int len = BLEN(buf);

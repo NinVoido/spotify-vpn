@@ -1,9 +1,9 @@
 From c2293864de70fec322fe7e559055530ef56b9641 Mon Sep 17 00:00:00 2001
-From: Lev Stipakov <lev@openvpn.net>
+From: Lev Stipakov <lev@spotify.net>
 Date: Tue, 11 Jan 2022 13:35:42 +0200
 Subject: [PATCH] config-w32-vc.h.in: indicate OpenSSL EC support
 
-Signed-off-by: Lev Stipakov <lev@openvpn.net>
+Signed-off-by: Lev Stipakov <lev@spotify.net>
 ---
  config-w32-vc.h.in | 12 ++++++++++++
  1 file changed, 12 insertions(+)

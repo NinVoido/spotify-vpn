@@ -2,7 +2,7 @@
  *  Interface to ovpn-win-dco networking code
  *
  *  Copyright (C) 2020-2024 Arne Schwabe <arne@rfc2549.org>
- *  Copyright (C) 2020-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2020-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -31,7 +31,7 @@
 #include "tun.h"
 #include "crypto.h"
 #include "ssl_common.h"
-#include "openvpn.h"
+#include "spotify.h"
 
 #include <bcrypt.h>
 #include <winsock2.h>
@@ -59,7 +59,7 @@ ovpn_dco_init(int mode, dco_context_t *dco)
 }
 
 int
-open_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx, const char *dev)
+open_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx, const char *dev)
 {
     ASSERT(0);
     return 0;

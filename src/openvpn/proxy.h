@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -31,7 +31,7 @@
 #define HTTP_AUTH_NONE   0
 #define HTTP_AUTH_BASIC  1
 #define HTTP_AUTH_DIGEST 2
-/* #define HTTP_AUTH_NTLM   3 removed in OpenVPN 2.7 */
+/* #define HTTP_AUTH_NTLM   3 removed in spotify 2.7 */
 #define HTTP_AUTH_NTLM2  4
 #define HTTP_AUTH_N      5 /* number of HTTP_AUTH methods */
 
@@ -85,8 +85,8 @@ void http_proxy_close(struct http_proxy_info *hp);
 
 bool establish_http_proxy_passthru(struct http_proxy_info *p,
                                    socket_descriptor_t sd,  /* already open to proxy */
-                                   const char *host,        /* openvpn server remote */
-                                   const char *port,          /* openvpn server port */
+                                   const char *host,        /* spotify server remote */
+                                   const char *port,          /* spotify server port */
                                    struct event_timeout *server_poll_timeout,
                                    struct buffer *lookahead,
                                    struct signal_info *sig_info);

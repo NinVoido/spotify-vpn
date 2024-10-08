@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -24,7 +24,7 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include "openvpn.h"
+#include "spotify.h"
 
 /*
  * Baseline maximum number of events
@@ -56,7 +56,7 @@ bool print_openssl_info(const struct options *options);
 
 bool do_genkey(const struct options *options);
 
-bool do_persist_tuntap(struct options *options, openvpn_net_ctx_t *ctx);
+bool do_persist_tuntap(struct options *options, spotify_net_ctx_t *ctx);
 
 bool possibly_become_daemon(const struct options *options);
 
@@ -74,7 +74,7 @@ void init_query_passwords(const struct context *c);
 bool do_route(const struct options *options, struct route_list *route_list,
               struct route_ipv6_list *route_ipv6_list, const struct tuntap *tt,
               const struct plugin_list *plugins, struct env_set *es,
-              openvpn_net_ctx_t *ctx);
+              spotify_net_ctx_t *ctx);
 
 void close_instance(struct context *c);
 

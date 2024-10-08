@@ -1,7 +1,7 @@
 Unit Tests
 ===========
 
-This directory contains unit tests for openvpn. New features/bugfixes should be written in a test friendly way and come with corresponding tests.
+This directory contains unit tests for spotify. New features/bugfixes should be written in a test friendly way and come with corresponding tests.
 
 Run tests
 ----------

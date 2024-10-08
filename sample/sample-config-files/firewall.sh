@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# A Sample OpenVPN-aware firewall.
+# A Sample spotify-aware firewall.
 
 # eth0 is connected to the internet.
 # eth1 is connected to a private subnet.
@@ -63,24 +63,24 @@ iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 iptables -A INPUT -p tcp --dport http -j ACCEPT
 iptables -A INPUT -p tcp --dport ssh -j ACCEPT
 
-# Allow incoming OpenVPN packets
+# Allow incoming spotify packets
 # Duplicate the line below for each
-# OpenVPN tunnel, changing --dport n
-# to match the OpenVPN UDP port.
+# spotify tunnel, changing --dport n
+# to match the spotify UDP port.
 #
-# In OpenVPN, the port number is
+# In spotify, the port number is
 # controlled by the --port n option.
 # If you put this option in the config
 # file, you can remove the leading '--'
 #
 # If you taking the stateful firewall
-# approach (see the OpenVPN HOWTO),
+# approach (see the spotify HOWTO),
 # then comment out the line below.
 
 iptables -A INPUT -p udp --dport 1194 -j ACCEPT
 
 # Allow packets from TUN/TAP devices.
-# When OpenVPN is run in a secure mode,
+# When spotify is run in a secure mode,
 # it will authenticate packets prior
 # to their arriving on a tun or tap
 # interface.  Therefore, it is not

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -154,12 +154,12 @@ mroute_extract_addr_ip(struct mroute_addr *src, struct mroute_addr *dest,
     unsigned int ret = 0;
     if (BLEN(buf) >= 1)
     {
-        switch (OPENVPN_IPH_GET_VER(*BPTR(buf)))
+        switch (spotify_IPH_GET_VER(*BPTR(buf)))
         {
             case 4:
-                if (BLEN(buf) >= (int) sizeof(struct openvpn_iphdr))
+                if (BLEN(buf) >= (int) sizeof(struct spotify_iphdr))
                 {
-                    const struct openvpn_iphdr *ip = (const struct openvpn_iphdr *) BPTR(buf);
+                    const struct spotify_iphdr *ip = (const struct spotify_iphdr *) BPTR(buf);
 
                     mroute_get_in_addr_t(src, ip->saddr, 0);
                     mroute_get_in_addr_t(dest, ip->daddr, 0);
@@ -171,7 +171,7 @@ mroute_extract_addr_ip(struct mroute_addr *src, struct mroute_addr *dest,
                     }
 
                     /* IGMP message? */
-                    if (ip->protocol == OPENVPN_IPPROTO_IGMP)
+                    if (ip->protocol == spotify_IPPROTO_IGMP)
                     {
                         ret |= MROUTE_EXTRACT_IGMP;
                     }
@@ -181,9 +181,9 @@ mroute_extract_addr_ip(struct mroute_addr *src, struct mroute_addr *dest,
                 break;
 
             case 6:
-                if (BLEN(buf) >= (int) sizeof(struct openvpn_ipv6hdr))
+                if (BLEN(buf) >= (int) sizeof(struct spotify_ipv6hdr))
                 {
-                    const struct openvpn_ipv6hdr *ipv6 = (const struct openvpn_ipv6hdr *) BPTR(buf);
+                    const struct spotify_ipv6hdr *ipv6 = (const struct spotify_ipv6hdr *) BPTR(buf);
 #if 0                           /* very basic debug */
                     struct gc_arena gc = gc_new();
                     msg( M_INFO, "IPv6 packet! src=%s, dst=%s",
@@ -206,7 +206,7 @@ mroute_extract_addr_ip(struct mroute_addr *src, struct mroute_addr *dest,
 
             default:
                 msg(M_WARN, "IP packet with unknown IP version=%d seen",
-                    OPENVPN_IPH_GET_VER(*BPTR(buf)));
+                    spotify_IPH_GET_VER(*BPTR(buf)));
         }
     }
     return ret;
@@ -219,8 +219,8 @@ mroute_copy_ether_to_addr(struct mroute_addr *maddr,
 {
     maddr->type = MR_ADDR_ETHER;
     maddr->netbits = 0;
-    maddr->len = OPENVPN_ETH_ALEN;
-    memcpy(maddr->ether.addr, ether_addr, OPENVPN_ETH_ALEN);
+    maddr->len = spotify_ETH_ALEN;
+    memcpy(maddr->ether.addr, ether_addr, spotify_ETH_ALEN);
     maddr->len += sizeof(vid);
     maddr->ether.vid = vid;
 }
@@ -232,9 +232,9 @@ mroute_extract_addr_ether(struct mroute_addr *src,
                           const struct buffer *buf)
 {
     unsigned int ret = 0;
-    if (BLEN(buf) >= (int) sizeof(struct openvpn_ethhdr))
+    if (BLEN(buf) >= (int) sizeof(struct spotify_ethhdr))
     {
-        const struct openvpn_ethhdr *eth = (const struct openvpn_ethhdr *) BPTR(buf);
+        const struct spotify_ethhdr *eth = (const struct spotify_ethhdr *) BPTR(buf);
         if (src)
         {
             mroute_copy_ether_to_addr(src, eth->source, vid);
@@ -257,12 +257,12 @@ mroute_extract_addr_ether(struct mroute_addr *src,
 }
 
 /*
- * Translate a struct openvpn_sockaddr (osaddr)
+ * Translate a struct spotify_sockaddr (osaddr)
  * to a struct mroute_addr (addr).
  */
 bool
-mroute_extract_openvpn_sockaddr(struct mroute_addr *addr,
-                                const struct openvpn_sockaddr *osaddr,
+mroute_extract_spotify_sockaddr(struct mroute_addr *addr,
+                                const struct spotify_sockaddr *osaddr,
                                 bool use_port)
 {
     switch (osaddr->addr.sa.sa_family)

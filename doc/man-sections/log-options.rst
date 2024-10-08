@@ -5,7 +5,7 @@ Log options
   Echo ``parms`` to log output.
 
   Designed to be used to send messages to a controlling application which
-  is receiving the OpenVPN log output.
+  is receiving the spotify log output.
 
 --errors-to-stderr
   Output errors to stderr instead of stdout unless log output is
@@ -17,10 +17,10 @@ Log options
   be truncated. This option takes effect immediately when it is parsed in
   the command line and will supersede syslog output if ``--daemon``
   is also specified. This option is persistent over the entire
-  course of an OpenVPN instantiation and will not be reset by
+  course of an spotify instantiation and will not be reset by
   :code:`SIGHUP`, :code:`SIGUSR1`, or ``--ping-restart``.
 
-  Note that on Windows, when OpenVPN is started as a service, logging
+  Note that on Windows, when spotify is started as a service, logging
   occurs by default without the need to specify this option.
 
 --log-append file

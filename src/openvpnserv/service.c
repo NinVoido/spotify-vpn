@@ -15,7 +15,7 @@
 #include <process.h>
 
 
-openvpn_service_t openvpn_service[_service_max];
+spotify_service_t spotify_service[_service_max];
 
 
 BOOL
@@ -80,18 +80,18 @@ CmdInstallServices()
     for (i = 0; i < _service_max; i++)
     {
         service = CreateService(svc_ctl_mgr,
-                                openvpn_service[i].name,
-                                openvpn_service[i].display_name,
+                                spotify_service[i].name,
+                                spotify_service[i].display_name,
                                 SERVICE_QUERY_STATUS,
                                 SERVICE_WIN32_SHARE_PROCESS,
-                                openvpn_service[i].start_type,
+                                spotify_service[i].start_type,
                                 SERVICE_ERROR_NORMAL,
                                 path, NULL, NULL,
-                                openvpn_service[i].dependencies,
+                                spotify_service[i].dependencies,
                                 NULL, NULL);
         if (service)
         {
-            wprintf(TEXT("%ls installed.\n"), openvpn_service[i].display_name);
+            wprintf(TEXT("%ls installed.\n"), spotify_service[i].display_name);
             CloseServiceHandle(service);
             --ret;
         }
@@ -107,7 +107,7 @@ CmdInstallServices()
 
 
 static int
-CmdStartService(openvpn_service_type type)
+CmdStartService(spotify_service_type type)
 {
     int ret = 1;
     SC_HANDLE svc_ctl_mgr;
@@ -120,7 +120,7 @@ CmdStartService(openvpn_service_type type)
         return 1;
     }
 
-    service = OpenService(svc_ctl_mgr, openvpn_service[type].name, SERVICE_ALL_ACCESS);
+    service = OpenService(svc_ctl_mgr, spotify_service[type].name, SERVICE_ALL_ACCESS);
     if (service)
     {
         if (StartService(service, 0, NULL))
@@ -162,7 +162,7 @@ CmdRemoveServices()
 
     for (i = 0; i < _service_max; i++)
     {
-        openvpn_service_t *ovpn_svc = &openvpn_service[i];
+        spotify_service_t *ovpn_svc = &spotify_service[i];
         service = OpenService(svc_ctl_mgr, ovpn_svc->name,
                               DELETE | SERVICE_STOP | SERVICE_QUERY_STATUS);
         if (service == NULL)
@@ -240,7 +240,7 @@ _tmain(int argc, TCHAR *argv[])
 
     const SERVICE_TABLE_ENTRY *dispatchTable = dispatchTable_shared;
 
-    openvpn_service[interactive] = interactive_service;
+    spotify_service[interactive] = interactive_service;
 
     for (int i = 1; i < argc; i++)
     {

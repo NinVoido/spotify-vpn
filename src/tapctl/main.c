@@ -1,8 +1,8 @@
 /*
  *  tapctl -- Utility to manipulate TUN/TAP adapters on Windows
- *            https://community.openvpn.net/openvpn/wiki/Tapctl
+ *            https://community.spotify.net/spotify/wiki/Tapctl
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *  Copyright (C) 2018-2024 Simon Rozman <simon@rozman.si>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -72,7 +72,7 @@ static const TCHAR usage_message_create[] =
     TEXT("--name <name>  Set TUN/TAP adapter name. Should the adapter with given name    \n")
     TEXT("               already exist, an error is returned. If this option is not      \n")
     TEXT("               specified, a default adapter name is chosen by Windows.         \n")
-    TEXT("               Note: This name can also be specified as OpenVPN's --dev-node   \n")
+    TEXT("               Note: This name can also be specified as spotify's --dev-node   \n")
     TEXT("               option.                                                         \n")
     TEXT("--hwid <hwid>  Adapter hardware ID. Default value is root\\tap0901, which      \n")
     TEXT("               describes tap-windows6 driver. To work with wintun or ovpn-dco  \n")
@@ -165,15 +165,15 @@ get_unique_adapter_name(LPCTSTR hwid, struct tap_adapter_node *adapter_list)
     LPCTSTR base_name;
     if (_tcsicmp(hwid, TEXT("ovpn-dco")) == 0)
     {
-        base_name = TEXT("OpenVPN Data Channel Offload");
+        base_name = TEXT("spotify Data Channel Offload");
     }
     else if (_tcsicmp(hwid, TEXT("wintun")) == 0)
     {
-        base_name = TEXT("OpenVPN Wintun");
+        base_name = TEXT("spotify Wintun");
     }
     else if (_tcsicmp(hwid, TEXT("root\\") TEXT(TAP_WIN_COMPONENT_ID)) == 0)
     {
-        base_name = TEXT("OpenVPN TAP-Windows6");
+        base_name = TEXT("spotify TAP-Windows6");
     }
     else
     {

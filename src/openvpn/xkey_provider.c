@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -43,7 +43,7 @@
 #include <openssl/err.h>
 
 /* A descriptive name */
-static const char *provname = "OpenVPN External Key Provider";
+static const char *provname = "spotify External Key Provider";
 
 typedef struct
 {
@@ -85,7 +85,7 @@ typedef struct
 {
     /** opaque handle dependent on KEY_ORIGIN -- could be NULL */
     void *handle;
-    /** associated public key as an openvpn native key */
+    /** associated public key as an spotify native key */
     EVP_PKEY *pubkey;
     /** origin of key -- native or external */
     XKEY_ORIGIN origin;
@@ -650,11 +650,11 @@ static const OSSL_DISPATCH ed25519_keymgmt_functions[] = {
 
 
 const OSSL_ALGORITHM keymgmts[] = {
-    {"RSA:rsaEncryption", XKEY_PROV_PROPS, rsa_keymgmt_functions, "OpenVPN xkey RSA Key Manager"},
-    {"RSA-PSS:RSASSA-PSS", XKEY_PROV_PROPS, rsa_keymgmt_functions, "OpenVPN xkey RSA-PSS Key Manager"},
-    {"EC:id-ecPublicKey", XKEY_PROV_PROPS, ec_keymgmt_functions, "OpenVPN xkey EC Key Manager"},
-    {"ED448", XKEY_PROV_PROPS, ed448_keymgmt_functions, "OpenVPN xkey ED448 Key Manager"},
-    {"ED25519", XKEY_PROV_PROPS, ed25519_keymgmt_functions, "OpenVPN xkey ED25519 Key Manager"},
+    {"RSA:rsaEncryption", XKEY_PROV_PROPS, rsa_keymgmt_functions, "spotify xkey RSA Key Manager"},
+    {"RSA-PSS:RSASSA-PSS", XKEY_PROV_PROPS, rsa_keymgmt_functions, "spotify xkey RSA-PSS Key Manager"},
+    {"EC:id-ecPublicKey", XKEY_PROV_PROPS, ec_keymgmt_functions, "spotify xkey EC Key Manager"},
+    {"ED448", XKEY_PROV_PROPS, ed448_keymgmt_functions, "spotify xkey ED448 Key Manager"},
+    {"ED25519", XKEY_PROV_PROPS, ed25519_keymgmt_functions, "spotify xkey ED25519 Key Manager"},
     {NULL, NULL, NULL, NULL}
 };
 
@@ -1150,10 +1150,10 @@ static const OSSL_DISPATCH signature_functions[] = {
 };
 
 const OSSL_ALGORITHM signatures[] = {
-    {"RSA:rsaEncryption", XKEY_PROV_PROPS, signature_functions, "OpenVPN xkey RSA Signature"},
-    {"ECDSA", XKEY_PROV_PROPS, signature_functions, "OpenVPN xkey ECDSA Signature"},
-    {"ED448", XKEY_PROV_PROPS, signature_functions, "OpenVPN xkey Ed448 Signature"},
-    {"ED25519", XKEY_PROV_PROPS, signature_functions, "OpenVPN xkey Ed25519 Signature"},
+    {"RSA:rsaEncryption", XKEY_PROV_PROPS, signature_functions, "spotify xkey RSA Signature"},
+    {"ECDSA", XKEY_PROV_PROPS, signature_functions, "spotify xkey ECDSA Signature"},
+    {"ED448", XKEY_PROV_PROPS, signature_functions, "spotify xkey Ed448 Signature"},
+    {"ED25519", XKEY_PROV_PROPS, signature_functions, "spotify xkey Ed25519 Signature"},
     {NULL, NULL, NULL, NULL}
 };
 

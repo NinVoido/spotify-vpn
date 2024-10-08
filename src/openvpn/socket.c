@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -37,7 +37,7 @@
 #include "manage.h"
 #include "misc.h"
 #include "manage.h"
-#include "openvpn.h"
+#include "spotify.h"
 #include "forward.h"
 
 #include "memdbg.h"
@@ -127,7 +127,7 @@ get_addr_generic(sa_family_t af, unsigned int flags, const char *hostname,
         *sep = '\0';
     }
 
-    ret = openvpn_getaddrinfo(flags & ~GETADDR_HOST_ORDER, var_host, NULL,
+    ret = spotify_getaddrinfo(flags & ~GETADDR_HOST_ORDER, var_host, NULL,
                               resolve_retry_seconds, sig_info, af, &ai);
     if ((ret == 0) && network)
     {
@@ -291,7 +291,7 @@ do_preresolve_host(struct context *c,
         return 0;
     }
 
-    status = openvpn_getaddrinfo(flags, hostname, servname,
+    status = spotify_getaddrinfo(flags, hostname, servname,
                                  c->options.resolve_retry_seconds, NULL,
                                  af, &ai);
     if (status == 0)
@@ -426,7 +426,7 @@ err:
  * If resolve error, try again for resolve_retry_seconds seconds.
  */
 int
-openvpn_getaddrinfo(unsigned int flags,
+spotify_getaddrinfo(unsigned int flags,
                     const char *hostname,
                     const char *servname,
                     int resolve_retry_seconds,
@@ -533,7 +533,7 @@ openvpn_getaddrinfo(unsigned int flags,
             if (management)
             {
                 management_set_state(management,
-                                     OPENVPN_STATE_RESOLVE,
+                                     spotify_STATE_RESOLVE,
                                      NULL,
                                      NULL,
                                      NULL,
@@ -659,7 +659,7 @@ done:
  * isn't very good about error checking.
  */
 int
-openvpn_inet_aton(const char *dotted_quad, struct in_addr *addr)
+spotify_inet_aton(const char *dotted_quad, struct in_addr *addr)
 {
     unsigned int a, b, c, d;
 
@@ -728,7 +728,7 @@ ip_addr_dotted_quad_safe(const char *dotted_quad)
     /* verify that string will convert to IP address */
     {
         struct in_addr a;
-        return openvpn_inet_aton(dotted_quad, &a) == OIA_IP;
+        return spotify_inet_aton(dotted_quad, &a) == OIA_IP;
     }
 }
 
@@ -1265,7 +1265,7 @@ socket_do_accept(socket_descriptor_t sd,
     else if (remote_len_af && remote_len != remote_len_af)
     {
         msg(D_LINK_ERRORS, "TCP: Received strange incoming connection with unknown address length=%d", remote_len);
-        openvpn_close_socket(new_sd);
+        spotify_close_socket(new_sd);
         new_sd = SOCKET_UNDEFINED;
     }
     else
@@ -1296,8 +1296,8 @@ socket_listen_accept(socket_descriptor_t sd,
                      volatile int *signal_received)
 {
     struct gc_arena gc = gc_new();
-    /* struct openvpn_sockaddr *remote = &act->dest; */
-    struct openvpn_sockaddr remote_verify = act->dest;
+    /* struct spotify_sockaddr *remote = &act->dest; */
+    struct spotify_sockaddr remote_verify = act->dest;
     socket_descriptor_t new_sd = SOCKET_UNDEFINED;
 
     CLEAR(*act);
@@ -1310,7 +1310,7 @@ socket_listen_accept(socket_descriptor_t sd,
         struct timeval tv;
 
         FD_ZERO(&reads);
-        openvpn_fd_set(sd, &reads);
+        spotify_fd_set(sd, &reads);
         tv.tv_sec = 0;
         tv.tv_usec = 0;
 
@@ -1341,7 +1341,7 @@ socket_listen_accept(socket_descriptor_t sd,
             struct addrinfo *ai = NULL;
             if (remote_dynamic)
             {
-                openvpn_getaddrinfo(0, remote_dynamic, NULL, 1, NULL,
+                spotify_getaddrinfo(0, remote_dynamic, NULL, 1, NULL,
                                     remote_verify.addr.sa.sa_family, &ai);
             }
 
@@ -1350,7 +1350,7 @@ socket_listen_accept(socket_descriptor_t sd,
                 msg(M_WARN,
                     "TCP NOTE: Rejected connection attempt from %s due to --remote setting",
                     print_link_socket_actual(act, &gc));
-                if (openvpn_close_socket(new_sd))
+                if (spotify_close_socket(new_sd))
                 {
                     msg(M_ERR, "TCP: close socket failed (new_sd)");
                 }
@@ -1368,7 +1368,7 @@ socket_listen_accept(socket_descriptor_t sd,
         management_sleep(1);
     }
 
-    if (!nowait && openvpn_close_socket(sd))
+    if (!nowait && spotify_close_socket(sd))
     {
         msg(M_ERR, "TCP: close socket failed (sd)");
     }
@@ -1434,7 +1434,7 @@ socket_bind(socket_descriptor_t sd,
 }
 
 int
-openvpn_connect(socket_descriptor_t sd,
+spotify_connect(socket_descriptor_t sd,
                 const struct sockaddr *remote,
                 int connect_timeout,
                 volatile int *signal_received)
@@ -1449,7 +1449,7 @@ openvpn_connect(socket_descriptor_t sd,
     status = connect(sd, remote, af_addr_size(remote->sa_family));
     if (status)
     {
-        status = openvpn_errno();
+        status = spotify_errno();
     }
     if (
 #ifdef _WIN32
@@ -1471,7 +1471,7 @@ openvpn_connect(socket_descriptor_t sd,
             struct timeval tv;
 
             FD_ZERO(&writes);
-            openvpn_fd_set(sd, &writes);
+            spotify_fd_set(sd, &writes);
             tv.tv_sec = (connect_timeout > 0) ? 1 : 0;
             tv.tv_usec = 0;
 
@@ -1488,7 +1488,7 @@ openvpn_connect(socket_descriptor_t sd,
             }
             if (status < 0)
             {
-                status = openvpn_errno();
+                status = spotify_errno();
                 break;
             }
             if (status <= 0)
@@ -1519,7 +1519,7 @@ openvpn_connect(socket_descriptor_t sd,
                 }
                 else
                 {
-                    status = openvpn_errno();
+                    status = spotify_errno();
                 }
                 break;
             }
@@ -1568,7 +1568,7 @@ socket_connect(socket_descriptor_t *sd,
     if (management)
     {
         management_set_state(management,
-                             OPENVPN_STATE_TCP_CONNECT,
+                             spotify_STATE_TCP_CONNECT,
                              NULL,
                              NULL,
                              NULL,
@@ -1578,7 +1578,7 @@ socket_connect(socket_descriptor_t *sd,
 #endif
 
     /* Set the actual address */
-    status = openvpn_connect(*sd, dest, connect_timeout, &sig_info->signal_received);
+    status = spotify_connect(*sd, dest, connect_timeout, &sig_info->signal_received);
 
     get_signal(&sig_info->signal_received);
     if (sig_info->signal_received)
@@ -1592,7 +1592,7 @@ socket_connect(socket_descriptor_t *sd,
         msg(D_LINK_ERRORS, "TCP: connect to %s failed: %s",
             print_sockaddr(dest, &gc), strerror(status));
 
-        openvpn_close_socket(*sd);
+        spotify_close_socket(*sd);
         *sd = SOCKET_UNDEFINED;
         register_signal(sig_info, SIGUSR1, "connection-failed");
     }
@@ -1680,7 +1680,7 @@ resolve_bind_local(struct link_socket *sock, const sa_family_t af)
 
         if (status)
         {
-            status = openvpn_getaddrinfo(flags, sock->local_host, sock->local_port, 0,
+            status = spotify_getaddrinfo(flags, sock->local_host, sock->local_port, 0,
                                          NULL, af, &sock->info.lsa->bind_local);
         }
 
@@ -1763,7 +1763,7 @@ resolve_remote(struct link_socket *sock,
                                           flags, &ai);
             if (status)
             {
-                status = openvpn_getaddrinfo(flags, sock->remote_host, sock->remote_port,
+                status = spotify_getaddrinfo(flags, sock->remote_host, sock->remote_port,
                                              retry, sig_info, sock->info.af, &ai);
             }
 
@@ -1899,7 +1899,7 @@ link_socket_init_phase1(struct context *c, int mode)
         sock->remote_host = c->c1.http_proxy->options.server;
         sock->remote_port = c->c1.http_proxy->options.port;
 
-        /* the OpenVPN server we will use the proxy to connect to */
+        /* the spotify server we will use the proxy to connect to */
         sock->proxy_dest_host = remote_host;
         sock->proxy_dest_port = remote_port;
     }
@@ -1910,7 +1910,7 @@ link_socket_init_phase1(struct context *c, int mode)
         sock->remote_host = c->c1.socks_proxy->server;
         sock->remote_port = c->c1.socks_proxy->port;
 
-        /* the OpenVPN server we will use the proxy to connect to */
+        /* the spotify server we will use the proxy to connect to */
         sock->proxy_dest_host = remote_host;
         sock->proxy_dest_port = remote_port;
     }
@@ -2084,7 +2084,7 @@ phase2_tcp_client(struct link_socket *sock, struct signal_info *sig_info)
         }
         if (proxy_retry)
         {
-            openvpn_close_socket(sock->sd);
+            spotify_close_socket(sock->sd);
             sock->sd = create_socket_tcp(sock->info.lsa->current_remote);
         }
 
@@ -2315,7 +2315,7 @@ link_socket_close(struct link_socket *sock)
             if (!gremlin)
             {
                 msg(D_LOW, "TCP/UDP: Closing socket");
-                if (openvpn_close_socket(sock->sd))
+                if (spotify_close_socket(sock->sd))
                 {
                     msg(M_WARN | M_ERRNO, "TCP/UDP: Close Socket failed");
                 }
@@ -2332,7 +2332,7 @@ link_socket_close(struct link_socket *sock)
 
         if (socket_defined(sock->ctrl_sd))
         {
-            if (openvpn_close_socket(sock->ctrl_sd))
+            if (spotify_close_socket(sock->ctrl_sd))
             {
                 msg(M_WARN | M_ERRNO, "TCP/UDP: Close Socket (ctrl_sd) failed");
             }
@@ -2397,11 +2397,11 @@ link_socket_connection_initiated(struct link_socket_info *info,
     setenv_str(es, "common_name", common_name);
 
     /* Process --ipchange plugin */
-    if (plugin_defined(info->plugins, OPENVPN_PLUGIN_IPCHANGE))
+    if (plugin_defined(info->plugins, spotify_PLUGIN_IPCHANGE))
     {
         struct argv argv = argv_new();
         ipchange_fmt(false, &argv, info, &gc);
-        if (plugin_call(info->plugins, OPENVPN_PLUGIN_IPCHANGE, &argv, NULL, es) != OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (plugin_call(info->plugins, spotify_PLUGIN_IPCHANGE, &argv, NULL, es) != spotify_PLUGIN_FUNC_SUCCESS)
         {
             msg(M_WARN, "WARNING: ipchange plugin call failed");
         }
@@ -2414,7 +2414,7 @@ link_socket_connection_initiated(struct link_socket_info *info,
         struct argv argv = argv_new();
         setenv_str(es, "script_type", "ipchange");
         ipchange_fmt(true, &argv, info, &gc);
-        openvpn_run_script(&argv, es, 0, "--ipchange");
+        spotify_run_script(&argv, es, 0, "--ipchange");
         argv_free(&argv);
     }
 
@@ -2664,9 +2664,9 @@ stream_buf_added(struct stream_buf *sb,
 #if PORT_SHARE
         if (sb->port_share_state == PS_ENABLED)
         {
-            if (!is_openvpn_protocol(&sb->buf))
+            if (!is_spotify_protocol(&sb->buf))
             {
-                msg(D_STREAM_ERRORS, "Non-OpenVPN client protocol detected");
+                msg(D_STREAM_ERRORS, "Non-spotify client protocol detected");
                 sb->port_share_state = PS_FOREIGN;
                 sb->error = true;
                 return false;
@@ -2851,7 +2851,7 @@ print_link_socket_actual_ex(const struct link_socket_actual *act,
             {
                 case AF_INET:
                 {
-                    struct openvpn_sockaddr sa;
+                    struct spotify_sockaddr sa;
                     CLEAR(sa);
                     sa.addr.in4.sin_family = AF_INET;
 #if defined(HAVE_IN_PKTINFO) && defined(HAVE_IPI_SPEC_DST)
@@ -2978,7 +2978,7 @@ add_in6_addr( struct in6_addr base, uint32_t add )
 
 /* set environmental variables for ip/port in *addr */
 void
-setenv_sockaddr(struct env_set *es, const char *name_prefix, const struct openvpn_sockaddr *addr, const unsigned int flags)
+setenv_sockaddr(struct env_set *es, const char *name_prefix, const struct spotify_sockaddr *addr, const unsigned int flags)
 {
     char name_buf[256];
 
@@ -3035,7 +3035,7 @@ setenv_in_addr_t(struct env_set *es, const char *name_prefix, in_addr_t addr, co
 {
     if (addr || !(flags & SA_SET_IF_NONZERO))
     {
-        struct openvpn_sockaddr si;
+        struct spotify_sockaddr si;
         CLEAR(si);
         si.addr.in4.sin_family = AF_INET;
         si.addr.in4.sin_addr.s_addr = htonl(addr);
@@ -3051,7 +3051,7 @@ setenv_in6_addr(struct env_set *es,
 {
     if (!IN6_IS_ADDR_UNSPECIFIED(addr) || !(flags & SA_SET_IF_NONZERO))
     {
-        struct openvpn_sockaddr si;
+        struct spotify_sockaddr si;
         CLEAR(si);
         si.addr.in6.sin6_family = AF_INET6;
         si.addr.in6.sin6_addr = *addr;
@@ -3186,7 +3186,7 @@ addr_family_name(int af)
  * This is used for options compatibility
  * checking.
  *
- * IPv6 and IPv4 protocols are comptabile but OpenVPN
+ * IPv6 and IPv4 protocols are comptabile but spotify
  * has always sent UDPv4, TCPv4 over the wire. Keep these
  * strings for backward compatibility
  */
@@ -3919,7 +3919,7 @@ sd_close(socket_descriptor_t *sd)
 {
     if (sd && socket_defined(*sd))
     {
-        openvpn_close_socket(*sd);
+        spotify_close_socket(*sd);
         *sd = SOCKET_UNDEFINED;
     }
 }
@@ -4006,7 +4006,7 @@ socket_connect_unix(socket_descriptor_t sd,
     int status = connect(sd, (struct sockaddr *) remote, sizeof(struct sockaddr_un));
     if (status)
     {
-        status = openvpn_errno();
+        status = spotify_errno();
     }
     return status;
 }

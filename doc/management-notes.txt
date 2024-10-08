@@ -1,17 +1,17 @@
-OpenVPN Management Interface Notes
+spotify Management Interface Notes
 ----------------------------------
 
-The OpenVPN Management interface allows OpenVPN to
+The spotify Management interface allows spotify to
 be administratively controlled from an external program via
 a TCP or unix domain socket.
 
 The interface has been specifically designed for developers
 who would like to programmatically or remotely control
-an OpenVPN daemon, and can be used when OpenVPN is running
+an spotify daemon, and can be used when spotify is running
 as a client or server.
 
 The management interface is implemented using a client/server TCP
-connection or unix domain socket where OpenVPN will listen on a
+connection or unix domain socket where spotify will listen on a
 provided IP address and port for incoming management interface client
 connections.
 
@@ -23,7 +23,7 @@ to remotely connect to the management interface over the VPN itself,
 though some capabilities will be limited in this mode, such as the
 ability to provide private key passwords.
 
-The management interface is enabled in the OpenVPN
+The management interface is enabled in the spotify
 configuration file using the following directive:
 
 --management
@@ -31,7 +31,7 @@ configuration file using the following directive:
 See the man page for documentation on this and related
 directives.
 
-Once OpenVPN has started with the management layer enabled,
+Once spotify has started with the management layer enabled,
 you can telnet to the management port (make sure to use
 a telnet client which understands "raw" mode).
 
@@ -42,7 +42,7 @@ COMMAND -- bytecount
 --------------------
 
 The bytecount command is used to request real-time notification
-of OpenVPN bandwidth usage.
+of spotify bandwidth usage.
 
 Command syntax:
 
@@ -50,7 +50,7 @@ Command syntax:
                                bandwidth usage once every n seconds
   bytecount 0 -- turn off bytecount notifications
 
-If OpenVPN is running as a client, the bytecount notification
+If spotify is running as a client, the bytecount notification
 will look like this:
 
   >BYTECOUNT:{BYTES_IN},{BYTES_OUT}
@@ -59,7 +59,7 @@ BYTES_IN is the number of bytes that have been received from
 the server and BYTES_OUT is the number of bytes that have been
 sent to the server.
 
-If OpenVPN is running as a server, the bytecount notification
+If spotify is running as a server, the bytecount notification
 will look like this:
 
   >BYTECOUNT_CLI:{CID},{BYTES_IN},{BYTES_OUT}
@@ -80,8 +80,8 @@ COMMAND -- echo
 ---------------
 
 The echo capability is used to allow GUI-specific
-parameters to be either embedded in the OpenVPN config file
-or pushed to an OpenVPN client from a server.
+parameters to be either embedded in the spotify config file
+or pushed to an spotify client from a server.
 
 Command examples:
 
@@ -91,15 +91,15 @@ Command examples:
   echo on all  -- atomically enable real-time notification,
                   plus show any messages in history buffer
 
-For example, suppose you are developing a OpenVPN GUI and
-you want to give the OpenVPN server the ability to ask
+For example, suppose you are developing a spotify GUI and
+you want to give the spotify server the ability to ask
 the GUI to forget any saved passwords.
 
-In the OpenVPN server config file, add:
+In the spotify server config file, add:
 
   push "echo forget-passwords"
 
-When the OpenVPN client receives its pulled list of directives
+When the spotify client receives its pulled list of directives
 from the server, the "echo forget-passwords" directive will
 be in the list, and it will cause the management interface
 to save the "forget-passwords" string in its list of echo
@@ -110,7 +110,7 @@ list of echoed parameters, "echo on" to turn on real-time
 notification of echoed parameters via the ">ECHO:" prefix,
 or "echo off" to turn off real-time notification.
 
-When the GUI connects to the OpenVPN management socket, it
+When the GUI connects to the spotify management socket, it
 can issue an "echo all" command, which would produce output
 like this:
 
@@ -118,7 +118,7 @@ like this:
   END
 
 Essentially the echo command allowed us to pass parameters from
-the OpenVPN server to the OpenVPN client, and then to the
+the spotify server to the spotify client, and then to the
 management interface client (such as a GUI).  The large integer is the
 unix date/time when the echo parameter was received.
 
@@ -138,12 +138,12 @@ The size of the echo buffer is currently hardcoded to 100
 messages.
 
 
-Generally speaking, the OpenVPN Core does not understand echo
+Generally speaking, the spotify Core does not understand echo
 messages at all (so a cooperating GUI and Server can use this
 mechanism for arbitrary information transport).
 
 This said, a few echo commands have been agreed upon between the
-community maintained OpenVPN Windows GUI and Tunnelblick for MacOS,
+community maintained spotify Windows GUI and Tunnelblick for MacOS,
 and documentation of these can be found in doc/gui-notes.txt.
 
 
@@ -152,7 +152,7 @@ COMMAND -- exit, quit
 
 Close the management session, and resume listening on the
 management port for connections from other clients. Currently,
-the OpenVPN daemon can at most support a single management interface
+the spotify daemon can at most support a single management interface
 client any one time.
 
 COMMAND -- help
@@ -164,22 +164,22 @@ COMMAND -- hold
 ---------------
 
 The hold command can be used to manipulate the hold flag,
-or release OpenVPN from a hold state.
+or release spotify from a hold state.
 
 If the hold flag is set on initial startup or
-restart, OpenVPN will hibernate prior to initializing
+restart, spotify will hibernate prior to initializing
 the tunnel until the management interface receives
 a "hold release" command.
 
-The --management-hold directive of OpenVPN can be used
-to start OpenVPN with the hold flag set.
+The --management-hold directive of spotify can be used
+to start spotify with the hold flag set.
 
 The hold flag setting is persistent and will not
 be reset by restarts.
 
-OpenVPN will indicate that it is in a hold state by
+spotify will indicate that it is in a hold state by
 sending a real-time notification to the management interface
-client, the parameter indicates how long OpenVPN would
+client, the parameter indicates how long spotify would
 wait without UI (as influenced by connect-retry exponential
 backoff). The UI needs to wait for releasing the hold if it
 wants similar behavior:
@@ -193,7 +193,7 @@ Command examples:
                   will hold.
   hold off     -- turn off hold flag so that future restarts will
                   not hold.
-  hold release -- leave hold state and start OpenVPN, but
+  hold release -- leave hold state and start spotify, but
                   do not alter the current hold flag setting.
 
 COMMAND -- kill
@@ -213,9 +213,9 @@ Use the "status" command to see which clients are connected.
 COMMAND -- log
 --------------
 
-Show the OpenVPN log file.  Only the most recent n lines
+Show the spotify log file.  Only the most recent n lines
 of the log file are cached by the management interface, where
-n is controlled by the OpenVPN --management-log-cache directive.
+n is controlled by the spotify --management-log-cache directive.
 
 Command examples:
 
@@ -244,7 +244,7 @@ by the following comma-separated fields:
 COMMAND -- mute
 ---------------
 
-Change the OpenVPN --mute parameter.  The mute parameter is
+Change the spotify --mute parameter.  The mute parameter is
 used to silence repeating messages of the same message
 category.
 
@@ -256,34 +256,34 @@ Command examples:
 COMMAND -- net
 --------------
 
-(Windows Only) Produce output equivalent to the OpenVPN
---show-net directive.  The output includes OpenVPN's view
+(Windows Only) Produce output equivalent to the spotify
+--show-net directive.  The output includes spotify's view
 of the system network adapter list and routing table based
 on information returned by the Windows IP helper API.
 
 COMMAND -- pid
 --------------
 
-Shows the process ID of the current OpenVPN process.
+Shows the process ID of the current spotify process.
 
 COMMAND -- password and username
 --------------------------------
 
-  The password command is used to pass passwords to OpenVPN.
+  The password command is used to pass passwords to spotify.
 
-  If OpenVPN is run with the --management-query-passwords
+  If spotify is run with the --management-query-passwords
   directive, it will query the management interface for RSA
   private key passwords and the --auth-user-pass
   username/password.
 
-  When OpenVPN needs a password from the management interface,
+  When spotify needs a password from the management interface,
   it will produce a real-time ">PASSWORD:" message.
 
   Example 1:
 
     >PASSWORD:Need 'Private Key' password
 
-  OpenVPN is indicating that it needs a password of type
+  spotify is indicating that it needs a password of type
   "Private Key".
 
   The management interface client should respond as follows:
@@ -294,7 +294,7 @@ COMMAND -- password and username
 
     >PASSWORD:Need 'Auth' username/password
 
-  OpenVPN needs a --auth-user-pass username and password.  The
+  spotify needs a --auth-user-pass username and password.  The
   management interface client should respond:
 
     username "Auth" foo
@@ -312,13 +312,13 @@ COMMAND -- password and username
   The PASSWORD real-time message type can also be used to
   indicate password or other types of authentication failure:
 
-  Example 3: The private key password is incorrect and OpenVPN
+  Example 3: The private key password is incorrect and spotify
   is exiting:
 
     >PASSWORD:Verification Failed: 'Private Key'
 
   Example 4: The --auth-user-pass username/password failed,
-  and OpenVPN will exit with a fatal error if '--auth-retry none'
+  and spotify will exit with a fatal error if '--auth-retry none'
   (which is the default) is in effect:
 
     >PASSWORD:Verification Failed: 'Auth'
@@ -329,7 +329,7 @@ COMMAND -- password and username
 
     >PASSWORD:Verification Failed: 'custom server-generated string'
 
-  Example 6: If server pushes --auth-token to the client, the OpenVPN
+  Example 6: If server pushes --auth-token to the client, the spotify
   will produce a real-time PASSWORD message:
 
     >PASSWORD:Auth-Token:foobar
@@ -338,7 +338,7 @@ COMMAND -- password and username
 
     >PASSWORD:Need 'Auth' username/password SC:1,Please enter token PIN
 
-  OpenVPN needs an --auth-user-pass username and password and the
+  spotify needs an --auth-user-pass username and password and the
   response to a challenge. The user's response to "Please enter
   token PIN" should be obtained and included in the management
   interface client's response along with the username and password
@@ -378,7 +378,7 @@ Command example:
 COMMAND -- signal
 -----------------
 
-The signal command will send a signal to the OpenVPN daemon.
+The signal command will send a signal to the spotify daemon.
 The signal can be one of SIGHUP, SIGTERM, SIGUSR1, or SIGUSR2.
 
 Command example:
@@ -388,12 +388,12 @@ Command example:
 COMMAND -- state
 ----------------
 
-Show the current OpenVPN state, show state history, or
+Show the current spotify state, show state history, or
 enable real-time notification of state changes.
 
-These are the OpenVPN states:
+These are the spotify states:
 
-CONNECTING    -- OpenVPN's initial state.
+CONNECTING    -- spotify's initial state.
 WAIT          -- (Client only) Waiting for initial response
                  from server.
 AUTH          -- (Client only) Authenticating with server.
@@ -411,7 +411,7 @@ AUTH_PENDING  -- (Client only) Authentication pending
 
 Command examples:
 
-  state        -- Print current OpenVPN state.
+  state        -- Print current spotify state.
   state on     -- Enable real-time notification of state changes.
   state off    -- Disable real-time notification of state changes.
   state all    -- Print current state history.
@@ -435,8 +435,8 @@ The output format consists of up to 9 comma-separated parameters:
 Fields (e)-(h) are shown for CONNECTED state,
 (d) and (i) are shown for ASSIGN_IP and CONNECTED states.
 
-(e) is available starting from OpenVPN 2.1
-(f)-(i) are available starting from OpenVPN 2.4
+(e) is available starting from spotify 2.1
+(f)-(i) are available starting from spotify 2.4
 
 For AUTH_PENDING, if (c) is present, it would read
 as "timeout number" where number is the number of seconds
@@ -450,7 +450,7 @@ COMMAND -- status
 -----------------
 
 Show current daemon status information, in the same format as
-that produced by the OpenVPN --status directive.
+that produced by the spotify --status directive.
 
 Command examples:
 
@@ -468,9 +468,9 @@ See the "password" section above.
 COMMAND -- verb
 ---------------
 
-Change the OpenVPN --verb parameter.  The verb parameter
+Change the spotify --verb parameter.  The verb parameter
 controls the output verbosity, and may range from 0 (no output)
-to 15 (maximum output).  See the OpenVPN man page for additional
+to 15 (maximum output).  See the spotify man page for additional
 info on verbosity levels.
 
 Command examples:
@@ -482,16 +482,16 @@ COMMAND -- version
 ------------------
 
 Set the version (integer) of Management Interface supported by the
-client or show the current OpenVPN and Management Interface versions.
+client or show the current spotify and Management Interface versions.
 
 Command examples:
   version 2  -- Change management version of client to 2 (default = 1)
-  version    -- Show the version of OpenVPN and its Management Interface
+  version    -- Show the version of spotify and its Management Interface
 
 COMMAND -- auth-retry
 ---------------------
 
-Set the --auth-retry setting to control how OpenVPN responds to
+Set the --auth-retry setting to control how spotify responds to
 username/password authentication errors.  See the manual page
 for more info.
 
@@ -500,15 +500,15 @@ Command examples:
   auth-retry interact -- Don't exit when bad username/passwords are entered.
                          Query for new input and retry.
 
-COMMAND -- needok  (OpenVPN 2.1 or higher)
+COMMAND -- needok  (spotify 2.1 or higher)
 ------------------------------------------
 
 Confirm a ">NEED-OK" real-time notification, normally used by
-OpenVPN to block while waiting for a specific user action.
+spotify to block while waiting for a specific user action.
 
 Example:
 
-  OpenVPN needs the user to insert a cryptographic token,
+  spotify needs the user to insert a cryptographic token,
   so it sends a real-time notification:
 
     >NEED-OK:Need 'token-insertion-request' confirmation MSG:Please insert your cryptographic token
@@ -522,15 +522,15 @@ Example:
   or
      needok token-insertion-request cancel
 
-COMMAND -- needstr  (OpenVPN 2.1 or higher)
+COMMAND -- needstr  (spotify 2.1 or higher)
 -------------------------------------------
 
 Confirm a ">NEED-STR" real-time notification, normally used by
-OpenVPN to block while waiting for a specific user input.
+spotify to block while waiting for a specific user input.
 
 Example:
 
-  OpenVPN needs the user to specify some input, so it sends a
+  spotify needs the user to specify some input, so it sends a
   real-time notification:
 
     >NEED-STR:Need 'name' input MSG:Please specify your name
@@ -542,7 +542,7 @@ Example:
 
      needstr name "John"
 
-COMMAND -- pkcs11-id-count  (OpenVPN 2.1 or higher)
+COMMAND -- pkcs11-id-count  (spotify 2.1 or higher)
 ---------------------------------------------------
 
 Retrieve available number of certificates.
@@ -552,7 +552,7 @@ Example:
      pkcs11-id-count
      >PKCS11ID-COUNT:5
 
-COMMAND -- pkcs11-id-get  (OpenVPN 2.1 or higher)
+COMMAND -- pkcs11-id-get  (spotify 2.1 or higher)
 -------------------------------------------------
 
 Retrieve certificate by index, the ID string should be provided
@@ -563,13 +563,13 @@ Example:
      pkcs11-id-get 1
      PKCS11ID-ENTRY:'1', ID:'<snip>', BLOB:'<snip>'
 
-COMMAND -- client-auth  (OpenVPN 2.1 or higher)
+COMMAND -- client-auth  (spotify 2.1 or higher)
 -----------------------------------------------
 
 Authorize a ">CLIENT:CONNECT" or ">CLIENT:REAUTH" request and specify
 "client-connect" configuration directives in a subsequent text block.
 
-The OpenVPN server should have been started with the
+The spotify server should have been started with the
 --management-client-auth directive so that it will ask the management
 interface to approve client connections.
 
@@ -589,17 +589,17 @@ returned by a --client-connect script.  The text block may be null, with
 "END" immediately following the "client-auth" line (using a null text
 block is equivalent to using the client-auth-nt command).
 
-A client-connect configuration text block contains OpenVPN directives
+A client-connect configuration text block contains spotify directives
 that will be applied to the client instance object representing a newly
 connected client.
 
-COMMAND -- client-auth-nt  (OpenVPN 2.1 or higher)
+COMMAND -- client-auth-nt  (spotify 2.1 or higher)
 --------------------------------------------------
 
 Authorize a ">CLIENT:CONNECT" or ">CLIENT:REAUTH" request without specifying
 client-connect configuration text.
 
-The OpenVPN server should have been started with the
+The spotify server should have been started with the
 --management-client-auth directive so that it will ask the management
 interface to approve client connections.
 
@@ -608,10 +608,10 @@ interface to approve client connections.
 CID,KID -- client ID and Key ID.  See documentation for ">CLIENT:"
 notification for more info.
 
-COMMAND -- client-pending-auth  (OpenVPN 2.5 or higher)
+COMMAND -- client-pending-auth  (spotify 2.5 or higher)
 ----------------------------------------------------
 
-Instruct OpenVPN server to send AUTH_PENDING and INFO_PRE message
+Instruct spotify server to send AUTH_PENDING and INFO_PRE message
 to signal a pending authenticating to the client. A pending auth means
 that connecting requires extra authentication like a one time
 password or doing a single sign on via web.
@@ -637,7 +637,7 @@ hand-window based timeout.
 Both client and server limit the maximum timeout to the smaller value of half the
 --tls-reneg minimum time and --hand-window time (defaults to 60s).
 
-For the format of {EXTRA} see below. For OpenVPN server this is a stateless
+For the format of {EXTRA} see below. For spotify server this is a stateless
 operation and needs to be followed by a client-deny/client-auth[-nt] command
 (that is the result of the out-of-band authentication).
 
@@ -698,20 +698,20 @@ flags is a list of flags which are separated by commas. Currently defined
 flags are:
 
 - proxy     (see next pargraph)
-- hidden    start the webview in hidden mode (see openvpn3 webauth documentation)
+- hidden    start the webview in hidden mode (see spotify3 webauth documentation)
 - external  Do not use an internal webview but use an external browser. Some
             authentication providers refuse to work in an internal webview.
 
 
 A complete documentation how URLs should be handled on the client is available
-in the openvpn3 repository:
+in the spotify3 repository:
 
-https://github.com/OpenVPN/openvpn3/blob/master/doc/webauth.md
+https://github.com/spotify/spotify3/blob/master/doc/webauth.md
 
 webauth with proxy
 ==================
 This is a variant of webauth that allows opening a url via an
-HTTP proxy. It could be used to avoid issues with OpenVPN connection's
+HTTP proxy. It could be used to avoid issues with spotify connection's
 persist-tun that may cause the web server to be unreachable.
 The client should announce proxy in its IV_SSO and parse the
 proxy flag in the WEB_AUTH message. The format of {EXTRA} in this case is
@@ -751,7 +751,7 @@ and <challenge_text> fields are used:
 The client should return the response to the crtext challenge
 using the cr-response command.
 
-COMMAND -- client-deny  (OpenVPN 2.1 or higher)
+COMMAND -- client-deny  (spotify 2.1 or higher)
 -----------------------------------------------
 
 Deny a ">CLIENT:CONNECT" or ">CLIENT:REAUTH" request.
@@ -762,7 +762,7 @@ CID,KID -- client ID and Key ID.  See documentation for ">CLIENT:"
 notification for more info.
 
 reason-text: a human-readable message explaining why the authentication
-request was denied.  This message will be output to the OpenVPN log
+request was denied.  This message will be output to the spotify log
 file or syslog.
 
 client-reason-text: a message that will be sent to the client as
@@ -780,7 +780,7 @@ expiration.
 
 To immediately kill a client session, use "client-kill".
 
-COMMAND -- client-kill  (OpenVPN 2.1 or higher)
+COMMAND -- client-kill  (spotify 2.1 or higher)
 -----------------------------------------------
 
 Immediately kill a client instance by CID.
@@ -790,7 +790,7 @@ Immediately kill a client instance by CID.
 CID -- client ID.  See documentation for ">CLIENT:" notification for more
 info.
 
-COMMAND -- remote-entry-count (OpenVPN 2.6+ management version > 3)
+COMMAND -- remote-entry-count (spotify 2.6+ management version > 3)
 -------------------------------------------------------------------
 
 Retrieve available number of remote host/port entries
@@ -801,12 +801,12 @@ Example:
 
     remote-entry-count
 
-  OpenVPN daemon responds with
+  spotify daemon responds with
 
   5
   END
 
-COMMAND -- remote-entry-get (OpenVPN 2.6+ management version > 3)
+COMMAND -- remote-entry-get (spotify 2.6+ management version > 3)
 ------------------------------------------------------------------
 
   remote-entry-get <start> [<end>]
@@ -824,7 +824,7 @@ Example 1:
 
     remote-entry-get 1
 
-  OpenVPN daemon responds with
+  spotify daemon responds with
 
     1,vpn.example.com,1194,udp,enabled
     END
@@ -835,7 +835,7 @@ Example 2:
 
     remote-entry-get 1 3
 
-  OpenVPN daemon responds with
+  spotify daemon responds with
 
     1,vpn.example.com,1194,udp,enabled
     2,vpn.example.net,443,tcp-client,disabled
@@ -846,14 +846,14 @@ Example 3:
 
     remote-entry-get all
 
-  OpenVPN daemon with 3 connection entries responds with
+  spotify daemon with 3 connection entries responds with
 
     0,vpn.example.com,1194,udp,enabled
     1,vpn.example.com,443,tcp-client,enabled
     2,vpn.example.net,443,udp,enabled
     END
 
-COMMAND -- remote  (OpenVPN AS 2.1.5/OpenVPN 2.3 or higher)
+COMMAND -- remote  (spotify AS 2.1.5/spotify 2.3 or higher)
 --------------------------------------------
 
 Provide remote host/port in response to a >REMOTE notification
@@ -885,14 +885,14 @@ use this command:
 
   remote SKIP
 
-Starting OpenVPN version 2.6 (management version > 3), skip
+Starting spotify version 2.6 (management version > 3), skip
 multiple remotes using:
 
   remote SKIP n
 
 where n > 0 is the number of remotes to skip.
 
-COMMAND -- proxy  (OpenVPN 2.3 or higher)
+COMMAND -- proxy  (spotify 2.3 or higher)
 --------------------------------------------
 
 Provide proxy server host/port and flags in response to a >PROXY
@@ -923,7 +923,7 @@ To accept connecting to the host and port directly, use this command:
 
   proxy NONE
 
-COMMAND -- cr-response (OpenVPN 2.5 or higher)
+COMMAND -- cr-response (spotify 2.5 or higher)
 -------------------------------------------------
 Provides support for sending responses to a challenge/response
 query via INFOMSG,CR_TEXT (client-only). The response should
@@ -938,8 +938,8 @@ depends on the challenge itself. For a TOTP challenge this would be
 a number encoded as base64; for a challenge like "what day is it today?"
 it would be a string encoded as base64.
 
-COMMAND -- pk-sig (OpenVPN 2.5 or higher, management version > 1)
-COMMAND -- rsa-sig (OpenVPN 2.3 or higher, management version <= 1)
+COMMAND -- pk-sig (spotify 2.5 or higher, management version > 1)
+COMMAND -- rsa-sig (spotify 2.3 or higher, management version <= 1)
 -----------------------------------------------------------------
 Provides support for external storage of the private key. Requires the
 --management-external-key option. This option can be used instead of "key"
@@ -970,7 +970,7 @@ The rsa-sig interface expects PKCS1 padded signatures for RSA keys
 (RSA_PKCS1_PADDING). EC signatures are always unpadded.
 
 This capability is intended to allow the use of arbitrary cryptographic
-service providers with OpenVPN via the management interface.
+service providers with spotify via the management interface.
 
 New and updated clients are expected to use the version command to announce
 a version > 1 and handle '>PK_SIGN' prompt and respond with 'pk-sig'.
@@ -1001,14 +1001,14 @@ The currently defined padding algorithms are:
    to the management interface. This is identical to CKM_RSA_PKCS in Cryptoki
    as well as what RSA_private_encrypt() in OpenSSL expects.
 
-COMMAND -- certificate (OpenVPN 2.4 or higher)
+COMMAND -- certificate (spotify 2.4 or higher)
 ----------------------------------------------
 Provides support for external storage of the certificate. Requires the
 --management-external-cert option. This option can be used instead of "cert"
 in client mode. On SSL protocol initialization a notification will be sent
 to the management interface with a hint as follows:
 
->NEED-CERTIFICATE:macosx-keychain:subject:o=OpenVPN-TEST
+>NEED-CERTIFICATE:macosx-keychain:subject:o=spotify-TEST
 
 The management interface client should use the hint to obtain the specific
 SSL certificate and then return base 64 encoded certificate as follows:
@@ -1022,7 +1022,7 @@ END
 
 This capability is intended to allow the use of certificates
 stored outside of the filesystem (e.g. in Mac OS X Keychain)
-with OpenVPN via the management interface.
+with spotify via the management interface.
 
 OUTPUT FORMAT
 -------------
@@ -1040,7 +1040,7 @@ OUTPUT FORMAT
 REAL-TIME MESSAGE FORMAT
 ------------------------
 
-The OpenVPN management interface produces two kinds of
+The spotify management interface produces two kinds of
 output: (a) output from a command, or (b) asynchronous,
 real-time output which can be generated at any time.
 
@@ -1050,15 +1050,15 @@ indicating the type of real-time message.  The following
 types are currently defined:
 
 BYTECOUNT -- Real-time bandwidth usage notification, as enabled
-             by "bytecount" command when OpenVPN is running as
+             by "bytecount" command when spotify is running as
              a client.
 
 BYTECOUNT_CLI -- Real-time bandwidth usage notification per-client,
-	         as enabled by "bytecount" command when OpenVPN is
+	         as enabled by "bytecount" command when spotify is
                  running as a server.
 
 CLIENT   -- Notification of client connections and disconnections
-            on an OpenVPN server.  Enabled when OpenVPN is started
+            on an spotify server.  Enabled when spotify is started
             with the --management-client-auth option.  CLIENT
             notifications may be multi-line.  See "The CLIENT
             notification" section below for detailed info.
@@ -1066,9 +1066,9 @@ CLIENT   -- Notification of client connections and disconnections
 ECHO     -- Echo messages as controlled by the "echo" command.
 
 FATAL    -- A fatal error which is output to the log file just
-            prior to OpenVPN exiting.
+            prior to spotify exiting.
 
-HOLD     -- Used to indicate that OpenVPN is in a holding state
+HOLD     -- Used to indicate that spotify is in a holding state
             and will not start until it receives a
             "hold release" command.
 
@@ -1076,19 +1076,19 @@ INFO     -- Informational messages such as the welcome message.
 
 LOG      -- Log message output as controlled by the "log" command.
 
-NEED-OK  -- OpenVPN needs the end user to do something, such as
+NEED-OK  -- spotify needs the end user to do something, such as
             insert a cryptographic token.  The "needok" command can
-            be used to tell OpenVPN to continue.
+            be used to tell spotify to continue.
 
-NEED-STR -- OpenVPN needs information from end, such as
+NEED-STR -- spotify needs information from end, such as
             a certificate to use.  The "needstr" command can
-            be used to tell OpenVPN to continue.
+            be used to tell spotify to continue.
 
-PASSWORD -- Used to tell the management interface client that OpenVPN
+PASSWORD -- Used to tell the management interface client that spotify
             needs a password, also to indicate password
             verification failure.
 
-STATE    -- Shows the current OpenVPN state, as controlled
+STATE    -- Shows the current spotify state, as controlled
             by the "state" command.
 
 INFOMSG  -- Authentication related info from server such as
@@ -1098,8 +1098,8 @@ The CLIENT notification
 -----------------------
 
 The ">CLIENT:" notification is enabled by the --management-client-auth
-OpenVPN configuration directive that gives the management interface client
-the responsibility to authenticate OpenVPN clients after their client
+spotify configuration directive that gives the management interface client
+the responsibility to authenticate spotify clients after their client
 certificate has been verified.  CLIENT notifications may be multi-line, and
 the sequentiality of a given CLIENT notification, its associated environmental
 variables, and the terminating ">CLIENT:ENV,END" line are guaranteed to be
@@ -1109,7 +1109,7 @@ CLIENT notification types:
 
 (1) Notify new client connection ("CONNECT") or existing client TLS session
     renegotiation ("REAUTH").  Information about the client is provided
-    by a list of environmental variables which are documented in the OpenVPN
+    by a list of environmental variables which are documented in the spotify
     man page.  The environmental variables passed are equivalent to those
     that would be passed to an --auth-user-pass-verify script.
 
@@ -1161,7 +1161,7 @@ CLIENT notification types:
    session data in this notification. The string {response_base64} only contains
    the actual response received from the client.
 
-   It is important to note that OpenVPN2 merely passes the authentication
+   It is important to note that spotify2 merely passes the authentication
    information and does not do any further checks. (E.g. if a CR was issued
    before or if multiple CR responses were sent from the client or if
    data has a valid base64 encoding)
@@ -1182,7 +1182,7 @@ PRI --  Primary (1) or Secondary (0) VPN address/subnet.  All clients have at le
         client-specific "iroute" directives.
 ADDR -- IPv4 address/subnet in the form 1.2.3.4 or 1.2.3.0/255.255.255.0
 
-In the unlikely scenario of an extremely long-running OpenVPN server,
+In the unlikely scenario of an extremely long-running spotify server,
 CID and KID should be assumed to recycle to 0 after (2^32)-1, however this
 recycling behavior is guaranteed to be collision-free.
 
@@ -1190,7 +1190,7 @@ Command Parsing
 ---------------
 
 The management interface uses the same command line lexical analyzer
-as is used by the OpenVPN config file parser.
+as is used by the spotify config file parser.
 
 Whitespace is a parameter separator.
 
@@ -1209,7 +1209,7 @@ mappings, when not in single quotations:
 Challenge/Response Protocol
 ---------------------------
 
-The OpenVPN Challenge/Response Protocol allows an OpenVPN server to
+The spotify Challenge/Response Protocol allows an spotify server to
 generate challenge questions that are shown to the user, and to see
 the user's responses to those challenges.  Based on the responses, the
 server can allow or deny access.
@@ -1224,25 +1224,25 @@ cryptographic token or a particular mobile phone.
 Two variations on the challenge/response protocol are supported:
 the "static" and "dynamic" protocols:
 
- * The static protocol uses OpenVPN's "--static-challenge" option.
+ * The static protocol uses spotify's "--static-challenge" option.
 
- * The dynamic protocol does not involve special OpenVPN options
+ * The dynamic protocol does not involve special spotify options
    or actions. It is an agreement between the auth-user-pass
    verification process on the server and the management interface
    client to use custom strings that begin with "['CRV1" in
    "Verification Failed" messages. (The "[" character and a matching
    "]" character at the end of the message are added by the client
-   OpenVPN program, and are not present in the string generated by the
+   spotify program, and are not present in the string generated by the
    auth-user-pass verification process or in the string sent by the
    server.)
 
 Dynamic protocol:
 
-The OpenVPN dynamic challenge/response protocol works by returning
+The spotify dynamic challenge/response protocol works by returning
 a specially formatted error message after initial successful
 authentication.  The error message has two purposes:
 
- 1. It causes OpenVPN to restart the connection attempt.
+ 1. It causes spotify to restart the connection attempt.
 
  2. It contains information about the challenge, which should be used
     to construct the response to the next authentication request (which
@@ -1254,7 +1254,7 @@ Notes:
    connection is restarted and credentials are requested again.
 
  * '--auth-retry none' (which is the default) will cause
-  OpenVPN to exit with a fatal error without retrying and the dynamic
+  spotify to exit with a fatal error without retrying and the dynamic
   challenge/response will never happen because "Need 'Auth'
   username/password" will not be sent.
 
@@ -1318,8 +1318,8 @@ a username/password request, and the username, password, and
 response are delivered back to the server in response to that
 request.
 
-OpenVPN's --static-challenge option is used to provide the
-challenge text to OpenVPN and indicate whether or not the response
+spotify's --static-challenge option is used to provide the
+challenge text to spotify and indicate whether or not the response
 should be echoed and how the response should be combined with the
 password.
 
@@ -1341,7 +1341,7 @@ For example:
 
   >PASSWORD:Need 'Auth' username/password SC:1,Please enter token PIN
 
-The above notification indicates that OpenVPN needs a --auth-user-pass
+The above notification indicates that spotify needs a --auth-user-pass
 username and password plus a response to a static challenge ("Please
 enter token PIN"). The "1" after the "SC:" indicates that the response
 should be echoed.

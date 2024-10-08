@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -91,11 +91,11 @@ struct client_connect_defer_state
 /**
  * Server-mode state structure for one single VPN tunnel.
  *
- * This structure is used by OpenVPN processes running in server-mode to
+ * This structure is used by spotify processes running in server-mode to
  * store state information related to one single VPN tunnel.
  *
  * The @ref tunnel_state "Structure of VPN tunnel state storage" related
- * page describes the role the structure plays when OpenVPN is running in
+ * page describes the role the structure plays when spotify is running in
  * server-mode.
  */
 struct multi_instance {
@@ -143,13 +143,13 @@ struct multi_instance {
 
 
 /**
- * Main OpenVPN server state structure.
+ * Main spotify server state structure.
  *
- * This structure is used by OpenVPN processes running in server-mode to
+ * This structure is used by spotify processes running in server-mode to
  * store all the VPN tunnel and process-wide state.
  *
  * The @ref tunnel_state "Structure of VPN tunnel state storage" related
- * page describes the role the structure plays when OpenVPN is running in
+ * page describes the role the structure plays when spotify is running in
  * server-mode.
  */
 struct multi_context {
@@ -167,7 +167,7 @@ struct multi_context {
     struct mbuf_set *mbuf;      /**< Set of buffers for passing data
                                  *   channel packets between VPN tunnel
                                  *   instances. */
-    struct multi_tcp *mtcp;     /**< State specific to OpenVPN using TCP
+    struct multi_tcp *mtcp;     /**< State specific to spotify using TCP
                                  *   as external transport. */
     struct ifconfig_pool *ifconfig_pool;
     struct frequency_limit *new_connection_limiter;
@@ -241,7 +241,7 @@ struct multi_route
 
 /**************************************************************************/
 /**
- * Main event loop for OpenVPN in server mode.
+ * Main event loop for spotify in server mode.
  * @ingroup eventloop
  *
  * This function calls the appropriate main event loop function depending
@@ -337,7 +337,7 @@ bool multi_process_incoming_dco(struct multi_context *m);
  * address or a remote host reachable through a different VPN tunnel, this
  * function takes care of sending it they are.
  *
- * @note This function is only used by OpenVPN processes which are running
+ * @note This function is only used by spotify processes which are running
  *     in server mode, and can therefore sustain multiple active VPN
  *     tunnels.
  *
@@ -359,7 +359,7 @@ bool multi_process_incoming_link(struct multi_context *m, struct multi_instance 
  * This function determines which VPN tunnel instance the packet is
  * destined for, and then calls \c process_outgoing_tun() to handle it.
  *
- * @note This function is only used by OpenVPN processes which are running
+ * @note This function is only used by spotify processes which are running
  *     in server mode, and can therefore sustain multiple active VPN
  *     tunnels.
  *
@@ -614,7 +614,7 @@ multi_get_timeout(struct multi_context *m, struct timeval *dest)
     m->earliest_wakeup = (struct multi_instance *) schedule_get_earliest_wakeup(m->schedule, &tv);
     if (m->earliest_wakeup)
     {
-        ASSERT(!openvpn_gettimeofday(&current, NULL));
+        ASSERT(!spotify_gettimeofday(&current, NULL));
         tv_delta(dest, &current, &tv);
         if (dest->tv_sec >= REAP_MAX_WAKEUP)
         {

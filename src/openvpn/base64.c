@@ -49,7 +49,7 @@ static char base64_chars[] =
  * length of *str.
  */
 int
-openvpn_base64_encode(const void *data, int size, char **str)
+spotify_base64_encode(const void *data, int size, char **str)
 {
     char *s, *p;
     int i;
@@ -155,7 +155,7 @@ token_decode(const char *token)
  * decoded data written or -1 on error or overflow.
  */
 int
-openvpn_base64_decode(const char *str, void *data, int size)
+spotify_base64_decode(const char *str, void *data, int size)
 {
     const char *p;
     unsigned char *q;

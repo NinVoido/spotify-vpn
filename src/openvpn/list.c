@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -380,7 +380,7 @@ hash_iterator_delete_element(struct hash_iterator *hi)
  * James Yonan Notes:
  *
  * This function is faster than it looks, and appears to be
- * appropriate for our usage in OpenVPN which is primarily
+ * appropriate for our usage in spotify which is primarily
  * for hash-table based address lookup (IPv4, IPv6, and Ethernet MAC).
  * NOTE: This function is never used for cryptographic purposes, only
  * to produce evenly-distributed indexes into hash tables.

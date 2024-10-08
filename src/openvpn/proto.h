@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -45,33 +45,33 @@
 
 /*
  * IP and Ethernet protocol structs.  For portability,
- * OpenVPN needs its own definitions of these structs, and
+ * spotify needs its own definitions of these structs, and
  * names have been adjusted to avoid collisions with
  * native structs.
  */
 
-#define OPENVPN_ETH_ALEN 6            /* ethernet address length */
-struct openvpn_ethhdr
+#define spotify_ETH_ALEN 6            /* ethernet address length */
+struct spotify_ethhdr
 {
-    uint8_t dest[OPENVPN_ETH_ALEN];   /* destination ethernet addr */
-    uint8_t source[OPENVPN_ETH_ALEN]; /* source ethernet addr   */
+    uint8_t dest[spotify_ETH_ALEN];   /* destination ethernet addr */
+    uint8_t source[spotify_ETH_ALEN]; /* source ethernet addr   */
 
-#define OPENVPN_ETH_P_IPV4   0x0800   /* IPv4 protocol */
-#define OPENVPN_ETH_P_IPV6   0x86DD   /* IPv6 protocol */
-#define OPENVPN_ETH_P_ARP    0x0806   /* ARP protocol */
-#define OPENVPN_ETH_P_8021Q  0x8100   /* 802.1Q protocol */
+#define spotify_ETH_P_IPV4   0x0800   /* IPv4 protocol */
+#define spotify_ETH_P_IPV6   0x86DD   /* IPv6 protocol */
+#define spotify_ETH_P_ARP    0x0806   /* ARP protocol */
+#define spotify_ETH_P_8021Q  0x8100   /* 802.1Q protocol */
     uint16_t proto;                   /* packet type ID field */
 };
 
-struct openvpn_8021qhdr
+struct spotify_8021qhdr
 {
-    uint8_t dest[OPENVPN_ETH_ALEN];     /* destination ethernet addr */
-    uint8_t source[OPENVPN_ETH_ALEN];   /* source ethernet addr */
+    uint8_t dest[spotify_ETH_ALEN];     /* destination ethernet addr */
+    uint8_t source[spotify_ETH_ALEN];   /* source ethernet addr */
 
     uint16_t tpid;                      /* 802.1Q Tag Protocol Identifier */
-#define OPENVPN_8021Q_MASK_PCP htons(0xE000) /* mask PCP out of pcp_cfi_vid */
-#define OPENVPN_8021Q_MASK_CFI htons(0x1000) /* mask CFI out of pcp_cfi_vid */
-#define OPENVPN_8021Q_MASK_VID htons(0x0FFF) /* mask VID out of pcp_cfi_vid */
+#define spotify_8021Q_MASK_PCP htons(0xE000) /* mask PCP out of pcp_cfi_vid */
+#define spotify_8021Q_MASK_CFI htons(0x1000) /* mask CFI out of pcp_cfi_vid */
+#define spotify_8021Q_MASK_VID htons(0x0FFF) /* mask VID out of pcp_cfi_vid */
     uint16_t pcp_cfi_vid;               /* bit fields, see IEEE 802.1Q */
     uint16_t proto;                     /* contained packet type ID field */
 };
@@ -80,11 +80,11 @@ struct openvpn_8021qhdr
  * Size difference between a regular Ethernet II header and an Ethernet II
  * header with additional IEEE 802.1Q tagging.
  */
-#define SIZE_ETH_TO_8021Q_HDR (sizeof(struct openvpn_8021qhdr) \
-                               - sizeof(struct openvpn_ethhdr))
+#define SIZE_ETH_TO_8021Q_HDR (sizeof(struct spotify_8021qhdr) \
+                               - sizeof(struct spotify_ethhdr))
 
 
-struct openvpn_arp {
+struct spotify_arp {
 #define ARP_MAC_ADDR_TYPE 0x0001
     uint16_t mac_addr_type;     /* 0x0001 */
 
@@ -96,30 +96,30 @@ struct openvpn_arp {
 #define ARP_REPLY   0x0002
     uint16_t arp_command;       /* 0x0001 for ARP request, 0x0002 for ARP reply */
 
-    uint8_t mac_src[OPENVPN_ETH_ALEN];
+    uint8_t mac_src[spotify_ETH_ALEN];
     in_addr_t ip_src;
-    uint8_t mac_dest[OPENVPN_ETH_ALEN];
+    uint8_t mac_dest[spotify_ETH_ALEN];
     in_addr_t ip_dest;
 };
 
-struct openvpn_iphdr {
-#define OPENVPN_IPH_GET_VER(v) (((v) >> 4) & 0x0F)
-#define OPENVPN_IPH_GET_LEN(v) (((v) & 0x0F) << 2)
+struct spotify_iphdr {
+#define spotify_IPH_GET_VER(v) (((v) >> 4) & 0x0F)
+#define spotify_IPH_GET_LEN(v) (((v) & 0x0F) << 2)
     uint8_t version_len;
 
     uint8_t tos;
     uint16_t tot_len;
     uint16_t id;
 
-#define OPENVPN_IP_OFFMASK 0x1fff
+#define spotify_IP_OFFMASK 0x1fff
     uint16_t frag_off;
 
     uint8_t ttl;
 
-#define OPENVPN_IPPROTO_IGMP    2  /* IGMP protocol */
-#define OPENVPN_IPPROTO_TCP     6  /* TCP protocol */
-#define OPENVPN_IPPROTO_UDP    17  /* UDP protocol */
-#define OPENVPN_IPPROTO_ICMPV6 58 /* ICMPV6 protocol */
+#define spotify_IPPROTO_IGMP    2  /* IGMP protocol */
+#define spotify_IPPROTO_TCP     6  /* TCP protocol */
+#define spotify_IPPROTO_UDP    17  /* UDP protocol */
+#define spotify_IPPROTO_ICMPV6 58 /* ICMPV6 protocol */
     uint8_t protocol;
 
     uint16_t check;
@@ -131,7 +131,7 @@ struct openvpn_iphdr {
 /*
  * IPv6 header
  */
-struct openvpn_ipv6hdr {
+struct spotify_ipv6hdr {
     uint8_t version_prio;
     uint8_t flow_lbl[3];
     uint16_t payload_len;
@@ -145,17 +145,17 @@ struct openvpn_ipv6hdr {
 /*
  * ICMPv6 header
  */
-struct openvpn_icmp6hdr {
-#define OPENVPN_ICMP6_DESTINATION_UNREACHABLE       1
-#define OPENVPN_ND_ROUTER_SOLICIT                 133
-#define OPENVPN_ND_ROUTER_ADVERT                  134
-#define OPENVPN_ND_NEIGHBOR_SOLICIT               135
-#define OPENVPN_ND_NEIGHBOR_ADVERT                136
-#define OPENVPN_ND_INVERSE_SOLICIT                141
-#define OPENVPN_ND_INVERSE_ADVERT                 142
+struct spotify_icmp6hdr {
+#define spotify_ICMP6_DESTINATION_UNREACHABLE       1
+#define spotify_ND_ROUTER_SOLICIT                 133
+#define spotify_ND_ROUTER_ADVERT                  134
+#define spotify_ND_NEIGHBOR_SOLICIT               135
+#define spotify_ND_NEIGHBOR_ADVERT                136
+#define spotify_ND_INVERSE_SOLICIT                141
+#define spotify_ND_INVERSE_ADVERT                 142
     uint8_t icmp6_type;
-#define OPENVPN_ICMP6_DU_NOROUTE                    0
-#define OPENVPN_ICMP6_DU_COMMUNICATION_PROHIBTED    1
+#define spotify_ICMP6_DU_NOROUTE                    0
+#define spotify_ICMP6_DU_COMMUNICATION_PROHIBTED    1
     uint8_t icmp6_code;
     uint16_t icmp6_cksum;
     uint8_t icmp6_dataun[4];
@@ -164,7 +164,7 @@ struct openvpn_icmp6hdr {
 /*
  * UDP header
  */
-struct openvpn_udphdr {
+struct spotify_udphdr {
     uint16_t source;
     uint16_t dest;
     uint16_t len;
@@ -174,23 +174,23 @@ struct openvpn_udphdr {
 /*
  * TCP header, per RFC 793.
  */
-struct openvpn_tcphdr {
+struct spotify_tcphdr {
     uint16_t source;       /* source port */
     uint16_t dest;         /* destination port */
     uint32_t seq;          /* sequence number */
     uint32_t ack_seq;      /* acknowledgement number */
 
-#define OPENVPN_TCPH_GET_DOFF(d) (((d) & 0xF0) >> 2)
+#define spotify_TCPH_GET_DOFF(d) (((d) & 0xF0) >> 2)
     uint8_t doff_res;
 
-#define OPENVPN_TCPH_FIN_MASK (1<<0)
-#define OPENVPN_TCPH_SYN_MASK (1<<1)
-#define OPENVPN_TCPH_RST_MASK (1<<2)
-#define OPENVPN_TCPH_PSH_MASK (1<<3)
-#define OPENVPN_TCPH_ACK_MASK (1<<4)
-#define OPENVPN_TCPH_URG_MASK (1<<5)
-#define OPENVPN_TCPH_ECE_MASK (1<<6)
-#define OPENVPN_TCPH_CWR_MASK (1<<7)
+#define spotify_TCPH_FIN_MASK (1<<0)
+#define spotify_TCPH_SYN_MASK (1<<1)
+#define spotify_TCPH_RST_MASK (1<<2)
+#define spotify_TCPH_PSH_MASK (1<<3)
+#define spotify_TCPH_ACK_MASK (1<<4)
+#define spotify_TCPH_URG_MASK (1<<5)
+#define spotify_TCPH_ECE_MASK (1<<6)
+#define spotify_TCPH_CWR_MASK (1<<7)
     uint8_t flags;
 
     uint16_t window;
@@ -198,16 +198,16 @@ struct openvpn_tcphdr {
     uint16_t urg_ptr;
 };
 
-#define OPENVPN_TCPOPT_EOL     0
-#define OPENVPN_TCPOPT_NOP     1
-#define OPENVPN_TCPOPT_MAXSEG  2
-#define OPENVPN_TCPOLEN_MAXSEG 4
+#define spotify_TCPOPT_EOL     0
+#define spotify_TCPOPT_NOP     1
+#define spotify_TCPOPT_MAXSEG  2
+#define spotify_TCPOLEN_MAXSEG 4
 
 struct ip_tcp_udp_hdr {
-    struct openvpn_iphdr ip;
+    struct spotify_iphdr ip;
     union {
-        struct openvpn_tcphdr tcp;
-        struct openvpn_udphdr udp;
+        struct spotify_tcphdr tcp;
+        struct spotify_udphdr udp;
     } u;
 };
 
@@ -259,24 +259,24 @@ get_tun_ip_ver(int tunnel_type, struct buffer *buf, int *ip_hdr_offset)
     if (tunnel_type == DEV_TYPE_TUN)
     {
         *ip_hdr_offset = 0;
-        if (likely(BLEN(buf) >= (int) sizeof(struct openvpn_iphdr)))
+        if (likely(BLEN(buf) >= (int) sizeof(struct spotify_iphdr)))
         {
-            ip_ver = OPENVPN_IPH_GET_VER(*BPTR(buf));
+            ip_ver = spotify_IPH_GET_VER(*BPTR(buf));
         }
     }
     else if (tunnel_type == DEV_TYPE_TAP)
     {
-        *ip_hdr_offset = (int)(sizeof(struct openvpn_ethhdr));
+        *ip_hdr_offset = (int)(sizeof(struct spotify_ethhdr));
         /* for tap get ip version from eth header */
         if (likely(BLEN(buf) >= *ip_hdr_offset))
         {
-            const struct openvpn_ethhdr *eh = (const struct openvpn_ethhdr *) BPTR(buf);
+            const struct spotify_ethhdr *eh = (const struct spotify_ethhdr *) BPTR(buf);
             uint16_t proto = ntohs(eh->proto);
-            if (proto == OPENVPN_ETH_P_IPV6)
+            if (proto == spotify_ETH_P_IPV6)
             {
                 ip_ver = 6;
             }
-            else if (proto == OPENVPN_ETH_P_IPV4)
+            else if (proto == spotify_ETH_P_IPV4)
             {
                 ip_ver = 4;
             }
@@ -321,7 +321,7 @@ void ipv4_packet_size_verify(const uint8_t *data,
 
 #endif
 
-#define OPENVPN_8021Q_MIN_VID 1
-#define OPENVPN_8021Q_MAX_VID 4094
+#define spotify_8021Q_MIN_VID 1
+#define spotify_8021Q_MAX_VID 4094
 
 #endif /* ifndef PROTO_H */

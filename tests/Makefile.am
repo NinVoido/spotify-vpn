@@ -1,11 +1,11 @@
 #
-#  OpenVPN -- An application to securely tunnel IP networks
+#  spotify -- An application to securely tunnel IP networks
 #             over a single UDP port, with support for SSL/TLS-based
 #             session authentication and key exchange,
 #             packet encryption, packet authentication, and
 #             packet compression.
 #
-#  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+#  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
 #  Copyright (C) 2006-2012 Alon Bar-Lev <alon.barlev@gmail.com>
 #
 
@@ -46,14 +46,14 @@ t_client.log: t_server_null.log
 dist_noinst_DATA = \
 	t_client.rc-sample
 
-ntlm_support_CFLAGS  = -I$(top_srcdir)/src/openvpn -I$(top_srcdir)/src/compat -I$(top_srcdir)/tests/unit_tests/openvpn -DNO_CMOCKA @TEST_CFLAGS@
-ntlm_support_LDFLAGS = @TEST_LDFLAGS@ -L$(top_srcdir)/src/openvpn $(OPTIONAL_CRYPTO_LIBS)
+ntlm_support_CFLAGS  = -I$(top_srcdir)/src/spotify -I$(top_srcdir)/src/compat -I$(top_srcdir)/tests/unit_tests/spotify -DNO_CMOCKA @TEST_CFLAGS@
+ntlm_support_LDFLAGS = @TEST_LDFLAGS@ -L$(top_srcdir)/src/spotify $(OPTIONAL_CRYPTO_LIBS)
 ntlm_support_SOURCES = ntlm_support.c \
-	unit_tests/openvpn/mock_msg.c unit_tests/openvpn/mock_msg.h \
-	$(top_srcdir)/src/openvpn/buffer.c \
-	$(top_srcdir)/src/openvpn/crypto.c \
-	$(top_srcdir)/src/openvpn/crypto_openssl.c \
-	$(top_srcdir)/src/openvpn/crypto_mbedtls.c \
-	$(top_srcdir)/src/openvpn/otime.c \
-	$(top_srcdir)/src/openvpn/packet_id.c \
-	$(top_srcdir)/src/openvpn/platform.c
+	unit_tests/spotify/mock_msg.c unit_tests/spotify/mock_msg.h \
+	$(top_srcdir)/src/spotify/buffer.c \
+	$(top_srcdir)/src/spotify/crypto.c \
+	$(top_srcdir)/src/spotify/crypto_openssl.c \
+	$(top_srcdir)/src/spotify/crypto_mbedtls.c \
+	$(top_srcdir)/src/spotify/otime.c \
+	$(top_srcdir)/src/spotify/packet_id.c \
+	$(top_srcdir)/src/spotify/platform.c

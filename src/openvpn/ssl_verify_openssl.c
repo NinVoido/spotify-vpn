@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -294,7 +294,7 @@ backend_x509_get_username(char *common_name, int cn_len,
 }
 
 char *
-backend_x509_get_serial(openvpn_x509_cert_t *cert, struct gc_arena *gc)
+backend_x509_get_serial(spotify_x509_cert_t *cert, struct gc_arena *gc)
 {
     ASN1_INTEGER *asn1_i;
     BIGNUM *bignum;
@@ -313,7 +313,7 @@ backend_x509_get_serial(openvpn_x509_cert_t *cert, struct gc_arena *gc)
 }
 
 char *
-backend_x509_get_serial_hex(openvpn_x509_cert_t *cert, struct gc_arena *gc)
+backend_x509_get_serial_hex(spotify_x509_cert_t *cert, struct gc_arena *gc)
 {
     const ASN1_INTEGER *asn1_i = X509_get_serialNumber(cert);
 
@@ -321,7 +321,7 @@ backend_x509_get_serial_hex(openvpn_x509_cert_t *cert, struct gc_arena *gc)
 }
 
 result_t
-backend_x509_write_pem(openvpn_x509_cert_t *cert, const char *filename)
+backend_x509_write_pem(spotify_x509_cert_t *cert, const char *filename)
 {
     BIO *out = BIO_new_file(filename, "w");
     if (!out)
@@ -549,7 +549,7 @@ x509_setenv_track(const struct x509_track *xt, struct env_set *es, const int dep
  *  X509_{cert_depth}_{name}={value}
  */
 void
-x509_setenv(struct env_set *es, int cert_depth, openvpn_x509_cert_t *peer_cert)
+x509_setenv(struct env_set *es, int cert_depth, spotify_x509_cert_t *peer_cert)
 {
     int i, n;
     int fn_nid;
@@ -608,7 +608,7 @@ x509_setenv(struct env_set *es, int cert_depth, openvpn_x509_cert_t *peer_cert)
 }
 
 result_t
-x509_verify_ns_cert_type(openvpn_x509_cert_t *peer_cert, const int usage)
+x509_verify_ns_cert_type(spotify_x509_cert_t *peer_cert, const int usage)
 {
     if (usage == NS_CERT_CHECK_NONE)
     {
@@ -686,7 +686,7 @@ x509_verify_cert_ku(X509 *x509, const unsigned *const expected_ku,
         return FAILURE;
     }
 
-    if (expected_ku[0] == OPENVPN_KU_REQUIRED)
+    if (expected_ku[0] == spotify_KU_REQUIRED)
     {
         /* Extension required, value checked by TLS library */
         ASN1_BIT_STRING_free(ku);

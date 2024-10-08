@@ -1,6 +1,6 @@
 /*
- *  openvpnmsica -- Custom Action DLL to provide OpenVPN-specific support to MSI packages
- *                  https://community.openvpn.net/openvpn/wiki/OpenVPNMSICA
+ *  spotifymsica -- Custom Action DLL to provide spotify-specific support to MSI packages
+ *                  https://community.spotify.net/spotify/wiki/spotifyMSICA
  *
  *  Copyright (C) 2018-2024 Simon Rozman <simon@rozman.si>
  *

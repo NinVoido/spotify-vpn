@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -22,7 +22,7 @@
  */
 
 /*
- * This file implements a simple OpenVPN plugin module which
+ * This file implements a simple spotify plugin module which
  * will log the calls made, and send back some config statements
  * when called on the CLIENT_CONNECT and CLIENT_CONNECT_V2 hooks.
  *
@@ -45,9 +45,9 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
-#include "openvpn-plugin.h"
+#include "spotify-plugin.h"
 
-/* Pointers to functions exported from openvpn */
+/* Pointers to functions exported from spotify */
 static plugin_log_t plugin_log = NULL;
 static plugin_secure_memzero_t plugin_secure_memzero = NULL;
 static plugin_base64_decode_t plugin_base64_decode = NULL;
@@ -117,11 +117,11 @@ atoi_null0(const char *str)
     }
 }
 
-/* use v3 functions so we can use openvpn's logging and base64 etc. */
-OPENVPN_EXPORT int
-openvpn_plugin_open_v3(const int v3structver,
-                       struct openvpn_plugin_args_open_in const *args,
-                       struct openvpn_plugin_args_open_return *ret)
+/* use v3 functions so we can use spotify's logging and base64 etc. */
+spotify_EXPORT int
+spotify_plugin_open_v3(const int v3structver,
+                       struct spotify_plugin_args_open_in const *args,
+                       struct spotify_plugin_args_open_return *ret)
 {
     /* const char **argv = args->argv; */ /* command line arguments (unused) */
     const char **envp = args->envp;       /* environment variables */
@@ -129,8 +129,8 @@ openvpn_plugin_open_v3(const int v3structver,
     /* Check API compatibility -- struct version 5 or higher needed */
     if (v3structver < 5)
     {
-        fprintf(stderr, "sample-client-connect: this plugin is incompatible with the running version of OpenVPN\n");
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        fprintf(stderr, "sample-client-connect: this plugin is incompatible with the running version of spotify\n");
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     /*
@@ -146,19 +146,19 @@ openvpn_plugin_open_v3(const int v3structver,
      * Intercept just about everything...
      */
     ret->type_mask =
-        OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_UP)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_DOWN)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_ROUTE_UP)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_IPCHANGE)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_TLS_VERIFY)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_CLIENT_CONNECT)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_CLIENT_CONNECT_V2)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_CLIENT_DISCONNECT)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_LEARN_ADDRESS)
-        |OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_TLS_FINAL);
+        spotify_PLUGIN_MASK(spotify_PLUGIN_UP)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_DOWN)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_ROUTE_UP)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_IPCHANGE)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_TLS_VERIFY)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_CLIENT_CONNECT)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_CLIENT_CONNECT_V2)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_CLIENT_DISCONNECT)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_LEARN_ADDRESS)
+        |spotify_PLUGIN_MASK(spotify_PLUGIN_TLS_FINAL);
 
-    /* Save global pointers to functions exported from openvpn */
+    /* Save global pointers to functions exported from spotify */
     plugin_log = args->callbacks->plugin_log;
     plugin_secure_memzero = args->callbacks->plugin_secure_memzero;
     plugin_base64_decode = args->callbacks->plugin_base64_decode;
@@ -168,35 +168,35 @@ openvpn_plugin_open_v3(const int v3structver,
      */
     context->verb = atoi_null0(get_env("verb", envp));
 
-    ret->handle = (openvpn_plugin_handle_t *) context;
+    ret->handle = (spotify_plugin_handle_t *) context;
     plugin_log(PLOG_NOTE, MODULE, "initialization succeeded");
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 
 error:
     free(context);
-    return OPENVPN_PLUGIN_FUNC_ERROR;
+    return spotify_PLUGIN_FUNC_ERROR;
 }
 
 
-/* there are two possible interfaces for an openvpn plugin how
+/* there are two possible interfaces for an spotify plugin how
  * to be called on "client connect", which primarily differ in the
  * way config options are handed back to the client instance
- * (see openvpn/multi.c, multi_client_connect_call_plugin_{v1,v2}())
+ * (see spotify/multi.c, multi_client_connect_call_plugin_{v1,v2}())
  *
- * OPENVPN_PLUGIN_CLIENT_CONNECT
- *   openvpn creates a temp file and passes the name to the plugin
+ * spotify_PLUGIN_CLIENT_CONNECT
+ *   spotify creates a temp file and passes the name to the plugin
  *    (via argv[1] variable, argv[0] is the name of the plugin)
- *   the plugin can write config statements to that file, and openvpn
+ *   the plugin can write config statements to that file, and spotify
  *    reads it in like a "ccd/$cn" per-client config file
  *
- * OPENVPN_PLUGIN_CLIENT_CONNECT_V2
- *   the caller passes in a pointer to an "openvpn_plugin_string_list"
- *   (openvpn-plugin.h), which is a linked list of (name,value) pairs
+ * spotify_PLUGIN_CLIENT_CONNECT_V2
+ *   the caller passes in a pointer to an "spotify_plugin_string_list"
+ *   (spotify-plugin.h), which is a linked list of (name,value) pairs
  *
  *   we fill in one node with name="config" and value="our config"
  *
  *   both "l" and "l->name" and "l->value" are malloc()ed by the plugin
- *   and free()ed by the caller (openvpn_plugin_string_list_free())
+ *   and free()ed by the caller (spotify_plugin_string_list_free())
  */
 
 /* helper function to write actual "here are your options" file,
@@ -207,17 +207,17 @@ write_cc_options_file(const char *name, const char **envp)
 {
     if (!name)
     {
-        return OPENVPN_PLUGIN_FUNC_SUCCESS;
+        return spotify_PLUGIN_FUNC_SUCCESS;
     }
 
     FILE *fp = fopen(name, "w");
     if (!fp)
     {
         plugin_log(PLOG_ERR, MODULE, "fopen('%s') failed", name);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
-    /* config to-be-sent can come from "setenv plugin_cc_config" in openvpn */
+    /* config to-be-sent can come from "setenv plugin_cc_config" in spotify */
     const char *p = get_env("plugin_cc_config", envp);
     if (p)
     {
@@ -235,7 +235,7 @@ write_cc_options_file(const char *name, const char **envp)
     }
     fclose(fp);
 
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
 int
@@ -246,34 +246,34 @@ cc_handle_deferred_v1(int seconds, const char *name, const char **envp)
     {
         plugin_log(PLOG_NOTE, MODULE, "env has UV_WANT_CC_ASYNC=%d, but "
                    "'client_connect_deferred_file' not set -> fail", seconds);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     /* the CLIENT_CONNECT (v1) API is a bit tricky to work with, because
      * completition can be signalled both by the "deferred_file" and by
      * the new ...CLIENT_CONNECT_DEFER API - which is optional.
      *
-     * For OpenVPN to be able to differenciate, we must create the file
+     * For spotify to be able to differenciate, we must create the file
      * right away if we want to use that for signalling.
      */
     int fd = open(ccd_file, O_WRONLY);
     if (fd < 0)
     {
         plugin_log(PLOG_ERR|PLOG_ERRNO, MODULE, "open('%s') failed", ccd_file);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     if (write(fd, "2", 1) != 1)
     {
         plugin_log(PLOG_ERR|PLOG_ERRNO, MODULE, "write to '%s' failed", ccd_file );
         close(fd);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
     close(fd);
 
     /* we do not want to complicate our lives with having to wait()
      * for child processes (so they are not zombiefied) *and* we MUST NOT
-     * fiddle with signal handlers (= shared with openvpn main), so
+     * fiddle with signal handlers (= shared with spotify main), so
      * we use double-fork() trick.
      */
 
@@ -281,12 +281,12 @@ cc_handle_deferred_v1(int seconds, const char *name, const char **envp)
     pid_t p1 = fork();
     if (p1 < 0)                 /* Fork failed */
     {
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
     if (p1 > 0)                 /* parent process */
     {
         waitpid(p1, NULL, 0);
-        return OPENVPN_PLUGIN_FUNC_DEFERRED;
+        return spotify_PLUGIN_FUNC_DEFERRED;
     }
 
     /* first gen child process, fork() again and exit() right away */
@@ -302,7 +302,7 @@ cc_handle_deferred_v1(int seconds, const char *name, const char **envp)
     }
 
     /* (grand-)child process
-     *  - never call "return" now (would mess up openvpn)
+     *  - never call "return" now (would mess up spotify)
      *  - return status is communicated by file
      *  - then exit()
      */
@@ -311,7 +311,7 @@ cc_handle_deferred_v1(int seconds, const char *name, const char **envp)
     plugin_log(PLOG_NOTE, MODULE, "in async/deferred handler, sleep(%d)", seconds);
     sleep(seconds);
 
-    /* write config options to openvpn */
+    /* write config options to spotify */
     int ret = write_cc_options_file(name, envp);
 
     /* by setting "UV_WANT_CC_FAIL" we can be triggered to fail */
@@ -319,10 +319,10 @@ cc_handle_deferred_v1(int seconds, const char *name, const char **envp)
     if (p)
     {
         plugin_log(PLOG_NOTE, MODULE, "env has UV_WANT_CC_FAIL=%s -> fail", p);
-        ret = OPENVPN_PLUGIN_FUNC_ERROR;
+        ret = spotify_PLUGIN_FUNC_ERROR;
     }
 
-    /* now signal success/failure state to openvpn */
+    /* now signal success/failure state to spotify */
     fd = open(ccd_file, O_WRONLY);
     if (fd < 0)
     {
@@ -331,9 +331,9 @@ cc_handle_deferred_v1(int seconds, const char *name, const char **envp)
     }
 
     plugin_log(PLOG_NOTE, MODULE, "cc_handle_deferred_v1: done, signalling %s",
-               (ret == OPENVPN_PLUGIN_FUNC_SUCCESS) ? "success" : "fail" );
+               (ret == spotify_PLUGIN_FUNC_SUCCESS) ? "success" : "fail" );
 
-    if (write(fd, (ret == OPENVPN_PLUGIN_FUNC_SUCCESS) ? "1" : "0", 1) != 1)
+    if (write(fd, (ret == spotify_PLUGIN_FUNC_SUCCESS) ? "1" : "0", 1) != 1)
     {
         plugin_log(PLOG_ERR|PLOG_ERRNO, MODULE, "write to '%s' failed", ccd_file );
     }
@@ -343,11 +343,11 @@ cc_handle_deferred_v1(int seconds, const char *name, const char **envp)
 }
 
 int
-openvpn_plugin_client_connect(struct plugin_context *context,
+spotify_plugin_client_connect(struct plugin_context *context,
                               const char **argv,
                               const char **envp)
 {
-    /* log environment variables handed to us by OpenVPN, but
+    /* log environment variables handed to us by spotify, but
      * only if "setenv verb" is 3 or higher (arbitrary number)
      */
     if (context->verb>=3)
@@ -366,21 +366,21 @@ openvpn_plugin_client_connect(struct plugin_context *context,
     const char *p = get_env("UV_WANT_CC_ASYNC", envp);
     if (p)
     {
-        /* the return value will usually be OPENVPN_PLUGIN_FUNC_DEFERRED
+        /* the return value will usually be spotify_PLUGIN_FUNC_DEFERRED
          * ("I will do my job in the background, check the status file!")
          * but depending on env setup it might be "..._ERRROR"
          */
         return cc_handle_deferred_v1(atoi(p), argv[1], envp);
     }
 
-    /* -- this is synchronous mode (openvpn waits for us) -- */
+    /* -- this is synchronous mode (spotify waits for us) -- */
 
     /* by setting "UV_WANT_CC_FAIL" we can be triggered to fail */
     p = get_env("UV_WANT_CC_FAIL", envp);
     if (p)
     {
         plugin_log(PLOG_NOTE, MODULE, "env has UV_WANT_CC_FAIL=%s -> fail", p);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     /* does the caller want options?  give them some */
@@ -390,17 +390,17 @@ openvpn_plugin_client_connect(struct plugin_context *context,
 }
 
 int
-openvpn_plugin_client_connect_v2(struct plugin_context *context,
+spotify_plugin_client_connect_v2(struct plugin_context *context,
                                  struct plugin_per_client_context *pcc,
                                  const char **envp,
-                                 struct openvpn_plugin_string_list **return_list)
+                                 struct spotify_plugin_string_list **return_list)
 {
     /* by setting "UV_WANT_CC2_ASYNC" we go to async/deferred mode */
     const char *want_async = get_env("UV_WANT_CC2_ASYNC", envp);
     const char *want_fail = get_env("UV_WANT_CC2_FAIL", envp);
     const char *want_disable = get_env("UV_WANT_CC2_DISABLE", envp);
 
-    /* config to push towards client - can be controlled by OpenVPN
+    /* config to push towards client - can be controlled by spotify
      * config ("setenv plugin_cc2_config ...") - mostly useful in a
      * regression test environment to push stuff like routes which are
      * then verified by t_client ping tests
@@ -423,22 +423,22 @@ openvpn_plugin_client_connect_v2(struct plugin_context *context,
         pcc->want_disable = (want_disable != NULL);
         pcc->client_config = client_config;
         plugin_log(PLOG_NOTE, MODULE, "env has UV_WANT_CC2_ASYNC=%s -> set up deferred handler", want_async);
-        return OPENVPN_PLUGIN_FUNC_DEFERRED;
+        return spotify_PLUGIN_FUNC_DEFERRED;
     }
 
     /* by setting "UV_WANT_CC2_FAIL" we can be triggered to fail here */
     if (want_fail)
     {
         plugin_log(PLOG_NOTE, MODULE, "env has UV_WANT_CC2_FAIL=%s -> fail", want_fail);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
-    struct openvpn_plugin_string_list *rl =
-        calloc(1, sizeof(struct openvpn_plugin_string_list));
+    struct spotify_plugin_string_list *rl =
+        calloc(1, sizeof(struct spotify_plugin_string_list));
     if (!rl)
     {
         plugin_log(PLOG_ERR, MODULE, "malloc(return_list) failed");
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
     rl->name = strdup("config");
     if (want_disable)
@@ -457,18 +457,18 @@ openvpn_plugin_client_connect_v2(struct plugin_context *context,
         free(rl->name);
         free(rl->value);
         free(rl);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     *return_list = rl;
 
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
 int
-openvpn_plugin_client_connect_defer_v2(struct plugin_context *context,
+spotify_plugin_client_connect_defer_v2(struct plugin_context *context,
                                        struct plugin_per_client_context *pcc,
-                                       struct openvpn_plugin_string_list
+                                       struct spotify_plugin_string_list
                                        **return_list)
 {
     time_t time_left = pcc->sleep_until - time(NULL);
@@ -478,25 +478,25 @@ openvpn_plugin_client_connect_defer_v2(struct plugin_context *context,
     /* not yet due? */
     if (time_left > 0)
     {
-        return OPENVPN_PLUGIN_FUNC_DEFERRED;
+        return spotify_PLUGIN_FUNC_DEFERRED;
     }
 
     /* client wants fail? */
     if (pcc->want_fail)
     {
         plugin_log(PLOG_NOTE, MODULE, "env has UV_WANT_CC2_FAIL -> fail" );
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     /* fill in RL according to with-disable / without-disable */
 
     /* TODO: unify this with non-deferred case */
-    struct openvpn_plugin_string_list *rl =
-        calloc(1, sizeof(struct openvpn_plugin_string_list));
+    struct spotify_plugin_string_list *rl =
+        calloc(1, sizeof(struct spotify_plugin_string_list));
     if (!rl)
     {
         plugin_log(PLOG_ERR, MODULE, "malloc(return_list) failed");
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
     rl->name = strdup("config");
     if (pcc->want_disable)
@@ -515,21 +515,21 @@ openvpn_plugin_client_connect_defer_v2(struct plugin_context *context,
         free(rl->name);
         free(rl->value);
         free(rl);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     *return_list = rl;
 
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
-OPENVPN_EXPORT int
-openvpn_plugin_func_v2(openvpn_plugin_handle_t handle,
+spotify_EXPORT int
+spotify_plugin_func_v2(spotify_plugin_handle_t handle,
                        const int type,
                        const char *argv[],
                        const char *envp[],
                        void *per_client_context,
-                       struct openvpn_plugin_string_list **return_list)
+                       struct spotify_plugin_string_list **return_list)
 {
     struct plugin_context *context = (struct plugin_context *) handle;
     struct plugin_per_client_context *pcc = (struct plugin_per_client_context *) per_client_context;
@@ -540,76 +540,76 @@ openvpn_plugin_func_v2(openvpn_plugin_handle_t handle,
      */
     switch (type)
     {
-        case OPENVPN_PLUGIN_UP:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_UP");
+        case spotify_PLUGIN_UP:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_UP");
             break;
 
-        case OPENVPN_PLUGIN_DOWN:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_DOWN");
+        case spotify_PLUGIN_DOWN:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_DOWN");
             break;
 
-        case OPENVPN_PLUGIN_ROUTE_UP:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_ROUTE_UP");
+        case spotify_PLUGIN_ROUTE_UP:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_ROUTE_UP");
             break;
 
-        case OPENVPN_PLUGIN_IPCHANGE:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_IPCHANGE");
+        case spotify_PLUGIN_IPCHANGE:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_IPCHANGE");
             break;
 
-        case OPENVPN_PLUGIN_TLS_VERIFY:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_TLS_VERIFY");
+        case spotify_PLUGIN_TLS_VERIFY:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_TLS_VERIFY");
             break;
 
-        case OPENVPN_PLUGIN_CLIENT_CONNECT:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_CLIENT_CONNECT");
-            return openvpn_plugin_client_connect(context, argv, envp);
+        case spotify_PLUGIN_CLIENT_CONNECT:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_CLIENT_CONNECT");
+            return spotify_plugin_client_connect(context, argv, envp);
 
-        case OPENVPN_PLUGIN_CLIENT_CONNECT_V2:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_CLIENT_CONNECT_V2");
-            return openvpn_plugin_client_connect_v2(context, pcc, envp,
+        case spotify_PLUGIN_CLIENT_CONNECT_V2:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_CLIENT_CONNECT_V2");
+            return spotify_plugin_client_connect_v2(context, pcc, envp,
                                                     return_list);
 
-        case OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2");
-            return openvpn_plugin_client_connect_defer_v2(context, pcc,
+        case spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2");
+            return spotify_plugin_client_connect_defer_v2(context, pcc,
                                                           return_list);
 
-        case OPENVPN_PLUGIN_CLIENT_DISCONNECT:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_CLIENT_DISCONNECT");
+        case spotify_PLUGIN_CLIENT_DISCONNECT:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_CLIENT_DISCONNECT");
             break;
 
-        case OPENVPN_PLUGIN_LEARN_ADDRESS:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_LEARN_ADDRESS");
+        case spotify_PLUGIN_LEARN_ADDRESS:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_LEARN_ADDRESS");
             break;
 
-        case OPENVPN_PLUGIN_TLS_FINAL:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_TLS_FINAL");
+        case spotify_PLUGIN_TLS_FINAL:
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_TLS_FINAL");
             break;
 
         default:
-            plugin_log(PLOG_NOTE, MODULE, "OPENVPN_PLUGIN_? type=%d\n", type);
+            plugin_log(PLOG_NOTE, MODULE, "spotify_PLUGIN_? type=%d\n", type);
     }
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
-OPENVPN_EXPORT void *
-openvpn_plugin_client_constructor_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void *
+spotify_plugin_client_constructor_v1(spotify_plugin_handle_t handle)
 {
-    printf("FUNC: openvpn_plugin_client_constructor_v1\n");
+    printf("FUNC: spotify_plugin_client_constructor_v1\n");
     return calloc(1, sizeof(struct plugin_per_client_context));
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_client_destructor_v1(openvpn_plugin_handle_t handle, void *per_client_context)
+spotify_EXPORT void
+spotify_plugin_client_destructor_v1(spotify_plugin_handle_t handle, void *per_client_context)
 {
-    printf("FUNC: openvpn_plugin_client_destructor_v1\n");
+    printf("FUNC: spotify_plugin_client_destructor_v1\n");
     free(per_client_context);
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_close_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void
+spotify_plugin_close_v1(spotify_plugin_handle_t handle)
 {
     struct plugin_context *context = (struct plugin_context *) handle;
-    printf("FUNC: openvpn_plugin_close_v1\n");
+    printf("FUNC: spotify_plugin_close_v1\n");
     free(context);
 }

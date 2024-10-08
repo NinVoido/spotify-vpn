@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -61,7 +61,7 @@ cert_hash_remember(struct tls_session *session, const int cert_depth,
 }
 
 result_t
-verify_cert(struct tls_session *session, openvpn_x509_cert_t *cert, int cert_depth)
+verify_cert(struct tls_session *session, spotify_x509_cert_t *cert, int cert_depth)
 {
     return FAILURE;
 }

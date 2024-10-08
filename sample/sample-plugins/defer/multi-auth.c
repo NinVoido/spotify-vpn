@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -22,7 +22,7 @@
  */
 
 /*
- * This file implements a simple OpenVPN plugin module which
+ * This file implements a simple spotify plugin module which
  * can do either an instant authentication or a deferred auth.
  * The purpose of this plug-in is to test multiple auth plugins
  * in the same configuration file
@@ -55,7 +55,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "openvpn-plugin.h"
+#include "spotify-plugin.h"
 
 static char *MODULE = "multi-auth";
 
@@ -95,17 +95,17 @@ plog(const struct plugin_context *ctx, int flags, char *fmt, ...)
 
 /*
  * Constants indicating minimum API and struct versions by the functions
- * in this plugin.  Consult openvpn-plugin.h, look for:
- * OPENVPN_PLUGIN_VERSION and OPENVPN_PLUGINv3_STRUCTVER
+ * in this plugin.  Consult spotify-plugin.h, look for:
+ * spotify_PLUGIN_VERSION and spotify_PLUGINv3_STRUCTVER
  *
  * Strictly speaking, this sample code only requires plugin_log, a feature
  * of structver version 1.  However, '1' lines up with ancient versions
- * of openvpn that are past end-of-support.  As such, we are requiring
- * structver '5' here to indicate a desire for modern openvpn, rather
+ * of spotify that are past end-of-support.  As such, we are requiring
+ * structver '5' here to indicate a desire for modern spotify, rather
  * than a need for any particular feature found in structver beyond '1'.
  */
-#define OPENVPN_PLUGIN_VERSION_MIN 3
-#define OPENVPN_PLUGIN_STRUCTVER_MIN 5
+#define spotify_PLUGIN_VERSION_MIN 3
+#define spotify_PLUGIN_STRUCTVER_MIN 5
 
 
 struct plugin_per_client_context {
@@ -168,29 +168,29 @@ atoi_null0(const char *str)
     }
 }
 
-/* Require a minimum OpenVPN Plugin API */
-OPENVPN_EXPORT int
-openvpn_plugin_min_version_required_v1()
+/* Require a minimum spotify Plugin API */
+spotify_EXPORT int
+spotify_plugin_min_version_required_v1()
 {
-    return OPENVPN_PLUGIN_VERSION_MIN;
+    return spotify_PLUGIN_VERSION_MIN;
 }
 
-/* use v3 functions so we can use openvpn's logging and base64 etc. */
-OPENVPN_EXPORT int
-openvpn_plugin_open_v3(const int v3structver,
-                       struct openvpn_plugin_args_open_in const *args,
-                       struct openvpn_plugin_args_open_return *ret)
+/* use v3 functions so we can use spotify's logging and base64 etc. */
+spotify_EXPORT int
+spotify_plugin_open_v3(const int v3structver,
+                       struct spotify_plugin_args_open_in const *args,
+                       struct spotify_plugin_args_open_return *ret)
 {
-    if (v3structver < OPENVPN_PLUGIN_STRUCTVER_MIN)
+    if (v3structver < spotify_PLUGIN_STRUCTVER_MIN)
     {
-        fprintf(stderr, "%s: this plugin is incompatible with the running version of OpenVPN\n", MODULE);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        fprintf(stderr, "%s: this plugin is incompatible with the running version of spotify\n", MODULE);
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
-    /* Save global pointers to functions exported from openvpn */
+    /* Save global pointers to functions exported from spotify */
     _plugin_vlog_func = args->callbacks->plugin_vlog;
 
-    plog(NULL, PLOG_NOTE, "FUNC: openvpn_plugin_open_v3");
+    plog(NULL, PLOG_NOTE, "FUNC: spotify_plugin_open_v3");
 
     /*
      * Allocate our context
@@ -239,11 +239,11 @@ openvpn_plugin_open_v3(const int v3structver,
     /*
      * Which callbacks to intercept.
      */
-    ret->type_mask = OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY);
-    ret->handle = (openvpn_plugin_handle_t *) context;
+    ret->type_mask = spotify_PLUGIN_MASK(spotify_PLUGIN_AUTH_USER_PASS_VERIFY);
+    ret->handle = (spotify_plugin_handle_t *) context;
 
     plog(context, PLOG_NOTE, "initialization succeeded");
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 
 error:
     plog(context, PLOG_NOTE, "initialization failed");
@@ -251,7 +251,7 @@ error:
     {
         free(context);
     }
-    return OPENVPN_PLUGIN_FUNC_ERROR;
+    return spotify_PLUGIN_FUNC_ERROR;
 }
 
 static bool
@@ -298,7 +298,7 @@ auth_user_pass_verify(struct plugin_context *context,
     {
         plog(context, PLOG_NOTE, "Direct authentication");
         return do_auth_user_pass(context, username, password) ?
-               OPENVPN_PLUGIN_FUNC_SUCCESS : OPENVPN_PLUGIN_FUNC_ERROR;
+               spotify_PLUGIN_FUNC_SUCCESS : spotify_PLUGIN_FUNC_ERROR;
     }
 
     /* get auth_control_file filename from envp string array*/
@@ -308,12 +308,12 @@ auth_user_pass_verify(struct plugin_context *context,
     /* Authenticate asynchronously in n seconds */
     if (!auth_control_file)
     {
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     /* we do not want to complicate our lives with having to wait()
      * for child processes (so they are not zombiefied) *and* we MUST NOT
-     * fiddle with signal handlers (= shared with openvpn main), so
+     * fiddle with signal handlers (= shared with spotify main), so
      * we use double-fork() trick.
      */
 
@@ -321,12 +321,12 @@ auth_user_pass_verify(struct plugin_context *context,
     pid_t p1 = fork();
     if (p1 < 0)                 /* Fork failed */
     {
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
     if (p1 > 0)                 /* parent process */
     {
         waitpid(p1, NULL, 0);
-        return OPENVPN_PLUGIN_FUNC_DEFERRED;
+        return spotify_PLUGIN_FUNC_DEFERRED;
     }
 
     /* first gen child process, fork() again and exit() right away */
@@ -343,7 +343,7 @@ auth_user_pass_verify(struct plugin_context *context,
     }
 
     /* (grand-)child process
-     *  - never call "return" now (would mess up openvpn)
+     *  - never call "return" now (would mess up spotify)
      *  - return status is communicated by file
      *  - then exit()
      */
@@ -353,7 +353,7 @@ auth_user_pass_verify(struct plugin_context *context,
          context->test_deferred_auth*1000);
     usleep(context->test_deferred_auth*1000);
 
-    /* now signal success state to openvpn */
+    /* now signal success state to spotify */
     int fd = open(auth_control_file, O_WRONLY);
     if (fd < 0)
     {
@@ -378,15 +378,15 @@ auth_user_pass_verify(struct plugin_context *context,
 }
 
 
-OPENVPN_EXPORT int
-openvpn_plugin_func_v3(const int v3structver,
-                       struct openvpn_plugin_args_func_in const *args,
-                       struct openvpn_plugin_args_func_return *ret)
+spotify_EXPORT int
+spotify_plugin_func_v3(const int v3structver,
+                       struct spotify_plugin_args_func_in const *args,
+                       struct spotify_plugin_args_func_return *ret)
 {
-    if (v3structver < OPENVPN_PLUGIN_STRUCTVER_MIN)
+    if (v3structver < spotify_PLUGIN_STRUCTVER_MIN)
     {
-        fprintf(stderr, "%s: this plugin is incompatible with the running version of OpenVPN\n", MODULE);
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        fprintf(stderr, "%s: this plugin is incompatible with the running version of spotify\n", MODULE);
+        return spotify_PLUGIN_FUNC_ERROR;
     }
     const char **argv = args->argv;
     const char **envp = args->envp;
@@ -394,36 +394,36 @@ openvpn_plugin_func_v3(const int v3structver,
     struct plugin_per_client_context *pcc = (struct plugin_per_client_context *) args->per_client_context;
     switch (args->type)
     {
-        case OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY:
-            plog(context, PLOG_NOTE, "OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY");
+        case spotify_PLUGIN_AUTH_USER_PASS_VERIFY:
+            plog(context, PLOG_NOTE, "spotify_PLUGIN_AUTH_USER_PASS_VERIFY");
             return auth_user_pass_verify(context, pcc, argv, envp);
 
         default:
-            plog(context, PLOG_NOTE, "OPENVPN_PLUGIN_?");
-            return OPENVPN_PLUGIN_FUNC_ERROR;
+            plog(context, PLOG_NOTE, "spotify_PLUGIN_?");
+            return spotify_PLUGIN_FUNC_ERROR;
     }
 }
 
-OPENVPN_EXPORT void *
-openvpn_plugin_client_constructor_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void *
+spotify_plugin_client_constructor_v1(spotify_plugin_handle_t handle)
 {
     struct plugin_context *context = (struct plugin_context *) handle;
-    plog(context, PLOG_NOTE, "FUNC: openvpn_plugin_client_constructor_v1");
+    plog(context, PLOG_NOTE, "FUNC: spotify_plugin_client_constructor_v1");
     return calloc(1, sizeof(struct plugin_per_client_context));
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_client_destructor_v1(openvpn_plugin_handle_t handle, void *per_client_context)
+spotify_EXPORT void
+spotify_plugin_client_destructor_v1(spotify_plugin_handle_t handle, void *per_client_context)
 {
     struct plugin_context *context = (struct plugin_context *) handle;
-    plog(context, PLOG_NOTE, "FUNC: openvpn_plugin_client_destructor_v1");
+    plog(context, PLOG_NOTE, "FUNC: spotify_plugin_client_destructor_v1");
     free(per_client_context);
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_close_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void
+spotify_plugin_close_v1(spotify_plugin_handle_t handle)
 {
     struct plugin_context *context = (struct plugin_context *) handle;
-    plog(context, PLOG_NOTE, "FUNC: openvpn_plugin_close_v1");
+    plog(context, PLOG_NOTE, "FUNC: spotify_plugin_close_v1");
     free(context);
 }

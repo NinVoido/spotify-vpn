@@ -1,9 +1,9 @@
-OpenVPN
-Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+spotify
+Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
 
-  OpenVPN has been written to try to avoid features
+  spotify has been written to try to avoid features
   that are not standardized well across different
-  OSes, so porting OpenVPN itself will probably be
+  OSes, so porting spotify itself will probably be
   straightforward if a tun or tap driver already exists.
 
   Where special OS features are used, they are usually
@@ -51,10 +51,10 @@ PORTING GUIDELINE TO A NEW PLATFORM:
   * Add platform-specific includes to syshead.h.
   * Add an #ifdef TARGET_YOUROS to the do_ifconfig()
     function in tun.c to generate a correct "ifconfig"
-    command for your platform.  Note that OpenVPN
+    command for your platform.  Note that spotify
     determines the ifconfig path at ./configure time.
   * Possibly add an ifconfig_order() variant for your OS so
-    openvpn knows whether to call ifconfig before
+    spotify knows whether to call ifconfig before
     or after tun/tap dev open.
   * Add an #ifdef TARGET_YOUROS block in tun.c and define
     the open_tun, close_tun, read_tun, and write_tun
@@ -65,24 +65,24 @@ PORTING GUIDELINE TO A NEW PLATFORM:
     the route command on your platform.  This
     is necessary for the --route option to
     work correctly.
-  * After you successfully build OpenVPN, run
+  * After you successfully build spotify, run
     the loopback tests as described in INSTALL.
   * For the next test, confirm that the UDP socket
     functionality is working independently of the
     tun device, by doing something like:
-      ./openvpn --remote localhost --verb 9 --ping 1 --dev null
+      ./spotify --remote localhost --verb 9 --ping 1 --dev null
   * Now try with --remote [a real host]
   * Now try with a real tun/tap device, you will
     need to figure out the appropriate ifconfig
-    command to use once openvpn has opened the tun/tap
+    command to use once spotify has opened the tun/tap
     device.
   * Once you have simple tests working on the tun device,
     try more complex tests such as using TLS mode.
   * Stress test the link by doing ping -f across it.
   * Make sure that packet fragmenting is happening
     correctly by doing a ping -s 2000 or higher.
-  * Ensure that OpenVPN on your platform will talk
-    to OpenVPN on other platforms such as Linux.
+  * Ensure that spotify on your platform will talk
+    to spotify on other platforms such as Linux.
     Some tun/tap driver implementations will prepend
     unnecessary stuff onto the datagram that must be
     disabled with an explicit ioctl call if cross-platform
@@ -97,5 +97,5 @@ PORTING GUIDELINE TO A NEW PLATFORM:
     running and occasionally even succeeding in their
     attempted once-per-10-seconds TLS handshake. 
   * When it's working, submit your patch to
-    <openvpn-devel@lists.sourceforge.net>
+    <spotify-devel@lists.sourceforge.net>
     and rejoice :)

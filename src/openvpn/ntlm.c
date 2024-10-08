@@ -1,5 +1,5 @@
 /*
- *  ntlm proxy support for OpenVPN
+ *  ntlm proxy support for spotify
  *
  *  Copyright (C) 2004 William Preston
  *
@@ -87,7 +87,7 @@ gen_timestamp(uint8_t *timestamp)
 
     UINTEGER64 timestamp_ull;
 
-    timestamp_ull = openvpn_time(NULL);
+    timestamp_ull = spotify_time(NULL);
     timestamp_ull = (timestamp_ull + UINT64(11644473600)) * UINT64(10000000);
 
     /* store little endian value */
@@ -257,7 +257,7 @@ ntlm_phase_3(const struct http_proxy_info *p, const char *phase_2,
      */
     uint8_t buf2[512]; /* decoded reply from proxy */
     CLEAR(buf2);
-    ret_val = openvpn_base64_decode(phase_2, buf2, -1);
+    ret_val = spotify_base64_decode(phase_2, buf2, -1);
     if (ret_val < 0)
     {
         msg(M_WARN, "NTLM: base64 decoding of phase 2 response failed");

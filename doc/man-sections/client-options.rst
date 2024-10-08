@@ -1,6 +1,6 @@
 Client Options
 --------------
-The client options are used when connecting to an OpenVPN server configured
+The client options are used when connecting to an spotify server configured
 to use ``--server``, ``--server-bridge``, or ``--mode server`` in its
 configuration.
 
@@ -9,25 +9,25 @@ configuration.
   IP address) for ``--ifconfig``, ``--route``, and ``--route-gateway``.
 
 --allow-recursive-routing
-  When this option is set, OpenVPN will not drop incoming tun packets with
+  When this option is set, spotify will not drop incoming tun packets with
   same destination as host.
 
 --auth-token token
   This is not an option to be used directly in any configuration files,
   but rather push this option from a ``--client-connect`` script or a
-  ``--plugin`` which hooks into the :code:`OPENVPN_PLUGIN_CLIENT_CONNECT`
-  or :code:`OPENVPN_PLUGIN_CLIENT_CONNECT_V2` calls. This option provides a
+  ``--plugin`` which hooks into the :code:`spotify_PLUGIN_CLIENT_CONNECT`
+  or :code:`spotify_PLUGIN_CLIENT_CONNECT_V2` calls. This option provides a
   possibility to replace the clients password with an authentication token
-  during the lifetime of the OpenVPN client.
+  during the lifetime of the spotify client.
 
   Whenever the connection is renegotiated and the
   ``--auth-user-pass-verify`` script or ``--plugin`` making use of the
-  :code:`OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY` hook is triggered, it will
+  :code:`spotify_PLUGIN_AUTH_USER_PASS_VERIFY` hook is triggered, it will
   pass over this token as the password instead of the password the user
   provided. The authentication token can only be reset by a full reconnect
   where the server can push new options to the client. The password the
   user entered is never preserved once an authentication token has been
-  set. If the OpenVPN server side rejects the authentication token then
+  set. If the spotify server side rejects the authentication token then
   the client will receive an :code:`AUTH_FAILED` and disconnect.
 
   The purpose of this is to enable two factor authentication methods, such
@@ -43,7 +43,7 @@ configuration.
      push "auth-token UNIQUE_TOKEN_VALUE"
 
   into the file/buffer for dynamic configuration data. This will then make
-  the OpenVPN server to push this value to the client, which replaces the
+  the spotify server to push this value to the client, which replaces the
   local password with the ``UNIQUE_TOKEN_VALUE``.
 
   Newer clients (2.4.7+) will fall back to the original password method
@@ -68,7 +68,7 @@ configuration.
       auth-user-pass up
 
   If ``up`` is present, it must be a file containing username/password on 2
-  lines. If the password line is missing, OpenVPN will prompt for one.
+  lines. If the password line is missing, spotify will prompt for one.
 
   If ``up`` is omitted, username/password will be prompted from the
   console.
@@ -88,7 +88,7 @@ configuration.
   script to verify the username/password provided by the client.
 
 --auth-retry type
-  Controls how OpenVPN responds to username/password verification errors
+  Controls how spotify responds to username/password verification errors
   such as the client-side response to an :code:`AUTH_FAILED` message from
   the server or verification failure of the private key password.
 
@@ -119,7 +119,7 @@ configuration.
   the management interface.
 
 --client
-  A helper directive designed to simplify the configuration of OpenVPN's
+  A helper directive designed to simplify the configuration of spotify's
   client mode. This directive is equivalent to:
   ::
 
@@ -230,7 +230,7 @@ configuration.
 
 --explicit-exit-notify n
   In UDP client mode or point-to-point mode, send server/peer an exit
-  notification if tunnel is restarted or OpenVPN process is exited. In
+  notification if tunnel is restarted or spotify process is exited. In
   client mode, on exit/restart, this option will tell the server to
   immediately close its client instance object rather than waiting for a
   timeout.
@@ -250,11 +250,11 @@ configuration.
   reconnect to the same server, with ``n`` = :code:`2` client will advance
   to the next server.
 
-  OpenVPN will not send any exit notifications unless this option is
+  spotify will not send any exit notifications unless this option is
   enabled.
 
 --inactive args
-  Causes OpenVPN to exit after ``n`` seconds of inactivity on the TUN/TAP
+  Causes spotify to exit after ``n`` seconds of inactivity on the TUN/TAP
   device. The time length of inactivity is measured since the last
   incoming or outgoing tunnel packet. The default value is 0 seconds,
   which disables this feature.
@@ -269,9 +269,9 @@ configuration.
   ``bytes`` of combined in/out traffic are produced on the tun/tap device
   in ``n`` seconds.
 
-  In any case, OpenVPN's internal ping packets (which are just keepalives)
+  In any case, spotify's internal ping packets (which are just keepalives)
   and TLS control packets are not considered "activity", nor are they
-  counted as traffic, as they are used internally by OpenVPN and are not
+  counted as traffic, as they are used internally by spotify and are not
   an indication of actual user activity.
 
 --proto-force p
@@ -290,7 +290,7 @@ configuration.
 
 --pull
   This option must be used on a client which is connecting to a
-  multi-client server. It indicates to OpenVPN that it should accept
+  multi-client server. It indicates to spotify that it should accept
   options pushed by the server, provided they are part of the legal set of
   pushable options (note that the ``--pull`` option is implied by
   ``--client`` ).
@@ -345,7 +345,7 @@ configuration.
   data is always pushed to the server:
 
   :code:`IV_VER=<version>`
-        The client OpenVPN version
+        The client spotify version
 
   :code:`IV_PLAT=[linux|solaris|openbsd|mac|netbsd|freebsd|win]`
         The client OS platform
@@ -384,7 +384,7 @@ configuration.
 
   :code:`IV_GUI_VER=<gui_id> <version>`
         The UI version of a UI if one is running, for example
-        :code:`de.blinkt.openvpn 0.5.47` for the Android app.
+        :code:`de.blinkt.spotify 0.5.47` for the Android app.
         This may be set by the client UI/GUI using ``--setenv``.
 
   :code:`IV_SSO=[crtext,][openurl,][proxy_url]`
@@ -416,7 +416,7 @@ configuration.
   :code:`IV_HWADDR=<string>`
         This is intended to be a unique and persistent ID of the client.
         The string value can be any readable ASCII string up to 64 bytes.
-        OpenVPN 2.x and some other implementations use the MAC address of
+        spotify 2.x and some other implementations use the MAC address of
         the client's interface used to reach the default gateway. If this
         string is generated by the client, it should be consistent and
         preserved across independent sessions and preferably
@@ -429,7 +429,7 @@ configuration.
   :code:`IV_PLAT_VER=x.y`
         The version of the operating system, e.g. 6.1 for Windows 7.
         This may be set by the client UI/GUI using ``--setenv``.
-        On Windows systems it is automatically determined by openvpn
+        On Windows systems it is automatically determined by spotify
         itself.
 
   :code:`UV_<name>=<value>`
@@ -446,7 +446,7 @@ configuration.
      remote host port
      remote host port proto
 
-  The ``port`` and ``proto`` arguments are optional. The OpenVPN client
+  The ``port`` and ``proto`` arguments are optional. The spotify client
   will try to connect to a server at ``host:port``.  The ``proto`` argument
   indicates the protocol to use when connecting with the remote, and may be
   :code:`tcp` or :code:`udp`.  To enforce IPv4 or IPv6 connections add a
@@ -454,14 +454,14 @@ configuration.
   / :code:`tcp4` / :code:`tcp6`.
 
   On the client, multiple ``--remote`` options may be specified for
-  redundancy, each referring to a different OpenVPN server, in the order
+  redundancy, each referring to a different spotify server, in the order
   specified by the list of ``--remote`` options. Specifying multiple
   ``--remote`` options for this purpose is a special case of the more
   general connection-profile feature. See the ``<connection>``
   documentation below.
 
   The client will move on to the next host in the list, in the event of
-  connection failure. Note that at any given time, the OpenVPN client will
+  connection failure. Note that at any given time, the spotify client will
   at most be connected to one server.
 
   Examples:
@@ -483,7 +483,7 @@ configuration.
      close and reopen the TUN/TAP interface. This could cause the client
      to exit with a fatal error.
 
-  If ``--remote`` is unspecified, OpenVPN will listen for packets from any
+  If ``--remote`` is unspecified, spotify will listen for packets from any
   IP address, but will not act on those packets unless they pass all
   authentication tests. This requirement for authentication is binding on
   all potential peers, even those from known and supposedly trusted IP
@@ -494,10 +494,10 @@ configuration.
   connections from any host which does not match ``host``.
 
   If ``host`` is a DNS name which resolves to multiple IP addresses,
-  OpenVPN will try them in the order that the system getaddrinfo()
+  spotify will try them in the order that the system getaddrinfo()
   presents them, so priorization and DNS randomization is done by the
   system library. Unless an IP version is forced by the protocol
-  specification (4/6 suffix), OpenVPN will try both IPv4 and IPv6
+  specification (4/6 suffix), spotify will try both IPv4 and IPv6
   addresses, in the order getaddrinfo() returns them.
 
 --remote-random
@@ -551,7 +551,7 @@ configuration.
   (``format`` = :code:`scrv1`) or simply concatenated (``format`` = :code:`concat`).
   :code:`scrv1` is the default.
 
-  See management-notes.txt in the OpenVPN distribution for a description of
-  the OpenVPN challenge/response protocol.
+  See management-notes.txt in the spotify distribution for a description of
+  the spotify challenge/response protocol.
 
 .. include:: proxy-options.rst

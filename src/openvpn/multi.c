@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -120,7 +120,7 @@ learn_address_script(const struct multi_context *m,
         plugins = m->top.plugins;
     }
 
-    if (plugin_defined(plugins, OPENVPN_PLUGIN_LEARN_ADDRESS))
+    if (plugin_defined(plugins, spotify_PLUGIN_LEARN_ADDRESS))
     {
         struct argv argv = argv_new();
         argv_printf(&argv, "%s %s",
@@ -130,7 +130,7 @@ learn_address_script(const struct multi_context *m,
         {
             argv_printf_cat(&argv, "%s", tls_common_name(mi->context.c2.tls_multi, false));
         }
-        if (plugin_call(plugins, OPENVPN_PLUGIN_LEARN_ADDRESS, &argv, NULL, es) != OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (plugin_call(plugins, spotify_PLUGIN_LEARN_ADDRESS, &argv, NULL, es) != spotify_PLUGIN_FUNC_SUCCESS)
         {
             msg(M_WARN, "WARNING: learn-address plugin call failed");
             ret = false;
@@ -148,7 +148,7 @@ learn_address_script(const struct multi_context *m,
         {
             argv_printf_cat(&argv, "%s", tls_common_name(mi->context.c2.tls_multi, false));
         }
-        if (!openvpn_run_script(&argv, es, 0, "--learn-address"))
+        if (!spotify_run_script(&argv, es, 0, "--learn-address"))
         {
             ret = false;
         }
@@ -574,9 +574,9 @@ multi_client_disconnect_script(struct multi_context *m, struct multi_instance *m
 {
     multi_client_disconnect_setenv(m, mi);
 
-    if (plugin_defined(mi->context.plugins, OPENVPN_PLUGIN_CLIENT_DISCONNECT))
+    if (plugin_defined(mi->context.plugins, spotify_PLUGIN_CLIENT_DISCONNECT))
     {
-        if (plugin_call(mi->context.plugins, OPENVPN_PLUGIN_CLIENT_DISCONNECT, NULL, NULL, mi->context.c2.es) != OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (plugin_call(mi->context.plugins, spotify_PLUGIN_CLIENT_DISCONNECT, NULL, NULL, mi->context.c2.es) != spotify_PLUGIN_FUNC_SUCCESS)
         {
             msg(M_WARN, "WARNING: client-disconnect plugin call failed");
         }
@@ -587,7 +587,7 @@ multi_client_disconnect_script(struct multi_context *m, struct multi_instance *m
         struct argv argv = argv_new();
         setenv_str(mi->context.c2.es, "script_type", "client-disconnect");
         argv_parse_cmd(&argv, mi->context.options.client_disconnect_script);
-        openvpn_run_script(&argv, mi->context.c2.es, 0, "--client-disconnect");
+        spotify_run_script(&argv, mi->context.c2.es, 0, "--client-disconnect");
         argv_free(&argv);
     }
 #ifdef ENABLE_MANAGEMENT
@@ -860,7 +860,7 @@ multi_print_status(struct multi_context *m, struct status_output *so, const int 
             /*
              * Status file version 1
              */
-            status_printf(so, "OpenVPN CLIENT LIST");
+            status_printf(so, "spotify CLIENT LIST");
             status_printf(so, "Updated,%s", time_string(0, 0, false, &gc_top));
             status_printf(so, "Common Name,Real Address,Bytes Received,Bytes Sent,Connected Since");
             hash_iterator_init(m->hash, &hi);
@@ -961,7 +961,7 @@ multi_print_status(struct multi_context *m, struct status_output *so, const int 
                                   sep,
 #endif
                                   sep, mi->context.c2.tls_multi ? mi->context.c2.tls_multi->peer_id : UINT32_MAX,
-                                  sep, translate_cipher_name_to_openvpn(mi->context.options.ciphername));
+                                  sep, translate_cipher_name_to_spotify(mi->context.options.ciphername));
                 }
                 gc_free(&gc);
             }
@@ -1233,13 +1233,13 @@ multi_learn_in_addr_t(struct multi_context *m,
                       int netbits,  /* -1 if host route, otherwise # of network bits in address */
                       bool primary)
 {
-    struct openvpn_sockaddr remote_si;
+    struct spotify_sockaddr remote_si;
     struct mroute_addr addr = {0};
 
     CLEAR(remote_si);
     remote_si.addr.in4.sin_family = AF_INET;
     remote_si.addr.in4.sin_addr.s_addr = htonl(a);
-    ASSERT(mroute_extract_openvpn_sockaddr(&addr, &remote_si, false));
+    ASSERT(mroute_extract_spotify_sockaddr(&addr, &remote_si, false));
 
     if (netbits >= 0)
     {
@@ -1837,7 +1837,7 @@ multi_client_set_protocol_options(struct context *c)
         auth_set_client_reason(tls_multi, "Client incompatible with this "
                                "server. Keying Material Exporters (RFC 5705) "
                                "support missing. Upgrade to a client that "
-                               "supports this feature (OpenVPN 2.6.0+).");
+                               "supports this feature (spotify 2.6.0+).");
         return false;
     }
     if (proto & IV_PROTO_DYN_TLS_CRYPT)
@@ -2106,14 +2106,14 @@ multi_client_connect_call_plugin_v1(struct multi_context *m,
     struct client_connect_defer_state *ccs = &(mi->client_connect_defer_state);
 
     /* deprecated callback, use a file for passing back return info */
-    if (plugin_defined(mi->context.plugins, OPENVPN_PLUGIN_CLIENT_CONNECT))
+    if (plugin_defined(mi->context.plugins, spotify_PLUGIN_CLIENT_CONNECT))
     {
         struct argv argv = argv_new();
         int call;
 
         if (!deferred)
         {
-            call = OPENVPN_PLUGIN_CLIENT_CONNECT;
+            call = spotify_PLUGIN_CLIENT_CONNECT;
             if (!ccs_gen_config_file(mi)
                 || !ccs_gen_deferred_ret_file(mi))
             {
@@ -2123,7 +2123,7 @@ multi_client_connect_call_plugin_v1(struct multi_context *m,
         }
         else
         {
-            call = OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER;
+            call = spotify_PLUGIN_CLIENT_CONNECT_DEFER;
             /* the initial call should have created these files */
             ASSERT(ccs->config_file);
             ASSERT(ccs->deferred_ret_file);
@@ -2132,11 +2132,11 @@ multi_client_connect_call_plugin_v1(struct multi_context *m,
         argv_printf(&argv, "%s", ccs->config_file);
         int plug_ret = plugin_call(mi->context.plugins, call,
                                    &argv, NULL, mi->context.c2.es);
-        if (plug_ret == OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (plug_ret == spotify_PLUGIN_FUNC_SUCCESS)
         {
             ret = CC_RET_SUCCEEDED;
         }
-        else if (plug_ret == OPENVPN_PLUGIN_FUNC_DEFERRED)
+        else if (plug_ret == spotify_PLUGIN_FUNC_DEFERRED)
         {
             ret = CC_RET_DEFERRED;
             /**
@@ -2199,8 +2199,8 @@ multi_client_connect_call_plugin_v2(struct multi_context *m,
     ASSERT(mi);
     ASSERT(option_types_found);
 
-    int call = deferred ? OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2 :
-               OPENVPN_PLUGIN_CLIENT_CONNECT_V2;
+    int call = deferred ? spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2 :
+               spotify_PLUGIN_CLIENT_CONNECT_V2;
     /* V2 callback, use a plugin_return struct for passing back return info */
     if (plugin_defined(mi->context.plugins, call))
     {
@@ -2210,21 +2210,21 @@ multi_client_connect_call_plugin_v2(struct multi_context *m,
 
         int plug_ret = plugin_call(mi->context.plugins, call,
                                    NULL, &pr, mi->context.c2.es);
-        if (plug_ret == OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (plug_ret == spotify_PLUGIN_FUNC_SUCCESS)
         {
             multi_client_connect_post_plugin(m, mi, &pr, option_types_found);
             ret = CC_RET_SUCCEEDED;
         }
-        else if (plug_ret == OPENVPN_PLUGIN_FUNC_DEFERRED)
+        else if (plug_ret == spotify_PLUGIN_FUNC_DEFERRED)
         {
             ret = CC_RET_DEFERRED;
             if (!(plugin_defined(mi->context.plugins,
-                                 OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2)))
+                                 spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2)))
             {
                 msg(M_WARN, "A plugin that defers from the "
-                    "OPENVPN_PLUGIN_CLIENT_CONNECT_V2 call must also "
+                    "spotify_PLUGIN_CLIENT_CONNECT_V2 call must also "
                     "declare support for "
-                    "OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2");
+                    "spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2");
                 ret = CC_RET_FAILED;
             }
         }
@@ -2317,7 +2317,7 @@ multi_client_connect_call_script(struct multi_context *m,
         argv_parse_cmd(&argv, mi->context.options.client_connect_script);
         argv_printf_cat(&argv, "%s", ccs->config_file);
 
-        if (openvpn_run_script(&argv, mi->context.c2.es, 0, "--client-connect"))
+        if (spotify_run_script(&argv, mi->context.c2.es, 0, "--client-connect"))
         {
             if (ccs_test_deferred_ret_file(mi) == CC_RET_DEFERRED)
             {
@@ -2980,7 +2980,7 @@ static void
 multi_schedule_context_wakeup(struct multi_context *m, struct multi_instance *mi)
 {
     /* calculate an absolute wakeup time */
-    ASSERT(!openvpn_gettimeofday(&mi->wakeup, NULL));
+    ASSERT(!spotify_gettimeofday(&mi->wakeup, NULL));
     tv_add(&mi->wakeup, &mi->context.c2.timeval);
 
     /* tell scheduler to wake us up at some point in the future */
@@ -3127,7 +3127,7 @@ multi_process_float(struct multi_context *m, struct multi_instance *mi)
     struct hash *hash = m->hash;
     struct gc_arena gc = gc_new();
 
-    if (!mroute_extract_openvpn_sockaddr(&real, &m->top.c2.from.dest, true))
+    if (!mroute_extract_spotify_sockaddr(&real, &m->top.c2.from.dest, true))
     {
         goto done;
     }
@@ -3839,7 +3839,7 @@ multi_push_restart_schedule_exit(struct multi_context *m, bool next_server)
     hash_iterator_free(&hi);
 
     /* reschedule signal */
-    ASSERT(!openvpn_gettimeofday(&m->deferred_shutdown_signal.wakeup, NULL));
+    ASSERT(!spotify_gettimeofday(&m->deferred_shutdown_signal.wakeup, NULL));
     tv.tv_sec = 2;
     tv.tv_usec = 0;
     tv_add(&m->deferred_shutdown_signal.wakeup, &tv);
@@ -3938,7 +3938,7 @@ management_callback_kill_by_addr(void *arg, const in_addr_t addr, const int port
     struct multi_context *m = (struct multi_context *) arg;
     struct hash_iterator hi;
     struct hash_element *he;
-    struct openvpn_sockaddr saddr;
+    struct spotify_sockaddr saddr;
     struct mroute_addr maddr;
     int count = 0;
 
@@ -3946,7 +3946,7 @@ management_callback_kill_by_addr(void *arg, const in_addr_t addr, const int port
     saddr.addr.in4.sin_family = AF_INET;
     saddr.addr.in4.sin_addr.s_addr = htonl(addr);
     saddr.addr.in4.sin_port = htons(port);
-    if (mroute_extract_openvpn_sockaddr(&maddr, &saddr, true))
+    if (mroute_extract_spotify_sockaddr(&maddr, &saddr, true))
     {
         hash_iterator_init(m->iter, &hi);
         while ((he = hash_iterator_next(&hi)))

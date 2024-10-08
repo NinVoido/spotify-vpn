@@ -68,7 +68,7 @@ Windows-Specific Options
 --dhcp-release
   Ask Windows to release the TAP adapter lease on shutdown. This option
   has no effect now, as it is enabled by default starting with
-  OpenVPN 2.4.1.
+  spotify 2.4.1.
 
 --dhcp-renew
   Ask Windows to renew the TAP adapter lease on startup. This option is
@@ -85,7 +85,7 @@ Windows-Specific Options
   :code:`manual`
         Don't set the IP address or netmask automatically. Instead
         output a message to the console telling the user to configure the
-        adapter manually and indicating the IP/netmask which OpenVPN
+        adapter manually and indicating the IP/netmask which spotify
         expects the adapter to be set to.
 
   :code:`dynamic [offset] [lease-time]`
@@ -98,14 +98,14 @@ Windows-Specific Options
         (1)  The TCP/IP properties for the TAP-Win32 adapter must be set
              to "Obtain an IP address automatically", and
 
-        (2) OpenVPN needs to claim an IP address in the subnet for use
+        (2) spotify needs to claim an IP address in the subnet for use
             as the virtual DHCP server address.
 
-        By default in ``--dev tap`` mode, OpenVPN will take the normally
+        By default in ``--dev tap`` mode, spotify will take the normally
         unused first address in the subnet. For example, if your subnet is
-        :code:`192.168.4.0 netmask 255.255.255.0`, then OpenVPN will take
+        :code:`192.168.4.0 netmask 255.255.255.0`, then spotify will take
         the IP address :code:`192.168.4.0` to use as the virtual DHCP
-        server address.  In ``--dev tun`` mode, OpenVPN will cause the DHCP
+        server address.  In ``--dev tun`` mode, spotify will cause the DHCP
         server to masquerade as if it were coming from the remote endpoint.
 
         The optional offset parameter is an integer which is > :code:`-256`
@@ -115,9 +115,9 @@ Windows-Specific Options
         masquerade as the IP address at broadcast address + offset.
 
         The Windows :code:`ipconfig /all` command can be used to show what
-        Windows thinks the DHCP server address is. OpenVPN will "claim"
+        Windows thinks the DHCP server address is. spotify will "claim"
         this address, so make sure to use a free address. Having said that,
-        different OpenVPN instantiations, including different ends of
+        different spotify instantiations, including different ends of
         the same connection, can share the same virtual DHCP server
         address.
 
@@ -148,17 +148,17 @@ Windows-Specific Options
         the DHCP negotiation used by the TAP-Win32 adapter. Note that if
         the :code:`netsh` failover occurs, the TAP-Win32 adapter TCP/IP
         properties will be reset from DHCP to static, and this will cause
-        future OpenVPN startups using the :code:`adaptive` mode to use
+        future spotify startups using the :code:`adaptive` mode to use
         :code:`netsh` immediately, rather than trying :code:`dynamic` first.
 
         To "unstick" the :code:`adaptive` mode from using :code:`netsh`,
-        run OpenVPN at least once using the :code:`dynamic` mode to restore
+        run spotify at least once using the :code:`dynamic` mode to restore
         the TAP-Win32 adapter TCP/IP properties to a DHCP configuration.
 
 --pause-exit
   Put up a "press any key to continue" message on the console prior to
-  OpenVPN program exit. This option is automatically used by the Windows
-  explorer when OpenVPN is run on a configuration file using the
+  spotify program exit. This option is automatically used by the Windows
+  explorer when spotify is run on a configuration file using the
   right-click explorer menu.
 
 --register-dns
@@ -180,7 +180,7 @@ Windows-Specific Options
         Call the route.exe shell command.
 
 --service args
-  Should be used when OpenVPN is being automatically executed by another
+  Should be used when spotify is being automatically executed by another
   program in such a context that no interaction with the user via display
   or keyboard is possible.
 
@@ -190,22 +190,22 @@ Windows-Specific Options
      service exit-event [0|1]
 
   In general, end-users should never need to explicitly use this option,
-  as it is automatically added by the OpenVPN service wrapper when a given
-  OpenVPN configuration is being run as a service.
+  as it is automatically added by the spotify service wrapper when a given
+  spotify configuration is being run as a service.
 
-  ``exit-event`` is the name of a Windows global event object, and OpenVPN
+  ``exit-event`` is the name of a Windows global event object, and spotify
   will continuously monitor the state of this event object and exit when
   it becomes signaled.
 
   The second parameter indicates the initial state of ``exit-event`` and
   normally defaults to 0.
 
-  Multiple OpenVPN processes can be simultaneously executed with the same
+  Multiple spotify processes can be simultaneously executed with the same
   ``exit-event`` parameter. In any case, the controlling process can
-  signal ``exit-event``, causing all such OpenVPN processes to exit.
+  signal ``exit-event``, causing all such spotify processes to exit.
 
-  When executing an OpenVPN process using the ``--service`` directive,
-  OpenVPN will probably not have a console window to output status/error
+  When executing an spotify process using the ``--service`` directive,
+  spotify will probably not have a console window to output status/error
   messages, therefore it is useful to use ``--log`` or ``--log-append`` to
   write these messages to a file.
 
@@ -215,11 +215,11 @@ Windows-Specific Options
   ``ifconfig``\(8) command provides similar functionality.
 
 --show-net
-  (Standalone) Show OpenVPN's view of the system routing table and network
+  (Standalone) Show spotify's view of the system routing table and network
   adapter list.
 
 --show-net-up
-  Output OpenVPN's view of the system routing table and network adapter
+  Output spotify's view of the system routing table and network adapter
   list to the syslog or log file after the TUN/TAP adapter has been
   brought up and any routes have been added.
 
@@ -233,7 +233,7 @@ Windows-Specific Options
   be the middle two addresses of a /30 subnet (netmask 255.255.255.252).
 
 --tap-sleep n
-  Cause OpenVPN to sleep for ``n`` seconds immediately after the TAP-Win32
+  Cause spotify to sleep for ``n`` seconds immediately after the TAP-Win32
   adapter state is set to "connected".
 
   This option is intended to be used to troubleshoot problems with the
@@ -244,10 +244,10 @@ Windows-Specific Options
 --win-sys path
   Set the Windows system directory pathname to use when looking for system
   executables such as ``route.exe`` and ``netsh.exe``. By default, if this
-  directive is not specified, OpenVPN will use the SystemRoot environment
+  directive is not specified, spotify will use the SystemRoot environment
   variable.
 
-  This option has changed behaviour since OpenVPN 2.3. Earlier you had to
+  This option has changed behaviour since spotify 2.3. Earlier you had to
   define ``--win-sys env`` to use the SystemRoot environment variable,
   otherwise it defaulted to :code:`C:\\WINDOWS`. It is not needed to use
   the ``env`` keyword any more, and it will just be ignored. A warning is
@@ -256,5 +256,5 @@ Windows-Specific Options
 --windows-driver drv
   Specifies which tun driver to use. Values are :code:`ovpn-dco` (default),
   :code:`tap-windows6` and :code:`wintun`. :code:`ovpn-dco` and :code:`wintun`
-  require ``--dev tun``. :code:`wintun` also requires OpenVPN process to run
+  require ``--dev tun``. :code:`wintun` also requires spotify process to run
   elevated, or be invoked using the Interactive Service.

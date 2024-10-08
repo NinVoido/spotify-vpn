@@ -14,5 +14,5 @@ ifconfig $br down
 brctl delbr $br
 
 for t in $tap; do
-    openvpn --rmtun --dev $t
+    spotify --rmtun --dev $t
 done

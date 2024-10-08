@@ -19,7 +19,7 @@ fi
 # Ensure PREFER_KSU is in a known state
 PREFER_KSU="${PREFER_KSU:-0}"
 
-# make sure we have permissions to run ifconfig/route from OpenVPN
+# make sure we have permissions to run ifconfig/route from spotify
 # can't use "id -u" here - doesn't work on Solaris
 ID=$(id)
 if expr "$ID" : "uid=0" >/dev/null

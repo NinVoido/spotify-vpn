@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -30,7 +30,7 @@
 #define OCC_STRING_SIZE 16
 
 /*
- * OCC (OpenVPN Configuration Control) protocol opcodes.
+ * OCC (spotify Configuration Control) protocol opcodes.
  */
 
 #define OCC_REQUEST   0         /* request options string from peer */

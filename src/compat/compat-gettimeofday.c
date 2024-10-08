@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -54,7 +54,7 @@ gettimeofday_calibrate(void)
 }
 
 /*
- * Rewritten by JY for OpenVPN 2.1, after I realized that
+ * Rewritten by JY for spotify 2.1, after I realized that
  * QueryPerformanceCounter takes nearly 2 orders of magnitude
  * more processor cycles than GetTickCount.
  */

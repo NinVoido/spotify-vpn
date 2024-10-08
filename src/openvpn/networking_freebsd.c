@@ -29,7 +29,7 @@ net_route_v4(const char *op, const in_addr_t *dst, int prefixlen,
                 table);
 
     argv_msg(M_INFO, &argv);
-    status = openvpn_execve_check(&argv, NULL, 0,
+    status = spotify_execve_check(&argv, NULL, 0,
                                   "ERROR: FreeBSD route command failed");
 
     argv_free(&argv);
@@ -54,7 +54,7 @@ net_route_v6(const char *op, const struct in6_addr *dst,
                 table);
 
     argv_msg(M_INFO, &argv);
-    status = openvpn_execve_check(&argv, NULL, 0,
+    status = spotify_execve_check(&argv, NULL, 0,
                                   "ERROR: FreeBSD route command failed");
 
     argv_free(&argv);
@@ -63,7 +63,7 @@ net_route_v6(const char *op, const struct in6_addr *dst,
 }
 
 int
-net_route_v4_add(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
+net_route_v4_add(spotify_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
                  const in_addr_t *gw, const char *iface, uint32_t table,
                  int metric)
 {
@@ -71,7 +71,7 @@ net_route_v4_add(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
 }
 
 int
-net_route_v6_add(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
+net_route_v6_add(spotify_net_ctx_t *ctx, const struct in6_addr *dst,
                  int prefixlen, const struct in6_addr *gw, const char *iface,
                  uint32_t table, int metric)
 {
@@ -79,7 +79,7 @@ net_route_v6_add(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
 }
 
 int
-net_route_v4_del(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
+net_route_v4_del(spotify_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
                  const in_addr_t *gw, const char *iface, uint32_t table,
                  int metric)
 {
@@ -87,7 +87,7 @@ net_route_v4_del(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
 }
 
 int
-net_route_v6_del(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
+net_route_v6_del(spotify_net_ctx_t *ctx, const struct in6_addr *dst,
                  int prefixlen, const struct in6_addr *gw, const char *iface,
                  uint32_t table, int metric)
 {

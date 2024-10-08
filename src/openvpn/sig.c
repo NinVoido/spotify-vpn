@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *  Copyright (C) 2016-2024 Selva Nair <selva.nair@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@
 #include "sig.h"
 #include "occ.h"
 #include "manage.h"
-#include "openvpn.h"
+#include "spotify.h"
 
 #include "memdbg.h"
 
@@ -355,12 +355,12 @@ signal_restart_status(const struct signal_info *si)
         {
             case SIGINT:
             case SIGTERM:
-                state = OPENVPN_STATE_EXITING;
+                state = spotify_STATE_EXITING;
                 break;
 
             case SIGHUP:
             case SIGUSR1:
-                state = OPENVPN_STATE_RECONNECTING;
+                state = spotify_STATE_RECONNECTING;
                 break;
         }
 
@@ -492,7 +492,7 @@ print_status(struct context *c, struct status_output *so)
         dco_get_peer_stats(c);
     }
 
-    status_printf(so, "OpenVPN STATISTICS");
+    status_printf(so, "spotify STATISTICS");
     status_printf(so, "Updated,%s", time_string(0, 0, false, &gc));
     status_printf(so, "TUN/TAP read bytes," counter_format, c->c2.tun_read_bytes);
     status_printf(so, "TUN/TAP write bytes," counter_format, c->c2.tun_write_bytes);

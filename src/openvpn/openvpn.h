@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -21,8 +21,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef OPENVPN_H
-#define OPENVPN_H
+#ifndef spotify_H
+#define spotify_H
 
 #include "buffer.h"
 #include "options.h"
@@ -125,10 +125,10 @@ struct context_persist
 
 /**************************************************************************/
 /**
- * Level 0 %context containing information related to the OpenVPN process.
+ * Level 0 %context containing information related to the spotify process.
  *
  * Level 0 state is initialized once at program startup, and then remains
- * throughout the lifetime of the OpenVPN process.  This structure
+ * throughout the lifetime of the spotify process.  This structure
  * contains information related to the process's PID, user, group, and
  * privileges.
  */
@@ -198,7 +198,7 @@ struct context_1
     /* if client mode, hash of option strings we pulled from server */
     struct sha256_digest pulled_options_digest_save;
     /**< Hash of option strings received from the
-     *   remote OpenVPN server.  Only used in
+     *   remote spotify server.  Only used in
      *   client-mode. */
 
     struct user_pass *auth_user_pass;
@@ -406,7 +406,7 @@ struct context_2
     time_t update_timeout_random_component;
     struct timeval timeout_random_component;
 
-    /* Timer for everything up to the first packet from the *OpenVPN* server
+    /* Timer for everything up to the first packet from the *spotify* server
      * socks, http proxy, and tcp packets do not count */
     struct event_timeout server_poll_interval;
 
@@ -479,7 +479,7 @@ struct context
                                  *   configuration file. */
 
     bool first_time;            /**< True on the first iteration of
-                                 *   OpenVPN's main loop. */
+                                 *   spotify's main loop. */
 
     /* context modes */
 #define CM_P2P            0  /* standalone point-to-point session or client */
@@ -488,7 +488,7 @@ struct context
 #define CM_CHILD_UDP      3  /* child context of a CM_TOP or CM_THREAD */
 #define CM_CHILD_TCP      4  /* child context of a CM_TOP or CM_THREAD */
     int mode;                   /**< Role of this context within the
-                                 *   OpenVPN process.  Valid values are \c
+                                 *   spotify process.  Valid values are \c
                                  *   CM_P2P, \c CM_TOP, \c CM_TOP_CLONE,
                                  *   \c CM_CHILD_UDP, and \c CM_CHILD_TCP. */
 
@@ -498,7 +498,7 @@ struct context
 
     struct env_set *es;         /**< Set of environment variables. */
 
-    openvpn_net_ctx_t net_ctx;  /**< Networking API opaque context */
+    spotify_net_ctx_t net_ctx;  /**< Networking API opaque context */
 
     struct signal_info *sig;    /**< Internal error signaling object. */
 
@@ -548,4 +548,4 @@ struct context
 /* this represents "disabled peer-id" */
 #define MAX_PEER_ID 0xFFFFFF
 
-#endif /* ifndef OPENVPN_H */
+#endif /* ifndef spotify_H */

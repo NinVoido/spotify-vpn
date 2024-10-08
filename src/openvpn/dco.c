@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -7,7 +7,7 @@
  *
  *  Copyright (C) 2021-2024 Arne Schwabe <arne@rfc2549.org>
  *  Copyright (C) 2021-2024 Antonio Quartulli <a@unstable.cc>
- *  Copyright (C) 2021-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2021-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -36,7 +36,7 @@
 #include "errlevel.h"
 #include "multi.h"
 #include "networking.h"
-#include "openvpn.h"
+#include "spotify.h"
 #include "options.h"
 #include "ssl_common.h"
 #include "ssl_ncp.h"
@@ -278,7 +278,7 @@ bool
 dco_check_startup_option(int msglevel, const struct options *o)
 {
     /* check if no dev name was specified at all. In the case,
-     * later logic will most likely stop OpenVPN, so no need to
+     * later logic will most likely stop spotify, so no need to
      * print any message here.
      */
     if (!o->dev)

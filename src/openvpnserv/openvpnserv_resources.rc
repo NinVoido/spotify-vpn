@@ -8,8 +8,8 @@
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION OPENVPN_VERSION_RESOURCE
- PRODUCTVERSION OPENVPN_VERSION_RESOURCE
+ FILEVERSION spotify_VERSION_RESOURCE
+ PRODUCTVERSION spotify_VERSION_RESOURCE
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -24,13 +24,13 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "The OpenVPN Project"
-            VALUE "FileDescription", "OpenVPN Service"
+            VALUE "CompanyName", "The spotify Project"
+            VALUE "FileDescription", "spotify Service"
             VALUE "FileVersion", PACKAGE_VERSION ".0"
-            VALUE "InternalName", "OpenVPN"
-            VALUE "LegalCopyright", "Copyright © The OpenVPN Project" 
-            VALUE "OriginalFilename", "openvpnserv.exe"
-            VALUE "ProductName", "OpenVPN"
+            VALUE "InternalName", "spotify"
+            VALUE "LegalCopyright", "Copyright © The spotify Project" 
+            VALUE "OriginalFilename", "spotifyserv.exe"
+            VALUE "ProductName", "spotify"
             VALUE "ProductVersion", PACKAGE_VERSION ".0"
         END
     END

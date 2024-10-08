@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -341,7 +341,7 @@ rand_ctx_get(void)
          * 800-90 section 8.7.1). We have very little information at this stage.
          * Include Program Name, memory address of the context and PID.
          */
-        buf_printf(&pers_string, "OpenVPN %0u %p %s", platform_getpid(), &cd_ctx, time_string(0, 0, 0, &gc));
+        buf_printf(&pers_string, "spotify %0u %p %s", platform_getpid(), &cd_ctx, time_string(0, 0, 0, &gc));
 
         /* Initialise mbed TLS RNG, and built-in entropy sources */
         mbedtls_entropy_init(&ec);
@@ -402,7 +402,7 @@ cipher_get(const char *ciphername)
 
     const mbedtls_cipher_info_t *cipher = NULL;
 
-    ciphername = translate_cipher_name_from_openvpn(ciphername);
+    ciphername = translate_cipher_name_from_spotify(ciphername);
     cipher = mbedtls_cipher_info_from_string(ciphername);
     return cipher;
 }
@@ -444,7 +444,7 @@ cipher_kt_name(const char *ciphername)
         return "[null-cipher]";
     }
 
-    return translate_cipher_name_to_openvpn(mbedtls_cipher_info_get_name(cipher_kt));
+    return translate_cipher_name_to_spotify(mbedtls_cipher_info_get_name(cipher_kt));
 }
 
 int
@@ -488,7 +488,7 @@ cipher_kt_tag_size(const char *ciphername)
 {
     if (cipher_kt_mode_aead(ciphername))
     {
-        return OPENVPN_AEAD_TAG_LENGTH;
+        return spotify_AEAD_TAG_LENGTH;
     }
     return 0;
 }
@@ -520,22 +520,22 @@ bool
 cipher_kt_mode_cbc(const char *ciphername)
 {
     const mbedtls_cipher_info_t *cipher = cipher_get(ciphername);
-    return cipher && cipher_kt_mode(cipher) == OPENVPN_MODE_CBC;
+    return cipher && cipher_kt_mode(cipher) == spotify_MODE_CBC;
 }
 
 bool
 cipher_kt_mode_ofb_cfb(const char *ciphername)
 {
     const mbedtls_cipher_info_t *cipher = cipher_get(ciphername);
-    return cipher && (cipher_kt_mode(cipher) == OPENVPN_MODE_OFB
-                      || cipher_kt_mode(cipher) == OPENVPN_MODE_CFB);
+    return cipher && (cipher_kt_mode(cipher) == spotify_MODE_OFB
+                      || cipher_kt_mode(cipher) == spotify_MODE_CFB);
 }
 
 bool
 cipher_kt_mode_aead(const char *ciphername)
 {
     const mbedtls_cipher_info_t *cipher = cipher_get(ciphername);
-    return cipher && (cipher_kt_mode(cipher) == OPENVPN_MODE_GCM
+    return cipher && (cipher_kt_mode(cipher) == spotify_MODE_GCM
 #ifdef MBEDTLS_CHACHAPOLY_C
                       || cipher_kt_mode(cipher) == MBEDTLS_MODE_CHACHAPOLY
 #endif
@@ -636,21 +636,21 @@ cipher_ctx_mode(const mbedtls_cipher_context_t *ctx)
 bool
 cipher_ctx_mode_cbc(const cipher_ctx_t *ctx)
 {
-    return ctx && cipher_ctx_mode(ctx) == OPENVPN_MODE_CBC;
+    return ctx && cipher_ctx_mode(ctx) == spotify_MODE_CBC;
 }
 
 
 bool
 cipher_ctx_mode_ofb_cfb(const cipher_ctx_t *ctx)
 {
-    return ctx && (cipher_ctx_mode(ctx) == OPENVPN_MODE_OFB
-                   || cipher_ctx_mode(ctx) == OPENVPN_MODE_CFB);
+    return ctx && (cipher_ctx_mode(ctx) == spotify_MODE_OFB
+                   || cipher_ctx_mode(ctx) == spotify_MODE_CFB);
 }
 
 bool
 cipher_ctx_mode_aead(const cipher_ctx_t *ctx)
 {
-    return ctx && (cipher_ctx_mode(ctx) == OPENVPN_MODE_GCM
+    return ctx && (cipher_ctx_mode(ctx) == spotify_MODE_GCM
 #ifdef MBEDTLS_CHACHAPOLY_C
                    || cipher_ctx_mode(ctx) == MBEDTLS_MODE_CHACHAPOLY
 #endif

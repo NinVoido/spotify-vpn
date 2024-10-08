@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -22,7 +22,7 @@
  */
 
 /*
- * Win32-specific OpenVPN code, targeted at the mingw
+ * Win32-specific spotify code, targeted at the mingw
  * development environment.
  */
 
@@ -44,7 +44,7 @@
 #include "sig.h"
 #include "win32-util.h"
 #include "win32.h"
-#include "openvpn-msg.h"
+#include "spotify-msg.h"
 
 #include "memdbg.h"
 
@@ -879,7 +879,7 @@ netcmd_semaphore_release(void)
 }
 
 /*
- * Service functions for openvpn_execve
+ * Service functions for spotify_execve
  */
 
 static char *
@@ -998,14 +998,14 @@ wide_cmd_line(const struct argv *a, struct gc_arena *gc)
  * Attempt to simulate fork/execve on Windows
  */
 int
-openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned int flags)
+spotify_execve(const struct argv *a, const struct env_set *es, const unsigned int flags)
 {
-    int ret = OPENVPN_EXECVE_ERROR;
+    int ret = spotify_EXECVE_ERROR;
     static bool exec_warn = false;
 
     if (a && a->argv[0])
     {
-        if (openvpn_execve_allowed(flags))
+        if (spotify_execve_allowed(flags))
         {
             struct gc_arena gc = gc_new();
             STARTUPINFOW start_info;
@@ -1038,20 +1038,20 @@ openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned in
                 }
                 else
                 {
-                    msg(M_WARN|M_ERRNO, "openvpn_execve: GetExitCodeProcess %ls failed", cmd);
+                    msg(M_WARN|M_ERRNO, "spotify_execve: GetExitCodeProcess %ls failed", cmd);
                 }
                 CloseHandle(proc_info.hProcess);
             }
             else
             {
-                msg(M_WARN|M_ERRNO, "openvpn_execve: CreateProcess %ls failed", cmd);
+                msg(M_WARN|M_ERRNO, "spotify_execve: CreateProcess %ls failed", cmd);
             }
             free(env);
             gc_free(&gc);
         }
         else
         {
-            ret = OPENVPN_EXECVE_NOT_ALLOWED;
+            ret = spotify_EXECVE_NOT_ALLOWED;
             if (!exec_warn && (script_security() < SSEC_SCRIPTS))
             {
                 msg(M_WARN, SCRIPT_SECURITY_WARNING);
@@ -1061,7 +1061,7 @@ openvpn_execve(const struct argv *a, const struct env_set *es, const unsigned in
     }
     else
     {
-        msg(M_WARN, "openvpn_execve: called with empty argv");
+        msg(M_WARN, "spotify_execve: called with empty argv");
     }
     return ret;
 }
@@ -1210,7 +1210,7 @@ out:
 bool
 win_wfp_block(const NET_IFINDEX index, const HANDLE msg_channel, BOOL dns_only)
 {
-    WCHAR openvpnpath[MAX_PATH];
+    WCHAR spotifypath[MAX_PATH];
     bool ret = false;
     DWORD status;
 
@@ -1221,13 +1221,13 @@ win_wfp_block(const NET_IFINDEX index, const HANDLE msg_channel, BOOL dns_only)
         goto out;
     }
 
-    ret = win_get_exe_path(openvpnpath, _countof(openvpnpath));
+    ret = win_get_exe_path(spotifypath, _countof(spotifypath));
     if (ret == false)
     {
         goto out;
     }
 
-    status = add_wfp_block_filters(&m_hEngineHandle, index, openvpnpath,
+    status = add_wfp_block_filters(&m_hEngineHandle, index, spotifypath,
                                    win_wfp_msg_handler, dns_only);
     if (status == 0)
     {
@@ -1498,7 +1498,7 @@ send_msg_iservice(HANDLE pipe, const void *data, size_t size,
 }
 
 bool
-get_openvpn_reg_value(const WCHAR *key, WCHAR *value, DWORD size)
+get_spotify_reg_value(const WCHAR *key, WCHAR *value, DWORD size)
 {
     WCHAR reg_path[256];
     HKEY hkey;
@@ -1523,7 +1523,7 @@ set_openssl_env_vars()
     const WCHAR *ssl_fallback_dir = L"C:\\Windows\\System32";
 
     WCHAR install_path[MAX_PATH] = { 0 };
-    if (!get_openvpn_reg_value(NULL, install_path, _countof(install_path)))
+    if (!get_spotify_reg_value(NULL, install_path, _countof(install_path)))
     {
         /* if we cannot find installation path from the registry,
          * use Windows directory as a fallback
@@ -1617,8 +1617,8 @@ plugin_in_trusted_dir(const WCHAR *plugin_path)
 
     /* Attempt to retrieve the trusted plugin directory path from the registry,
      * using installation path as a fallback */
-    if (!get_openvpn_reg_value(L"plugin_dir", plugin_dir, _countof(plugin_dir))
-        && !get_openvpn_reg_value(NULL, plugin_dir, _countof(plugin_dir)))
+    if (!get_spotify_reg_value(L"plugin_dir", plugin_dir, _countof(plugin_dir))
+        && !get_spotify_reg_value(NULL, plugin_dir, _countof(plugin_dir)))
     {
         msg(M_WARN, "Installation path could not be determined.");
     }

@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# t_cltsrv.sh - script to test OpenVPN's crypto loopback
+# t_cltsrv.sh - script to test spotify's crypto loopback
 # Copyright (C) 2005, 2006, 2008  Matthias Andree
 #
 # This program is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ set -e
 srcdir="${srcdir:-.}"
 top_srcdir="${top_srcdir:-..}"
 top_builddir="${top_builddir:-..}"
-openvpn="${openvpn:-${top_builddir}/src/openvpn/openvpn}"
+spotify="${spotify:-${top_builddir}/src/spotify/spotify}"
 trap "rm -f log.$$ log.$$.signal ; trap 0 ; exit 77" 1 2 15
 trap "rm -f log.$$ log.$$.signal ; exit 1" 0 3
 addopts=
@@ -56,8 +56,8 @@ success=0
 for i in 1 2 3 ; do
   set +e
   (
-  "${openvpn}" --script-security 2 --cd "${root}" ${addopts} --setenv role srv --down "${downscript}" --tls-exit --ping-exit 180 --config "sample-config-files/loopback-server" &
-  "${openvpn}" --script-security 2 --cd "${top_srcdir}/sample" ${addopts} --setenv role clt --down "${downscript}" --tls-exit --ping-exit 180 --config "sample-config-files/loopback-client"
+  "${spotify}" --script-security 2 --cd "${root}" ${addopts} --setenv role srv --down "${downscript}" --tls-exit --ping-exit 180 --config "sample-config-files/loopback-server" &
+  "${spotify}" --script-security 2 --cd "${top_srcdir}/sample" ${addopts} --setenv role clt --down "${downscript}" --tls-exit --ping-exit 180 --config "sample-config-files/loopback-client"
   ) 3>log.$$.signal >log.$$ 2>&1
   e1=$?
   wait $!

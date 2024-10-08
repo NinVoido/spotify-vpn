@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -132,7 +132,7 @@ tls_wrap_control(struct tls_wrap_ctx *ctx, uint8_t header, struct buffer *buf,
         struct buffer null = clear_buf();
 
         /* no encryption, only write hmac */
-        openvpn_encrypt(buf, null, &ctx->opt);
+        spotify_encrypt(buf, null, &ctx->opt);
         ASSERT(swap_hmac(buf, &ctx->opt, false));
     }
     else if (ctx->mode == TLS_WRAP_CRYPT)
@@ -232,7 +232,7 @@ read_control_auth(struct buffer *buf,
 
         /* authenticate only (no decrypt) and remove the hmac record
          * from the head of the buffer */
-        openvpn_decrypt(buf, null, &ctx->opt, NULL, BPTR(buf));
+        spotify_decrypt(buf, null, &ctx->opt, NULL, BPTR(buf));
         if (!buf->len)
         {
             msg(D_TLS_ERRORS,
@@ -485,7 +485,7 @@ session_id_hmac_init(void)
 
 struct session_id
 calculate_session_id_hmac(struct session_id client_sid,
-                          const struct openvpn_sockaddr *from,
+                          const struct spotify_sockaddr *from,
                           hmac_ctx_t *hmac,
                           int handwindow, int offset)
 {
@@ -527,7 +527,7 @@ calculate_session_id_hmac(struct session_id client_sid,
 
 bool
 check_session_id_hmac(struct tls_pre_decrypt_state *state,
-                      const struct openvpn_sockaddr *from,
+                      const struct spotify_sockaddr *from,
                       hmac_ctx_t *hmac,
                       int handwindow)
 {

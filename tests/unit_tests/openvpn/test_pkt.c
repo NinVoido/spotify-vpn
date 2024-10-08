@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2016-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2016-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -75,7 +75,7 @@ struct test_pkt_context {
 };
 
 const char static_key[] = "<tls-auth>\n"
-                          "-----BEGIN OpenVPN Static key V1-----\n"
+                          "-----BEGIN spotify Static key V1-----\n"
                           "37268ea8f95d7f71f9fb8fc03770c460\n"
                           "daf714a483d815c013ce0a537efc18f2\n"
                           "8f4f172669d9e6a413bac6741d8ea054\n"
@@ -92,7 +92,7 @@ const char static_key[] = "<tls-auth>\n"
                           "5700393bf4a3e7f967e2f384069ac8a8\n"
                           "e78b18b15604993fd16515cce9c0f3e4\n"
                           "2b4126b999005ade802797b0eeb8b9e6\n"
-                          "-----END OpenVPN Static key V1-----\n"
+                          "-----END spotify Static key V1-----\n"
                           "</tls-auth>\n";
 
 const uint8_t client_reset_v2_none[] =
@@ -189,7 +189,7 @@ init_tas_auth(int key_direction)
     struct key_type tls_crypt_kt;
     init_key_type(&tls_crypt_kt, "none", "SHA1", true, false);
 
-    crypto_read_openvpn_key(&tls_crypt_kt, &tas.tls_wrap.opt.key_ctx_bi,
+    crypto_read_spotify_key(&tls_crypt_kt, &tas.tls_wrap.opt.key_ctx_bi,
                             static_key, true, key_direction,
                             "Control Channel Authentication", "tls-auth",
                             NULL);
@@ -502,7 +502,7 @@ test_calc_session_id_hmac_static(void **ut_state)
     hmac_ctx_t *hmac = init_static_hmac();
     static const int handwindow = 100;
 
-    struct openvpn_sockaddr addr = { 0 };
+    struct spotify_sockaddr addr = { 0 };
 
     addr.addr.in4.sin_family = AF_INET;
     addr.addr.in4.sin_addr.s_addr = ntohl(0xff000ff);
@@ -663,7 +663,7 @@ test_extract_control_message(void **ut_state)
 int
 main(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_tls_decrypt_lite_none),
         cmocka_unit_test(test_tls_decrypt_lite_auth),

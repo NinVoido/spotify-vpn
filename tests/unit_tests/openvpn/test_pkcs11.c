@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -66,7 +66,7 @@ parse_line(const char *line, char **p, const int n, const char *file,
     return 0;
 }
 char *
-x509_get_subject(openvpn_x509_cert_t *cert, struct gc_arena *gc)
+x509_get_subject(spotify_x509_cert_t *cert, struct gc_arena *gc)
 {
     return "N/A";
 }
@@ -227,7 +227,7 @@ init(void **state)
     struct argv a = argv_new();
     argv_printf(&a, "%s --init-token --free --label \"%s\" --so-pin %s --pin %s",
                 SOFTHSM2_UTIL_PATH, token_name, PIN, PIN);
-    assert_true(openvpn_execve_check(&a, es, 0, "Failed to initialize token"));
+    assert_true(spotify_execve_check(&a, es, 0, "Failed to initialize token"));
 
     /* Import certificates and keys in our test database into the token */
     char cert[] = "cert_XXXXXX";
@@ -263,13 +263,13 @@ init(void **state)
         /* Use numcerts+1 as a unique id of the object  -- same id for matching cert and key */
         argv_printf(&a, "%s --provider %s --load-certificate %s --label \"%s\" --id %08x --login --write",
                     P11TOOL_PATH, SOFTHSM2_MODULE_PATH, cert, c->friendly_name, num_certs+1);
-        assert_true(openvpn_execve_check(&a, es, 0, "Failed to upload certificate into token"));
+        assert_true(spotify_execve_check(&a, es, 0, "Failed to upload certificate into token"));
 
         argv_free(&a);
         a = argv_new();
         argv_printf(&a, "%s --provider %s --load-privkey %s --label \"%s\" --id %08x --login --write",
                     P11TOOL_PATH, SOFTHSM2_MODULE_PATH, key, c->friendly_name, num_certs+1);
-        assert_true(openvpn_execve_check(&a, es, 0, "Failed to upload key into token"));
+        assert_true(spotify_execve_check(&a, es, 0, "Failed to upload key into token"));
 
         assert_int_equal(ftruncate(cert_fd, 0), 0);
         assert_int_equal(ftruncate(key_fd, 0), 0);
@@ -293,7 +293,7 @@ cleanup(void **state)
     struct argv a = argv_new();
 
     argv_printf(&a, "%s --delete-token --token \"%s\"", SOFTHSM2_UTIL_PATH, token_name);
-    assert_true(openvpn_execve_check(&a, es, 0, "Failed to delete token"));
+    assert_true(spotify_execve_check(&a, es, 0, "Failed to delete token"));
     argv_free(&a);
 
     rmdir(softhsm2_tokens_path); /* this must be empty after delete token */
@@ -311,7 +311,7 @@ static int
 setup_pkcs11(void **state)
 {
 #if defined(HAVE_XKEY_PROVIDER)
-    /* Initialize providers in a way matching what OpenVPN core does */
+    /* Initialize providers in a way matching what spotify core does */
     tls_libctx = OSSL_LIB_CTX_new();
     prov[0] = OSSL_PROVIDER_load(tls_libctx, "default");
     OSSL_PROVIDER_add_builtin(tls_libctx, "ovpn.xkey", xkey_provider_init);
@@ -379,7 +379,7 @@ test_pkcs11_ids(void **state)
         /* decode the base64 data and convert to X509 and get its sha1 fingerprint */
         unsigned char *der = malloc(strlen(base64));
         assert_non_null(der);
-        int derlen = openvpn_base64_decode(base64, der, strlen(base64));
+        int derlen = spotify_base64_decode(base64, der, strlen(base64));
         free(base64);
         assert_true(derlen > 0);
 
@@ -471,7 +471,7 @@ test_tls_ctx_use_pkcs11__management(void **state)
 int
 main(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup_teardown(test_pkcs11_ids, setup_pkcs11,
                                         teardown_pkcs11),

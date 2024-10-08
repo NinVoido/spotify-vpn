@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -27,8 +27,8 @@
  * This file is split from ssl.h to be able to unit test it.
  */
 
-#ifndef OPENVPN_SSL_NCP_H
-#define OPENVPN_SSL_NCP_H
+#ifndef spotify_SSL_NCP_H
+#define spotify_SSL_NCP_H
 
 #include "buffer.h"
 #include "options.h"
@@ -93,7 +93,7 @@ tls_peer_ncp_list(const char *peer_info, struct gc_arena *gc);
  * @parms gc            gc_arena to allocate the returned string
  *
  * @returns             colon separated string of normalised (via
- *                      translate_cipher_name_from_openvpn) and
+ *                      translate_cipher_name_from_spotify) and
  *                      zero terminated string iff all ciphers
  *                      in list are supported and the total length
  *                      is short than MAX_NCP_CIPHERS_LENGTH. NULL
@@ -156,4 +156,4 @@ get_p2p_ncp_cipher(struct tls_session *session, const char *peer_info,
 bool
 check_session_cipher(struct tls_session *session, struct options *options);
 
-#endif /* ifndef OPENVPN_SSL_NCP_H */
+#endif /* ifndef spotify_SSL_NCP_H */

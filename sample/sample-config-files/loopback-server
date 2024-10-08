@@ -3,11 +3,11 @@
 # This test performs a TLS negotiation once every 10 seconds,
 # and will terminate after 2 minutes.
 #
-# From the root directory of the OpenVPN distribution,
-# after openvpn has been built, run:
+# From the root directory of the spotify distribution,
+# after spotify has been built, run:
 #
-#  ./openvpn --config sample-config-files/loopback-client  (In one window) 
-#  ./openvpn --config sample-config-files/loopback-server  (Simultaneously in another window) 
+#  ./spotify --config sample-config-files/loopback-client  (In one window) 
+#  ./spotify --config sample-config-files/loopback-server  (Simultaneously in another window) 
 
 rport 16001
 lport 16000

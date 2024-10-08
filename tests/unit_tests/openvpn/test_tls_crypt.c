@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2016-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2016-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -58,14 +58,14 @@ key_state_export_keying_material(struct tls_session *session,
 #define PARAM2      "param two"
 
 static const char *test_server_key = \
-    "-----BEGIN OpenVPN tls-crypt-v2 server key-----\n"
+    "-----BEGIN spotify tls-crypt-v2 server key-----\n"
     "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4v\n"
     "MDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5f\n"
     "YGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn8=\n"
-    "-----END OpenVPN tls-crypt-v2 server key-----\n";
+    "-----END spotify tls-crypt-v2 server key-----\n";
 
 static const char *test_client_key = \
-    "-----BEGIN OpenVPN tls-crypt-v2 client key-----\n"
+    "-----BEGIN spotify tls-crypt-v2 client key-----\n"
     "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4v\n"
     "MDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5f\n"
     "YGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6P\n"
@@ -78,12 +78,12 @@ static const char *test_client_key = \
     "j0TzJ3BVru9W3CpotdNt7u09knxAfpCxjtrP3semsDew/gTBtcfQ/OoTFyFHnN5k\n"
     "RZ+q17SC4nba3Pp8/Fs0+hSbv2tJozoD8SElFq7SIWJsciTYh8q8f5yQxjdt4Wxu\n"
     "/Z5wtPCAZ0tOzj4ItTI77fBOYRTfEayzHgEr\n"
-    "-----END OpenVPN tls-crypt-v2 client key-----\n";
+    "-----END spotify tls-crypt-v2 client key-----\n";
 
 
 /* Has custom metadata of AABBCCDD (base64) */
 static const char *test_client_key_metadata = \
-    "-----BEGIN OpenVPN tls-crypt-v2 client key-----\n"
+    "-----BEGIN spotify tls-crypt-v2 client key-----\n"
     "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4v\n"
     "MDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5f\n"
     "YGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6P\n"
@@ -96,7 +96,7 @@ static const char *test_client_key_metadata = \
     "fbCsDh8n3H+Cw1k5YNBZDYYJOtVUgBWXheO6vgoOmqDdI0dAQ3hVo9DE+SkCFjgf\n"
     "l4FY2yLEh9ZVZZrl1eD1Owh/X178CkHrBJYl9LNQSyQEKlDGWwBLQ/pY3qtjctr3\n"
     "pV62MPQdBo+1lcsjDCJVQA6XUyltas4BKQ==\n"
-    "-----END OpenVPN tls-crypt-v2 client key-----\n";
+    "-----END spotify tls-crypt-v2 client key-----\n";
 
 int
 __wrap_parse_line(const char *line, char **p, const int n, const char *file,
@@ -674,7 +674,7 @@ test_tls_crypt_v2_write_client_key_file_metadata(void **state)
 int
 main(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup_teardown(tls_crypt_loopback,
                                         test_tls_crypt_setup,

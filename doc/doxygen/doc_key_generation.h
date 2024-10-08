@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -30,11 +30,11 @@
 /**
  * @page key_generation Data channel %key generation
  *
- * This section describes how OpenVPN peers generate and exchange %key
+ * This section describes how spotify peers generate and exchange %key
  * material necessary for the security operations performed on data
  * channel packets.
  *
- * The %key generation and exchange process between OpenVPN client and
+ * The %key generation and exchange process between spotify client and
  * server occurs every time data channel security parameters are
  * negotiated, for example during the initial setup of a VPN tunnel or
  * when the active security parameters expire.  In source code terms, this
@@ -42,7 +42,7 @@
  *
  * @section key_generation_method Key methods
  *
- * OpenVPN supports two different ways of generating and exchanging %key
+ * spotify supports two different ways of generating and exchanging %key
  * material between client and server.  These are known as %key method 1
  * and %key method 2.  %Key method 2 is the recommended method. Both are
  * explained below.
@@ -59,7 +59,7 @@
  * @subsection key_generation_method_2 Key method 2
  *
  * There are two methods for generating key data when using key method 2
- * the first is OpenVPN's traditional approach that exchanges random
+ * the first is spotify's traditional approach that exchanges random
  * data and uses a PRF and the other is using the RFC5705 keying material
  * exporter to generate the key material. For both methods the random
  * data is exchange but only used in the traditional method.
@@ -79,16 +79,16 @@
  *    server's random material.
  *
  * %Key method 2 %key expansion is performed by the \c
- * generate_key_expansion_openvpn_prf() function.  Please refer to its source
+ * generate_key_expansion_spotify_prf() function.  Please refer to its source
  * code for details of the %key expansion process.
  *
  * When the client sends the IV_PROTO_TLS_KEY_EXPORT flag and the server replies
  * with `key-derivation tls-ekm` the RFC5705 key material exporter with the
- * label EXPORTER-OpenVPN-datakeys is used for the key data.
+ * label EXPORTER-spotify-datakeys is used for the key data.
  *
  * @subsection key_generation_random Source of random material
  *
- * OpenVPN uses the either the OpenSSL library or the mbed TLS library as its
+ * spotify uses the either the OpenSSL library or the mbed TLS library as its
  * source of random material.
  *
  * In OpenSSL, the \c RAND_bytes() function is called
@@ -106,7 +106,7 @@
  *
  * @section key_generation_exchange Key exchange:
  *
- * The %key exchange process is initiated by the OpenVPN process running
+ * The %key exchange process is initiated by the spotify process running
  * in client mode.  After the initial three-way handshake has successfully
  * completed, the client sends its share of random material to the server,
  * after which the server responds with its part.  This process is
@@ -141,7 +141,7 @@ S_ACTIVE                                                            S_ACTIVE
  * control_processor Control Channel Processor module's\endlink \c
  * tls_process() function and control the %key generation and exchange
  * process as follows:
- * - %Key method 1 has been removed in OpenVPN 2.5
+ * - %Key method 1 has been removed in spotify 2.5
  * - %Key method 2:
  *   - \c key_method_2_write(): generate random material locally, and if
  *     in server mode generate %key expansion.
@@ -150,7 +150,7 @@ S_ACTIVE                                                            S_ACTIVE
  *
  * @subsection key_generation_encapsulation Transmission of key material
  *
- * The OpenVPN client and server communicate with each other through their
+ * The spotify client and server communicate with each other through their
  * control channel.  This means that all of the data transmitted over the
  * network, such as random material for %key generation, is encapsulated
  * in a TLS layer.  For more details, see the \link control_tls Control

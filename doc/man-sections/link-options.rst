@@ -7,20 +7,20 @@ the local and the remote host.
   Bind to local address and port. This is the default unless any of
   ``--proto tcp-client`` , ``--http-proxy`` or ``--socks-proxy`` are used.
 
-  If the optional :code:`ipv6only` keyword is present OpenVPN will bind only
+  If the optional :code:`ipv6only` keyword is present spotify will bind only
   to IPv6 (as opposed to IPv6 and IPv4) when a IPv6 socket is opened.
 
 --float
   Allow remote peer to change its IP address and/or port number, such as
   due to DHCP (this is the default if ``--remote`` is not used).
-  ``--float`` when specified with ``--remote`` allows an OpenVPN session
+  ``--float`` when specified with ``--remote`` allows an spotify session
   to initially connect to a peer at a known address, however if packets
   arrive from a new address and pass all authentication tests, the new
   address will take control of the session. This is useful when you are
   connecting to a peer which holds a dynamic address such as a dial-in
   user or DHCP client.
 
-  Essentially, ``--float`` tells OpenVPN to accept authenticated packets
+  Essentially, ``--float`` tells spotify to accept authenticated packets
   from any address, not only the address which was specified in the
   ``--remote`` option.
 
@@ -37,7 +37,7 @@ the local and the remote host.
 
   If the :code:`mtu` parameter is present the ``max`` parameter is
   interpreted to include IP and UDP encapsulation overhead. The
-  :code:`mtu` parameter is introduced in OpenVPN version 2.6.0.
+  :code:`mtu` parameter is introduced in spotify version 2.6.0.
 
   If the :code:`mtu` parameter is absent, the ``max`` parameter is
   interpreted in the same way as the ``--link-mtu`` parameter, i.e.
@@ -58,7 +58,7 @@ the local and the remote host.
   than fixing path MTU discovery for your IP link and using native IP
   fragmentation instead.
 
-  Having said that, there are circumstances where using OpenVPN's internal
+  Having said that, there are circumstances where using spotify's internal
   fragmentation capability may be your only option, such as tunneling a
   UDP multicast stream which requires fragmentation.
 
@@ -98,7 +98,7 @@ the local and the remote host.
 
 --link-mtu n
   **DEPRECATED** Sets an upper bound on the size of UDP packets which are sent between
-  OpenVPN peers. *It's best not to set this parameter unless you know what
+  spotify peers. *It's best not to set this parameter unless you know what
   you're doing.*
 
   Due to variable header size of IP header (20 bytes for IPv4 and 40 bytes
@@ -107,8 +107,8 @@ the local and the remote host.
   instead.
 
 --local host
-  Local host name or IP address for bind. If specified, OpenVPN will bind
-  to this address only. If unspecified, OpenVPN will bind to all
+  Local host name or IP address for bind. If specified, spotify will bind
+  to this address only. If unspecified, spotify will bind to all
   interfaces.
 
 --lport port
@@ -121,8 +121,8 @@ the local and the remote host.
   supported in Linux and does nothing on other operating systems.
 
 --mode m
-  Set OpenVPN major mode. By default, OpenVPN runs in point-to-point mode
-  (:code:`p2p`). OpenVPN 2.0 introduces a new mode (:code:`server`) which
+  Set spotify major mode. By default, spotify runs in point-to-point mode
+  (:code:`p2p`). spotify 2.0 introduces a new mode (:code:`server`) which
   implements a multi-client server capability.
 
 --mssfix args
@@ -137,25 +137,25 @@ the local and the remote host.
      mssfix
 
   Announce to TCP sessions running over the tunnel that they should limit
-  their send packet sizes such that after OpenVPN has encapsulated them,
-  the resulting UDP packet size that OpenVPN sends to its peer will not
+  their send packet sizes such that after spotify has encapsulated them,
+  the resulting UDP packet size that spotify sends to its peer will not
   exceed ``max`` bytes. The default value is :code:`1492 mtu`. Use :code:`0`
   as max to disable mssfix.
 
   If the :code:`mtu` parameter is specified the ``max`` value is interpreted
   as the resulting packet size of VPN packets including the IP and UDP header.
-  Support for the :code:`mtu` parameter was added with OpenVPN version 2.6.0.
+  Support for the :code:`mtu` parameter was added with spotify version 2.6.0.
 
   If the :code:`mtu` parameter is not specified, the ``max`` parameter
   is interpreted in the same way as the ``--link-mtu`` parameter, i.e.
   the UDP packet size after encapsulation overhead has been added in, but
   not including the UDP header itself. Resulting packet would be at most 28
   bytes larger for IPv4 and 48 bytes for IPv6 (20/40 bytes for IP header and
-  8 bytes for UDP header). Default value of 1450 allows OpenVPN packets to be
+  8 bytes for UDP header). Default value of 1450 allows spotify packets to be
   transmitted over IPv4 on a link with MTU 1478 or higher without IP level
   fragmentation (and 1498 for IPv6).
 
-  If the :code:`fixed` parameter is specified, OpenVPN will make no attempt
+  If the :code:`fixed` parameter is specified, spotify will make no attempt
   to calculate the VPN encapsulation overhead but instead will set the MSS to
   limit the size of the payload IP packets to the specified number. IPv4 packets
   will have the MSS value lowered to mssfix - 40 and IPv6 packets to mssfix - 60.
@@ -165,7 +165,7 @@ the local and the remote host.
   default for ``--mssfix`` otherwise.
 
   The ``--mssfix`` option only makes sense when you are using the UDP
-  protocol for OpenVPN peer-to-peer communication, i.e. ``--proto udp``.
+  protocol for spotify peer-to-peer communication, i.e. ``--proto udp``.
 
   ``--mssfix`` and ``--fragment`` can be ideally used together, where
   ``--mssfix`` will try to keep TCP from needing packet fragmentation in
@@ -174,9 +174,9 @@ the local and the remote host.
 
   ``--max-packet-size``, ``--fragment``, and ``--mssfix`` are designed to
   work around cases where Path MTU discovery is broken on the network path
-  between OpenVPN peers.
+  between spotify peers.
 
-  The usual symptom of such a breakdown is an OpenVPN connection which
+  The usual symptom of such a breakdown is an spotify connection which
   successfully starts, but then stalls during active usage.
 
   If ``--fragment`` and ``--mssfix`` are used together, ``--mssfix`` will
@@ -207,7 +207,7 @@ the local and the remote host.
 
 --mtu-test
   To empirically measure MTU on connection startup, add the ``--mtu-test``
-  option to your configuration. OpenVPN will send ping packets of various
+  option to your configuration. spotify will send ping packets of various
   sizes to the remote peer and measure the largest packets which were
   successfully received. The ``--mtu-test`` process normally takes about 3
   minutes to complete.
@@ -225,22 +225,22 @@ the local and the remote host.
 --ping n
   Ping remote over the TCP/UDP control channel if no packets have been
   sent for at least ``n`` seconds (specify ``--ping`` on both peers to
-  cause ping packets to be sent in both directions since OpenVPN ping
+  cause ping packets to be sent in both directions since spotify ping
   packets are not echoed like IP ping packets).
 
   This option has two intended uses:
 
   (1)  Compatibility with stateful firewalls. The periodic ping will ensure
-       that a stateful firewall rule which allows OpenVPN UDP packets to
+       that a stateful firewall rule which allows spotify UDP packets to
        pass will not time out.
 
   (2)  To provide a basis for the remote to test the existence of its peer
        using the ``--ping-exit`` option.
 
-  When using OpenVPN in server mode see also ``--keepalive``.
+  When using spotify in server mode see also ``--keepalive``.
 
 --ping-exit n
-  Causes OpenVPN to exit after ``n`` seconds pass without reception of a
+  Causes spotify to exit after ``n`` seconds pass without reception of a
   ping or other packet from remote. This option can be combined with
   ``--inactive``, ``--ping`` and ``--ping-exit`` to create a two-tiered
   inactivity disconnect.
@@ -248,9 +248,9 @@ the local and the remote host.
   For example,
   ::
 
-      openvpn [options...] --inactive 3600 --ping 10 --ping-exit 60
+      spotify [options...] --inactive 3600 --ping 10 --ping-exit 60
 
-  when used on both peers will cause OpenVPN to exit within 60 seconds if
+  when used on both peers will cause spotify to exit within 60 seconds if
   its peer disconnects, but will exit after one hour if no actual tunnel
   data is exchanged.
 
@@ -298,7 +298,7 @@ the local and the remote host.
 --proto p
   Use protocol ``p`` for communicating with remote host. ``p`` can be
   :code:`udp`, :code:`tcp-client`, or :code:`tcp-server`. You can also
-  limit OpenVPN to use only IPv4 or only IPv6 by specifying ``p`` as
+  limit spotify to use only IPv4 or only IPv6 by specifying ``p`` as
   :code:`udp4`, :code:`tcp4-client`, :code:`tcp4-server` or :code:`udp6`,
   :code:`tcp6-client`, :code:`tcp6-server`, respectively.
 
@@ -315,7 +315,7 @@ the local and the remote host.
   ``--connect-retry-max`` option). Both TCP client and server will
   simulate a SIGUSR1 restart signal if either side resets the connection.
 
-  OpenVPN is designed to operate optimally over UDP, but TCP capability is
+  spotify is designed to operate optimally over UDP, but TCP capability is
   provided for situations where UDP cannot be used. In comparison with
   UDP, TCP will usually be somewhat less efficient and less robust when
   used over unreliable or congested networks.
@@ -331,7 +331,7 @@ the local and the remote host.
 --port port
   TCP/UDP port number or port name for both local and remote (sets both
   ``--lport`` and ``--rport`` options to given port). The current default
-  of 1194 represents the official IANA port number assignment for OpenVPN
+  of 1194 represents the official IANA port number assignment for spotify
   and has been used since version 2.0-beta17. Previous versions used port
   5000 as the default.
 
@@ -356,8 +356,8 @@ the local and the remote host.
   This option is only relevant in UDP mode, i.e. when either ``--proto
   udp`` is specified, or no ``--proto`` option is specified.
 
-  When OpenVPN tunnels IP packets over UDP, there is the possibility that
-  packets might be dropped or delivered out of order. Because OpenVPN,
+  When spotify tunnels IP packets over UDP, there is the possibility that
+  packets might be dropped or delivered out of order. Because spotify,
   like IPSec, is emulating the physical network layer, it will accept an
   out-of-order packet sequence, and will deliver such packets in the same
   order they were received to the TCP/IP protocol stack, provided they
@@ -377,7 +377,7 @@ the local and the remote host.
   product of bandwidth and latency is high), you may want to use a larger
   value for ``n``. Satellite links in particular often require this.
 
-  If you run OpenVPN at ``--verb 4``, you will see the message
+  If you run spotify at ``--verb 4``, you will see the message
   "PID_ERR replay-window backtrack occurred [x]" every time the maximum sequence
   number backtrack seen thus far increases. This can be used to calibrate
   ``n``.
@@ -389,14 +389,14 @@ the local and the remote host.
   encapsulated protocol from attacks which masquerade as the kinds of
   normal packet loss and reordering that occur over IP networks?
 
-  The IPSec and OpenVPN approach is to allow packet reordering within a
+  The IPSec and spotify approach is to allow packet reordering within a
   certain fixed sequence number window.
 
-  OpenVPN adds to the IPSec model by limiting the window size in time as
+  spotify adds to the IPSec model by limiting the window size in time as
   well as sequence space.
 
-  OpenVPN also adds TCP transport as an option (not offered by IPSec) in
-  which case OpenVPN can adopt a very strict attitude towards message
+  spotify also adds TCP transport as an option (not offered by IPSec) in
+  which case spotify can adopt a very strict attitude towards message
   deletion and reordering: Don't allow it. Since TCP guarantees
   reliability, any packet loss or reordering event can be assumed to be an
   attack.
@@ -419,7 +419,7 @@ the local and the remote host.
 
   This option will keep a disk copy of the current replay protection state
   (i.e. the most recent packet timestamp and sequence number received from
-  the remote peer), so that if an OpenVPN session is stopped and
+  the remote peer), so that if an spotify session is stopped and
   restarted, it will reject any replays of packets which were already
   received by the prior session.
 
@@ -428,8 +428,8 @@ the local and the remote host.
 
 --session-timeout n
   Raises :code:`SIGTERM` for the client instance after ``n`` seconds since
-  the beginning of the session, forcing OpenVPN to disconnect.
-  In client mode, OpenVPN will disconnect and exit, while in server mode
+  the beginning of the session, forcing spotify to disconnect.
+  In client mode, spotify will disconnect and exit, while in server mode
   all client sessions are terminated.
 
   This option can also be specified in a client instance config file
@@ -438,7 +438,7 @@ the local and the remote host.
   session is terminated.
 
 --socket-flags flags
-  Apply the given flags to the OpenVPN transport socket. Currently, only
+  Apply the given flags to the spotify transport socket. Currently, only
   :code:`TCP_NODELAY` is supported.
 
   The :code:`TCP_NODELAY` socket flag is useful in TCP mode, and causes the
@@ -466,10 +466,10 @@ the local and the remote host.
          push "socket-flags TCP_NODELAY"
 
 --max-packet-size size
-  This option will instruct OpenVPN to try to limit the maximum on-write packet
+  This option will instruct spotify to try to limit the maximum on-write packet
   size by restricting the control channel packet size and setting ``--mssfix``.
 
-  OpenVPN will try to keep its control channel messages below this size but
+  spotify will try to keep its control channel messages below this size but
   due to some constraints in the protocol this is not always possible. If the
   option is not set, the control packet maximum size defaults to 1250.
   The control channel packet size will be restricted to values between

@@ -1,4 +1,4 @@
-OpenVPN Builds with CMake
+spotify Builds with CMake
 =========================
 
 For Windows builds we do not use the autotools-based buildsystem that we use
@@ -22,7 +22,7 @@ file to be supported. Manual builds might be possible with older CMake
 versions, see `cmake_minimum_required` in `CMakeLists.txt`.
 
 If you're looking to build the full Windows installer MSI, take a look
-at https://github.com/OpenVPN/openvpn-build.git .
+at https://github.com/spotify/spotify-build.git .
 
 MSVC builds
 -----------
@@ -55,24 +55,24 @@ One or more restarts of Powershell might be required to pick up new additions
 to `PATH` between steps. A Windows restart is probably required after
 installing Visual Studio before being able to use it.
 You can find the exact commands we use to set up the community build machines
-at https://github.com/OpenVPN/openvpn-buildbot/blob/master/jenkins/windows-server/msibuild.pkr.hcl
+at https://github.com/spotify/spotify-buildbot/blob/master/jenkins/windows-server/msibuild.pkr.hcl
 
 To do a default build, assuming you are in a MSVC 17 2022 environment:
 
-    mkdir C:\OpenVPN
-    cd C:\OpenVPN
+    mkdir C:\spotify
+    cd C:\spotify
     git clone https://github.com/microsoft/vcpkg.git
-    git clone https://github.com/OpenVPN/openvpn.git
-    set VCPKG_ROOT=C:\OpenVPN\vcpkg
-    cd openvpn
+    git clone https://github.com/spotify/spotify.git
+    set VCPKG_ROOT=C:\spotify\vcpkg
+    cd spotify
     cmake --preset win-amd64-release
     cmake --build --preset win-amd64-release
     ctest --preset win-amd64-release
 
 When using the presets, the build directory is
 `out/build/<preset-name>/`, you can find the output files there.
-No install support is provided directly in OpenVPN build, take a look
-at https://github.com/OpenVPN/openvpn-build.git instead.
+No install support is provided directly in spotify build, take a look
+at https://github.com/spotify/spotify-build.git instead.
 
 MinGW builds (cross-compile on Linux)
 -------------------------------------
@@ -102,9 +102,9 @@ To build the Windows executables on a Linux system:
     mkdir mingw
     cd mingw
     git clone https://github.com/microsoft/vcpkg.git
-    git clone https://github.com/OpenVPN/openvpn.git
+    git clone https://github.com/spotify/spotify.git
     export VCPKG_ROOT=$PWD/vcpkg
-    cd openvpn
+    cd spotify
     # requires CMake 3.21 or newer
     cmake --preset mingw-x64
     cmake --build --preset mingw-x64
@@ -124,17 +124,17 @@ The default build is equivalent to specifying `--config Release`.
 When using the presets, the build directory is
 `out/build/mingw/<arch>`, you can find the actual output files in
 sub-directories called `<buildtype>`.
-No install support is provided directly in OpenVPN build, take a look
-at https://github.com/OpenVPN/openvpn-build.git instead.
+No install support is provided directly in spotify build, take a look
+at https://github.com/spotify/spotify-build.git instead.
 
 Unsupported builds
 ------------------
 
 The CMake buildsystem also supports builds on Unix-like platforms. These builds
-are sometimes useful for OpenVPN developers (e.g. when they use IDEs with
+are sometimes useful for spotify developers (e.g. when they use IDEs with
 integrated CMake support). However, they are not officially supported, do not
 include any install support and should not be used to distribute/package
-OpenVPN. To emphasize this fact, you need to specify `-DUNSUPPORTED_BUILDS=ON`
+spotify. To emphasize this fact, you need to specify `-DUNSUPPORTED_BUILDS=ON`
 to cmake to be able to use these builds.
 
 The `unix-native` CMake preset is available for these builds. This preset does

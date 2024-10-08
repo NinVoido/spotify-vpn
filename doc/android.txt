@@ -1,17 +1,17 @@
-This file documents the support in OpenVPN for Android using the
+This file documents the support in spotify for Android using the
 VPNService API (https://developer.android.com/reference/android/net/VpnService)
 that has been introduced in Android 4.0 (API 14).
 
-This support is primarily used in the "OpenVPN for Android" app
-(https://github.com/schwabe/ics-openvpn). For building see the developer
-README: https://github.com/schwabe/ics-openvpn/blob/master/doc/README.txt
+This support is primarily used in the "spotify for Android" app
+(https://github.com/schwabe/ics-spotify). For building see the developer
+README: https://github.com/schwabe/ics-spotify/blob/master/doc/README.txt
 
 Android provides the VPNService API
 (http://developer.android.com/reference/android/net/VpnService.html)
 which allows establishing VPN connections without rooting the device.
 
 Unlike on other platforms, the tun device is openend by UI instead of
-OpenVPN itself.  The VpnService API needs the following parameters:
+spotify itself.  The VpnService API needs the following parameters:
 
 - IP and netmask of tun interface
 - Networks that should be routed to the tun interface
@@ -27,10 +27,10 @@ of protecting a socket from being routed over an interface. Calling
 protect (fd) will internally bind the socket to the interface used for the
 external connection (usually WiFi or mobile data).
 
-To use OpenVPN with the VPNService API OpenVPN must be built with
+To use spotify with the VPNService API spotify must be built with
 the TARGET_ANDROID compile option.  Also the UI must use a UNIX
-domain socket to connect to OpenVPN.  When compiled as TARGET_ANDROID
-OpenVPN will use management callbacks instead of executing traditional
+domain socket to connect to spotify.  When compiled as TARGET_ANDROID
+spotify will use management callbacks instead of executing traditional
 ifconfig/route commands use the need-ok callback mechanism which
 will ask
 
@@ -41,7 +41,7 @@ where command can be:
 IFCONFIG6 IPv6/netmask
 IFCONFIG local remoteOrNetmask MTU topology
 
-To tell the UI which IPs addresses OpenVPN expects on the interface.
+To tell the UI which IPs addresses spotify expects on the interface.
 Topology is one of "net30","p2p","subnet" or "undef".
 
 ROUTE6 network/netmask
@@ -60,7 +60,7 @@ The GUI will then respond with a "needok 'command' ok' or "needok
 
 PERSIST_TUN_ACTION
 
-When OpenVPN wants to open an fd it will do this query via management.
+When spotify wants to open an fd it will do this query via management.
 The UI should compare the last configuration of the tun device with the current
 tun configuration and reply with either NOACTION (or always respond with
 OPEN_BEFORE_CLOSE).
@@ -71,21 +71,21 @@ OPEN_BEFORE_CLOSE).
 For example the UI could respond with
 needok 'PERSIST_TUN_ACTION' OPEN_BEFORE_CLOSE
 
-To protect a socket the OpenVPN will send a PROTECTFD to the UI.
+To protect a socket the spotify will send a PROTECTFD to the UI.
 When sending the PROTECTFD command command to the UI it will send
 the fd of the socket as ancillary message over the UNIX socket.
 The UI will then call protect(fd) on the received socket protecting
 it from being routed over the VPN.
 
-When opening a tun device the OpenVPN process will first send all
+When opening a tun device the spotify process will first send all
 route, ifconfig and DNS related configuration to the UI and after
 that calls the OPENTUN command to receive a tun fd with the requested
 configuration.  The UI will then use the collected information to
 call the VPNService's establish() method to receive a fd which in
-turn is send to the OpenVPN process as ancillary message to the
+turn is send to the spotify process as ancillary message to the
 "needok 'OPENTUN' ok' response.
 
-The OpenVPN for Android UI extensively uses other features that
+The spotify for Android UI extensively uses other features that
 are not specific to Android but are rarely used on other platform.
 For example using SIGUSR1 and management-hold to restart, pause,
 continue the VPN on network changes or the external key management
@@ -95,7 +95,7 @@ To better support handover between networks, a the management command
 
 network-change [samenetwork]
 
-is used on the Android platform.  It tells OpenVPN to do the necessary
+is used on the Android platform.  It tells spotify to do the necessary
 action when the network changes.  Currently this is just calling
 the protect callback when using peer-id regardless of the samenetwork.
-Without peer-id OpenVPN will generate USR1 when samenetwork is not set.
+Without peer-id spotify will generate USR1 when samenetwork is not set.

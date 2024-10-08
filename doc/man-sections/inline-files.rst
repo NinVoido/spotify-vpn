@@ -1,7 +1,7 @@
 INLINE FILE SUPPORT
 ===================
 
-OpenVPN allows including files in the main configuration for the ``--ca``,
+spotify allows including files in the main configuration for the ``--ca``,
 ``--cert``, ``--dh``, ``--extra-certs``, ``--key``, ``--pkcs12``,
 ``--crl-verify``, ``--http-proxy-user-pass``, ``--tls-auth``,
 ``--auth-gen-token-secret``, ``--peer-fingerprint``, ``--tls-crypt``,

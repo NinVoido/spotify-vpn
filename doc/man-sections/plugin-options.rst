@@ -1,11 +1,11 @@
 Plug-in Interface Options
 -------------------------
 
-OpenVPN can be extended by loading external plug-in modules at runtime.  These
-plug-ins must be prebuilt and adhere to the OpenVPN Plug-In API.
+spotify can be extended by loading external plug-in modules at runtime.  These
+plug-ins must be prebuilt and adhere to the spotify Plug-In API.
 
 --plugin args
-  Loads an OpenVPN plug-in module.
+  Loads an spotify plug-in module.
 
   Valid syntax:
   ::
@@ -18,7 +18,7 @@ plug-ins must be prebuilt and adhere to the OpenVPN Plug-In API.
   optional init string which will be passed directly to the plug-in.
   If the init consists of multiple arguments it must be enclosed in
   double-quotes (\").  Multiple plugin modules may be loaded into one
-  OpenVPN process.
+  spotify process.
 
   The ``module-name`` argument can be just a filename or a filename
   with a relative or absolute path. The format of the filename and path
@@ -35,20 +35,20 @@ plug-ins must be prebuilt and adhere to the OpenVPN Plug-In API.
 
 
   ``DEFAULT_DIR`` is replaced by the default plug-in directory, which is
-  configured at the build time of OpenVPN. ``CWD`` is the current directory
-  where OpenVPN was started or the directory OpenVPN have switched into
+  configured at the build time of spotify. ``CWD`` is the current directory
+  where spotify was started or the directory spotify have switched into
   via the ``--cd`` option before the ``--plugin`` option.
 
-  For more information and examples on how to build OpenVPN plug-in
-  modules, see the README file in the ``plugin`` folder of the OpenVPN
+  For more information and examples on how to build spotify plug-in
+  modules, see the README file in the ``plugin`` folder of the spotify
   source distribution.
 
-  If you are using an RPM install of OpenVPN, see
-  :code:`/usr/share/openvpn/plugin`. The documentation is in ``doc`` and
+  If you are using an RPM install of spotify, see
+  :code:`/usr/share/spotify/plugin`. The documentation is in ``doc`` and
   the actual plugin modules are in ``lib``.
 
   Multiple plugin modules can be cascaded, and modules can be used in
-  tandem with scripts. The modules will be called by OpenVPN in the order
+  tandem with scripts. The modules will be called by spotify in the order
   that they are declared in the config file. If both a plugin and script
   are configured for the same callback, the script will be called last. If
   the return code of the module/script controls an authentication function
@@ -58,9 +58,9 @@ plug-ins must be prebuilt and adhere to the OpenVPN Plug-In API.
 
   **WARNING**:
         Plug-ins may do deferred execution, meaning the plug-in will
-        return the control back to the main OpenVPN process and provide
+        return the control back to the main spotify process and provide
         the plug-in result later on via a different thread or process.
-        OpenVPN does **NOT** support multiple authentication plug-ins
+        spotify does **NOT** support multiple authentication plug-ins
         **where more than one plugin** tries to do deferred authentication.
-        If this behaviour is detected, OpenVPN will shut down upon first
+        If this behaviour is detected, spotify will shut down upon first
         authentication.

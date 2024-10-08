@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *  Copyright (C) 2008-2024 David Sommerseth <dazo@eurephia.org>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -47,7 +47,7 @@
 
 #include "ssl_ncp.h"
 #include "ssl_util.h"
-#include "openvpn.h"
+#include "spotify.h"
 
 /**
  * Return the Negotiable Crypto Parameters version advertised in the peer info
@@ -103,12 +103,12 @@ mutate_ncp_cipher_list(const char *list, struct gc_arena *gc)
     while (token)
     {
         /*
-         * Going cipher_kt_name (and translate_cipher_name_from_openvpn/
-         * translate_cipher_name_to_openvpn) also normalises the cipher name,
+         * Going cipher_kt_name (and translate_cipher_name_from_spotify/
+         * translate_cipher_name_to_spotify) also normalises the cipher name,
          * e.g. replacing AeS-128-gCm with AES-128-GCM
          *
          * ciphers that have ? in front of them are considered optional and
-         * OpenVPN will only warn if they are not found (and remove them from
+         * spotify will only warn if they are not found (and remove them from
          * the list)
          */
         bool optional = false;

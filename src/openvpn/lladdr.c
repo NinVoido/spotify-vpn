@@ -14,7 +14,7 @@
 #include "proto.h"
 
 int
-set_lladdr(openvpn_net_ctx_t *ctx, const char *ifname, const char *lladdr,
+set_lladdr(spotify_net_ctx_t *ctx, const char *ifname, const char *lladdr,
            const struct env_set *es)
 {
     int r;
@@ -25,7 +25,7 @@ set_lladdr(openvpn_net_ctx_t *ctx, const char *ifname, const char *lladdr,
     }
 
 #if defined(TARGET_LINUX)
-    uint8_t addr[OPENVPN_ETH_ALEN];
+    uint8_t addr[spotify_ETH_ALEN];
 
     sscanf(lladdr, MAC_FMT, MAC_SCAN_ARG(addr));
     r = (net_addr_ll_set(ctx, ifname, addr) == 0);
@@ -56,7 +56,7 @@ set_lladdr(openvpn_net_ctx_t *ctx, const char *ifname, const char *lladdr,
     return -1;
 #endif /* if defined(TARGET_SOLARIS) */
     argv_msg(M_INFO, &argv);
-    r = openvpn_execve_check(&argv, es, M_WARN, "ERROR: Unable to set link layer address.");
+    r = spotify_execve_check(&argv, es, M_WARN, "ERROR: Unable to set link layer address.");
     argv_free(&argv);
 #endif /* if defined(TARGET_LINUX) */
 

@@ -5,11 +5,11 @@ Introduction
 ------------
 
 The *--dev null test suite* is primary targeted at testing client connections
-to the "just compiled" version of OpenVPN. The name is derived from "null"
-device type in OpenVPN. In particular, when *--dev null --ifconfig-noexec* is
-used in OpenVPN client configuration one does not need to run OpenVPN with root
+to the "just compiled" version of spotify. The name is derived from "null"
+device type in spotify. In particular, when *--dev null --ifconfig-noexec* is
+used in spotify client configuration one does not need to run spotify with root
 privileges because interface, routing, etc. configuration is not done at all.
-This is still enough to ensure that the OpenVPN client can connect to a server
+This is still enough to ensure that the spotify client can connect to a server
 instance.
 
 The main features of the test suite:
@@ -22,10 +22,10 @@ The main features of the test suite:
 * Uses the sample certificates and keys
 * Supports running multiple servers and clients
 * Supports running servers directly as root and with sudo
-* Supports using different OpenVPN client versions
+* Supports using different spotify client versions
 
   * The "current" (just compiled) version
-  * Any other OpenVPN versions that is present on the filesystem
+  * Any other spotify versions that is present on the filesystem
 
 * Support testing for success as well as failure
 * Test cases (client configurations) and server setups (server configurations) are stored in a configuration file, i.e. data and code have been separated
@@ -73,7 +73,7 @@ The tests suite is launched via "make check":
 
     * t_server_null_server.sh
 
-      * Launches the compiled OpenVPN server instances as root (if necessary with sudo or su) in the background. The servers are killed using their management interface once all clients have exited.
+      * Launches the compiled spotify server instances as root (if necessary with sudo or su) in the background. The servers are killed using their management interface once all clients have exited.
 
     * t_server_null_client.sh
 
@@ -104,7 +104,7 @@ server list::
 
 The client instances are added similarly::
 
-  TEST_NAME_9="t_server_null_client.sh-openvpn_current_udp_custom"
+  TEST_NAME_9="t_server_null_client.sh-spotify_current_udp_custom"
   SHOULD_PASS_9="yes"
   CLIENT_EXEC_9="${CLIENT_EXEC}"
   CLIENT_CONF_9="${CLIENT_CONF_BASE} --remote 127.0.0.1 1194 udp --proto udp"
@@ -129,7 +129,7 @@ over and over again in a loop and when failures occur it saves the output under
 
 To follow the test flow on Linux you can run this while stress-testing::
 
-    watch -n 0.5 "ps aux|grep -E '(openvpn|t_server_null_server.sh)'|grep -vE '(suppress|grep|tail)'"
+    watch -n 0.5 "ps aux|grep -E '(spotify|t_server_null_server.sh)'|grep -vE '(suppress|grep|tail)'"
 
 Regarding privilege escalation
 ------------------------------

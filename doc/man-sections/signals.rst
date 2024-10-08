@@ -2,7 +2,7 @@ SIGNALS
 =======
 
 :code:`SIGHUP`
-    Cause OpenVPN to close all TUN/TAP and network connections, restart,
+    Cause spotify to close all TUN/TAP and network connections, restart,
     re-read the configuration file (if any), and reopen TUN/TAP and network
     connections.
 
@@ -22,8 +22,8 @@ SIGNALS
     See ``--ipchange`` for more information.
 
 :code:`SIGUSR2`
-    Causes OpenVPN to display its current statistics (to the syslog file if
+    Causes spotify to display its current statistics (to the syslog file if
     ``--daemon`` is used, or stdout otherwise).
 
 :code:`SIGINT`, :code:`SIGTERM`
-    Causes OpenVPN to exit gracefully.
+    Causes spotify to exit gracefully.

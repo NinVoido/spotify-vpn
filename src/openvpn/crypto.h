@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -163,7 +163,7 @@ struct key_ctx
 {
     cipher_ctx_t *cipher;       /**< Generic cipher %context. */
     hmac_ctx_t *hmac;           /**< Generic HMAC %context. */
-    uint8_t implicit_iv[OPENVPN_MAX_IV_LENGTH];
+    uint8_t implicit_iv[spotify_MAX_IV_LENGTH];
     /**< The implicit part of the IV */
     size_t implicit_iv_len;     /**< The length of implicit_iv */
 };
@@ -245,11 +245,11 @@ struct crypto_options
     struct packet_id_persist *pid_persist;
     /**< Persistent packet ID state for
      *   keeping state between successive
-     *   OpenVPN process startups. */
+     *   spotify process startups. */
 
 #define CO_PACKET_ID_LONG_FORM  (1<<0)
     /**< Bit-flag indicating whether to use
-    *   OpenVPN's long packet ID format. */
+    *   spotify's long packet ID format. */
 #define CO_IGNORE_PACKET_ID     (1<<1)
     /**< Bit-flag indicating whether to ignore
      *   the packet ID of a received packet.
@@ -295,7 +295,7 @@ struct crypto_options
  * Minimal IV length for AEAD mode ciphers (in bytes):
  * 4-byte packet id + 8 bytes implicit IV.
  */
-#define OPENVPN_AEAD_MIN_IV_LEN (sizeof(packet_id_type) + 8)
+#define spotify_AEAD_MIN_IV_LEN (sizeof(packet_id_type) + 8)
 
 #define RKF_MUST_SUCCEED (1<<0)
 #define RKF_INLINE       (1<<1)
@@ -351,11 +351,11 @@ void free_key_ctx_bi(struct key_ctx_bi *ctx);
 
 /**
  * Encrypt and HMAC sign a packet so that it can be sent as a data channel
- * VPN tunnel packet to a remote OpenVPN peer.
+ * VPN tunnel packet to a remote spotify peer.
  * @ingroup data_crypto
  *
  * This function handles encryption and HMAC signing of a data channel
- * packet before it is sent to its remote OpenVPN peer.  It receives the
+ * packet before it is sent to its remote spotify peer.  It receives the
  * necessary security parameters in the \a opt argument, which should have
  * been set to the correct values by the \c tls_pre_encrypt() function.
  *
@@ -375,17 +375,17 @@ void free_key_ctx_bi(struct key_ctx_bi *ctx);
  *     contain the processed packet ready for sending, or be empty if an
  *     error occurred.
  */
-void openvpn_encrypt(struct buffer *buf, struct buffer work,
+void spotify_encrypt(struct buffer *buf, struct buffer work,
                      struct crypto_options *opt);
 
 
 /**
  * HMAC verify and decrypt a data channel packet received from a remote
- * OpenVPN peer.
+ * spotify peer.
  * @ingroup data_crypto
  *
  * This function handles authenticating and decrypting a data channel
- * packet received from a remote OpenVPN peer.  It receives the necessary
+ * packet received from a remote spotify peer.  It receives the necessary
  * security parameters in the \a opt argument, which should have been set
  * to the correct values by the \c tls_pre_decrypt() function.
  *
@@ -396,7 +396,7 @@ void openvpn_encrypt(struct buffer *buf, struct buffer work,
  * empty.
  *
  * @param buf          - The %buffer containing the packet received from a
- *                       remote OpenVPN peer on which to perform security
+ *                       remote spotify peer on which to perform security
  *                       operations.
  * @param work         - A working %buffer.
  * @param opt          - The security parameter state for this VPN tunnel.
@@ -412,7 +412,7 @@ void openvpn_encrypt(struct buffer *buf, struct buffer work,
  *     the plaintext packet ready for further processing, or be empty if
  *     an error occurred.
  */
-bool openvpn_decrypt(struct buffer *buf, struct buffer work,
+bool spotify_decrypt(struct buffer *buf, struct buffer work,
                      struct crypto_options *opt, const struct frame *frame,
                      const uint8_t *ad_start);
 
@@ -443,7 +443,7 @@ bool crypto_check_replay(struct crypto_options *opt,
  * @param kt            Struct with the crypto algorithm to use
  * @param packet_id_size Size of the packet id
  * @param occ           if true calculates the overhead for crypto in the same
- *                      incorrect way as all previous OpenVPN versions did, to
+ *                      incorrect way as all previous spotify versions did, to
  *                      end up with identical numbers for OCC compatibility
  */
 unsigned int
@@ -451,7 +451,7 @@ calculate_crypto_overhead(const struct key_type *kt,
                           unsigned int pkt_id_size,
                           bool occ);
 
-/** Return the worst-case OpenVPN crypto overhead (in bytes) */
+/** Return the worst-case spotify crypto overhead (in bytes) */
 unsigned int crypto_max_overhead(void);
 
 /**
@@ -532,7 +532,7 @@ void key2_print(const struct key2 *k,
                 const char *prefix0,
                 const char *prefix1);
 
-void crypto_read_openvpn_key(const struct key_type *key_type,
+void crypto_read_spotify_key(const struct key_type *key_type,
                              struct key_ctx_bi *ctx, const char *key_file,
                              bool key_inline, const int key_direction,
                              const char *key_name, const char *opt_name,
@@ -599,7 +599,7 @@ create_kt(const char *cipher, const char *md, const char *optname)
 
 /**
  * Checks if the current TLS library supports the TLS 1.0 PRF with MD5+SHA1
- * that OpenVPN uses when TLS Keying Material Export is not available.
+ * that spotify uses when TLS Keying Material Export is not available.
  *
  * @return  true if supported, false otherwise.
  */

@@ -1,10 +1,10 @@
-dnl  OpenVPN -- An application to securely tunnel IP networks
+dnl  spotify -- An application to securely tunnel IP networks
 dnl             over a single UDP port, with support for SSL/TLS-based
 dnl             session authentication and key exchange,
 dnl             packet encryption, packet authentication, and
 dnl             packet compression.
 dnl
-dnl  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+dnl  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
 dnl  Copyright (C) 2006-2012 Alon Bar-Lev <alon.barlev@gmail.com>
 dnl
 dnl  This program is free software; you can redistribute it and/or modify
@@ -28,17 +28,17 @@ AC_PREREQ(2.60)
 m4_include(version.m4)
 AC_INIT([PRODUCT_NAME], [PRODUCT_VERSION], [PRODUCT_BUGREPORT], [PRODUCT_TARNAME])
 m4_include(compat.m4)
-AC_DEFINE([OPENVPN_VERSION_RESOURCE], [PRODUCT_VERSION_RESOURCE], [Version in windows resource format])
-AC_SUBST([OPENVPN_VERSION_MAJOR], [PRODUCT_VERSION_MAJOR], [OpenVPN major version])
-AC_SUBST([OPENVPN_VERSION_MINOR], [PRODUCT_VERSION_MINOR], [OpenVPN minor version])
-AC_SUBST([OPENVPN_VERSION_PATCH], [PRODUCT_VERSION_PATCH], [OpenVPN patch level - may be a string or integer])
-AC_DEFINE([OPENVPN_VERSION_MAJOR], [PRODUCT_VERSION_MAJOR], [OpenVPN major version - integer])
-AC_DEFINE([OPENVPN_VERSION_MINOR], [PRODUCT_VERSION_MINOR], [OpenVPN minor version - integer])
-AC_DEFINE([OPENVPN_VERSION_PATCH], ["PRODUCT_VERSION_PATCH"], [OpenVPN patch level - may be a string or integer])
+AC_DEFINE([spotify_VERSION_RESOURCE], [PRODUCT_VERSION_RESOURCE], [Version in windows resource format])
+AC_SUBST([spotify_VERSION_MAJOR], [PRODUCT_VERSION_MAJOR], [spotify major version])
+AC_SUBST([spotify_VERSION_MINOR], [PRODUCT_VERSION_MINOR], [spotify minor version])
+AC_SUBST([spotify_VERSION_PATCH], [PRODUCT_VERSION_PATCH], [spotify patch level - may be a string or integer])
+AC_DEFINE([spotify_VERSION_MAJOR], [PRODUCT_VERSION_MAJOR], [spotify major version - integer])
+AC_DEFINE([spotify_VERSION_MINOR], [PRODUCT_VERSION_MINOR], [spotify minor version - integer])
+AC_DEFINE([spotify_VERSION_PATCH], ["PRODUCT_VERSION_PATCH"], [spotify patch level - may be a string or integer])
 
 AC_CONFIG_AUX_DIR([.])
-AC_CONFIG_HEADERS([config.h include/openvpn-plugin.h])
-AC_CONFIG_SRCDIR([src/openvpn/syshead.h])
+AC_CONFIG_HEADERS([config.h include/spotify-plugin.h])
+AC_CONFIG_SRCDIR([src/spotify/syshead.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 dnl Automake 1.14+ warns if sources are in sub-directories but subdir-objects
@@ -308,11 +308,11 @@ AC_ARG_WITH(
 	[with_openssl_engine="auto"]
 )
 
-AC_ARG_VAR([PLUGINDIR], [Path of plug-in directory @<:@default=LIBDIR/openvpn/plugins@:>@])
+AC_ARG_VAR([PLUGINDIR], [Path of plug-in directory @<:@default=LIBDIR/spotify/plugins@:>@])
 if test -n "${PLUGINDIR}"; then
 	plugindir="${PLUGINDIR}"
 else
-	plugindir="\${libdir}/openvpn/plugins"
+	plugindir="\${libdir}/spotify/plugins"
 fi
 
 AC_DEFINE_UNQUOTED([TARGET_ALIAS], ["${host}"], [A string representing our host])
@@ -1105,7 +1105,7 @@ elif test "${with_crypto_library}" = "wolfssl"; then
 	have_export_keying_material="yes"
 
 	if test "${enable_wolfssl_options_h}" = "yes"; then
-		AC_DEFINE([EXTERNAL_OPTS_OPENVPN], [1], [Include options.h from wolfSSL library])
+		AC_DEFINE([EXTERNAL_OPTS_spotify], [1], [Include options.h from wolfSSL library])
 	else
 		AC_DEFINE([WOLFSSL_USER_SETTINGS], [1], [Use custom user_settings.h file for wolfSSL library])
 	fi
@@ -1464,8 +1464,8 @@ TAP_WIN_COMPONENT_ID="PRODUCT_TAP_WIN_COMPONENT_ID"
 TAP_WIN_MIN_MAJOR="PRODUCT_TAP_WIN_MIN_MAJOR"
 TAP_WIN_MIN_MINOR="PRODUCT_TAP_WIN_MIN_MINOR"
 AC_DEFINE_UNQUOTED([TAP_WIN_COMPONENT_ID], ["${TAP_WIN_COMPONENT_ID}"], [The tap-windows id])
-AC_DEFINE_UNQUOTED([TAP_WIN_MIN_MAJOR], [${TAP_WIN_MIN_MAJOR}], [The tap-windows version number is required for OpenVPN])
-AC_DEFINE_UNQUOTED([TAP_WIN_MIN_MINOR], [${TAP_WIN_MIN_MINOR}], [The tap-windows version number is required for OpenVPN])
+AC_DEFINE_UNQUOTED([TAP_WIN_MIN_MAJOR], [${TAP_WIN_MIN_MAJOR}], [The tap-windows version number is required for spotify])
+AC_DEFINE_UNQUOTED([TAP_WIN_MIN_MINOR], [${TAP_WIN_MIN_MINOR}], [The tap-windows version number is required for spotify])
 AC_SUBST([TAP_WIN_COMPONENT_ID])
 AC_SUBST([TAP_WIN_MIN_MAJOR])
 AC_SUBST([TAP_WIN_MIN_MINOR])
@@ -1538,14 +1538,14 @@ AC_CONFIG_FILES([
 	distro/systemd/Makefile
 	doc/Makefile
 	doc/doxygen/Makefile
-	doc/doxygen/openvpn.doxyfile
+	doc/doxygen/spotify.doxyfile
 	include/Makefile
 	sample/sample-plugins/Makefile
 	src/Makefile
 	src/compat/Makefile
-	src/openvpn/Makefile
-	src/openvpnmsica/Makefile
-	src/openvpnserv/Makefile
+	src/spotify/Makefile
+	src/spotifymsica/Makefile
+	src/spotifyserv/Makefile
 	src/plugins/Makefile
 	src/plugins/auth-pam/Makefile
 	src/plugins/down-root/Makefile
@@ -1553,7 +1553,7 @@ AC_CONFIG_FILES([
 	tests/Makefile
         tests/unit_tests/Makefile
         tests/unit_tests/example_test/Makefile
-        tests/unit_tests/openvpn/Makefile
+        tests/unit_tests/spotify/Makefile
         tests/unit_tests/plugins/Makefile
         tests/unit_tests/plugins/auth-pam/Makefile
 	sample/Makefile

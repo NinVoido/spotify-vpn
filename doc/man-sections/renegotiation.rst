@@ -1,12 +1,12 @@
 Data Channel Renegotiation
 ``````````````````````````
 
-When running OpenVPN in client/server mode, the data channel will use a
+When running spotify in client/server mode, the data channel will use a
 separate ephemeral encryption key which is rotated at regular intervals.
 
 --reneg-bytes n
   Renegotiate data channel key after ``n`` bytes sent or received
-  (disabled by default with an exception, see below). OpenVPN allows the
+  (disabled by default with an exception, see below). spotify allows the
   lifetime of a key to be expressed as a number of bytes
   encrypted/decrypted, a number of packets, or a number of seconds. A key
   renegotiation will be forced if any of these three criteria are met by

@@ -29,7 +29,7 @@
 #include "argv.h"
 #include "networking.h"
 #include "misc.h"
-#include "openvpn.h"
+#include "spotify.h"
 #include "run_command.h"
 #include "socket.h"
 
@@ -37,7 +37,7 @@
 #include <netinet/in.h>
 
 int
-net_ctx_init(struct context *c, openvpn_net_ctx_t *ctx)
+net_ctx_init(struct context *c, spotify_net_ctx_t *ctx)
 {
     ctx->es = NULL;
     if (c)
@@ -50,26 +50,26 @@ net_ctx_init(struct context *c, openvpn_net_ctx_t *ctx)
 }
 
 void
-net_ctx_reset(openvpn_net_ctx_t *ctx)
+net_ctx_reset(spotify_net_ctx_t *ctx)
 {
     gc_reset(&ctx->gc);
 }
 
 void
-net_ctx_free(openvpn_net_ctx_t *ctx)
+net_ctx_free(spotify_net_ctx_t *ctx)
 {
     gc_free(&ctx->gc);
 }
 
 int
-net_iface_new(openvpn_net_ctx_t *ctx, const char *iface, const char *type,
+net_iface_new(spotify_net_ctx_t *ctx, const char *iface, const char *type,
               void *arg)
 {
     struct argv argv = argv_new();
 
     argv_printf(&argv, "%s link add %s type %s", iproute_path, iface, type);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, S_FATAL, "Linux ip link add failed");
+    spotify_execve_check(&argv, ctx->es, S_FATAL, "Linux ip link add failed");
 
     argv_free(&argv);
 
@@ -77,7 +77,7 @@ net_iface_new(openvpn_net_ctx_t *ctx, const char *iface, const char *type,
 }
 
 int
-net_iface_type(openvpn_net_ctx_t *ctx, const char *iface,
+net_iface_type(spotify_net_ctx_t *ctx, const char *iface,
                char type[IFACE_TYPE_LEN_MAX])
 {
     /* not supported by iproute2 */
@@ -86,12 +86,12 @@ net_iface_type(openvpn_net_ctx_t *ctx, const char *iface,
 }
 
 int
-net_iface_del(openvpn_net_ctx_t *ctx, const char *iface)
+net_iface_del(spotify_net_ctx_t *ctx, const char *iface)
 {
     struct argv argv = argv_new();
 
     argv_printf(&argv, "%s link del %s", iproute_path, iface);
-    openvpn_execve_check(&argv, ctx->es, 0, "Linux ip link del failed");
+    spotify_execve_check(&argv, ctx->es, 0, "Linux ip link del failed");
 
     argv_free(&argv);
 
@@ -99,14 +99,14 @@ net_iface_del(openvpn_net_ctx_t *ctx, const char *iface)
 }
 
 int
-net_iface_up(openvpn_net_ctx_t *ctx, const char *iface, bool up)
+net_iface_up(spotify_net_ctx_t *ctx, const char *iface, bool up)
 {
     struct argv argv = argv_new();
 
     argv_printf(&argv, "%s link set dev %s %s", iproute_path, iface,
                 up ? "up" : "down");
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, S_FATAL, "Linux ip link set failed");
+    spotify_execve_check(&argv, ctx->es, S_FATAL, "Linux ip link set failed");
 
     argv_free(&argv);
 
@@ -114,14 +114,14 @@ net_iface_up(openvpn_net_ctx_t *ctx, const char *iface, bool up)
 }
 
 int
-net_iface_mtu_set(openvpn_net_ctx_t *ctx, const char *iface, uint32_t mtu)
+net_iface_mtu_set(spotify_net_ctx_t *ctx, const char *iface, uint32_t mtu)
 {
     struct argv argv = argv_new();
 
     argv_printf(&argv, "%s link set dev %s up mtu %d", iproute_path, iface,
                 mtu);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, S_FATAL, "Linux ip link set failed");
+    spotify_execve_check(&argv, ctx->es, S_FATAL, "Linux ip link set failed");
 
     argv_free(&argv);
 
@@ -129,7 +129,7 @@ net_iface_mtu_set(openvpn_net_ctx_t *ctx, const char *iface, uint32_t mtu)
 }
 
 int
-net_addr_ll_set(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
+net_addr_ll_set(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface,
                 uint8_t *addr)
 {
     struct argv argv = argv_new();
@@ -140,7 +140,7 @@ net_addr_ll_set(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
                 iproute_path, MAC_PRINT_ARG(addr), iface);
 
     argv_msg(M_INFO, &argv);
-    if (!openvpn_execve_check(&argv, ctx->es, 0,
+    if (!spotify_execve_check(&argv, ctx->es, 0,
                               "Linux ip link set addr failed"))
     {
         ret = -1;
@@ -152,7 +152,7 @@ net_addr_ll_set(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
 }
 
 int
-net_addr_v4_add(openvpn_net_ctx_t *ctx, const char *iface,
+net_addr_v4_add(spotify_net_ctx_t *ctx, const char *iface,
                 const in_addr_t *addr, int prefixlen)
 {
     struct argv argv = argv_new();
@@ -162,7 +162,7 @@ net_addr_v4_add(openvpn_net_ctx_t *ctx, const char *iface,
     argv_printf(&argv, "%s addr add dev %s %s/%d", iproute_path, iface,
                 addr_str, prefixlen);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, S_FATAL, "Linux ip addr add failed");
+    spotify_execve_check(&argv, ctx->es, S_FATAL, "Linux ip addr add failed");
 
     argv_free(&argv);
 
@@ -170,7 +170,7 @@ net_addr_v4_add(openvpn_net_ctx_t *ctx, const char *iface,
 }
 
 int
-net_addr_v6_add(openvpn_net_ctx_t *ctx, const char *iface,
+net_addr_v6_add(spotify_net_ctx_t *ctx, const char *iface,
                 const struct in6_addr *addr, int prefixlen)
 {
     struct argv argv = argv_new();
@@ -179,7 +179,7 @@ net_addr_v6_add(openvpn_net_ctx_t *ctx, const char *iface,
     argv_printf(&argv, "%s -6 addr add %s/%d dev %s", iproute_path, addr_str,
                 prefixlen, iface);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, S_FATAL,
+    spotify_execve_check(&argv, ctx->es, S_FATAL,
                          "Linux ip -6 addr add failed");
 
     argv_free(&argv);
@@ -188,7 +188,7 @@ net_addr_v6_add(openvpn_net_ctx_t *ctx, const char *iface,
 }
 
 int
-net_addr_v4_del(openvpn_net_ctx_t *ctx, const char *iface,
+net_addr_v4_del(spotify_net_ctx_t *ctx, const char *iface,
                 const in_addr_t *addr, int prefixlen)
 {
     struct argv argv = argv_new();
@@ -198,7 +198,7 @@ net_addr_v4_del(openvpn_net_ctx_t *ctx, const char *iface,
                 addr_str, prefixlen);
 
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, 0, "Linux ip addr del failed");
+    spotify_execve_check(&argv, ctx->es, 0, "Linux ip addr del failed");
 
     argv_free(&argv);
 
@@ -206,7 +206,7 @@ net_addr_v4_del(openvpn_net_ctx_t *ctx, const char *iface,
 }
 
 int
-net_addr_v6_del(openvpn_net_ctx_t *ctx, const char *iface,
+net_addr_v6_del(spotify_net_ctx_t *ctx, const char *iface,
                 const struct in6_addr *addr, int prefixlen)
 {
     struct argv argv = argv_new();
@@ -215,7 +215,7 @@ net_addr_v6_del(openvpn_net_ctx_t *ctx, const char *iface,
     argv_printf(&argv, "%s -6 addr del %s/%d dev %s", iproute_path,
                 addr_str, prefixlen, iface);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, 0, "Linux ip -6 addr del failed");
+    spotify_execve_check(&argv, ctx->es, 0, "Linux ip -6 addr del failed");
 
     argv_free(&argv);
 
@@ -223,7 +223,7 @@ net_addr_v6_del(openvpn_net_ctx_t *ctx, const char *iface,
 }
 
 int
-net_addr_ptp_v4_add(openvpn_net_ctx_t *ctx, const char *iface,
+net_addr_ptp_v4_add(spotify_net_ctx_t *ctx, const char *iface,
                     const in_addr_t *local, const in_addr_t *remote)
 {
     struct argv argv = argv_new();
@@ -233,7 +233,7 @@ net_addr_ptp_v4_add(openvpn_net_ctx_t *ctx, const char *iface,
     argv_printf(&argv, "%s addr add dev %s local %s peer %s", iproute_path,
                 iface, local_str, remote_str);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, S_FATAL, "Linux ip addr add failed");
+    spotify_execve_check(&argv, ctx->es, S_FATAL, "Linux ip addr add failed");
 
     argv_free(&argv);
 
@@ -241,7 +241,7 @@ net_addr_ptp_v4_add(openvpn_net_ctx_t *ctx, const char *iface,
 }
 
 int
-net_addr_ptp_v4_del(openvpn_net_ctx_t *ctx, const char *iface,
+net_addr_ptp_v4_del(spotify_net_ctx_t *ctx, const char *iface,
                     const in_addr_t *local, const in_addr_t *remote)
 {
     struct argv argv = argv_new();
@@ -251,7 +251,7 @@ net_addr_ptp_v4_del(openvpn_net_ctx_t *ctx, const char *iface,
     argv_printf(&argv, "%s addr del dev %s local %s peer %s", iproute_path,
                 iface, local_str, remote_str);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, ctx->es, 0, "Linux ip addr del failed");
+    spotify_execve_check(&argv, ctx->es, 0, "Linux ip addr del failed");
 
     argv_free(&argv);
 
@@ -259,7 +259,7 @@ net_addr_ptp_v4_del(openvpn_net_ctx_t *ctx, const char *iface,
 }
 
 int
-net_route_v4_add(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
+net_route_v4_add(spotify_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
                  const in_addr_t *gw, const char *iface, uint32_t table,
                  int metric)
 {
@@ -287,7 +287,7 @@ net_route_v4_add(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
     }
 
     argv_msg(D_ROUTE, &argv);
-    if (!openvpn_execve_check(&argv, ctx->es, 0, "ERROR: Linux route add command failed"))
+    if (!spotify_execve_check(&argv, ctx->es, 0, "ERROR: Linux route add command failed"))
     {
         ret = -1;
     }
@@ -298,7 +298,7 @@ net_route_v4_add(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
 }
 
 int
-net_route_v6_add(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
+net_route_v6_add(spotify_net_ctx_t *ctx, const struct in6_addr *dst,
                  int prefixlen, const struct in6_addr *gw, const char *iface,
                  uint32_t table, int metric)
 {
@@ -322,7 +322,7 @@ net_route_v6_add(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
     }
 
     argv_msg(D_ROUTE, &argv);
-    if (!openvpn_execve_check(&argv, ctx->es, 0, "ERROR: Linux route -6 add command failed"))
+    if (!spotify_execve_check(&argv, ctx->es, 0, "ERROR: Linux route -6 add command failed"))
     {
         ret = -1;
     }
@@ -333,7 +333,7 @@ net_route_v6_add(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
 }
 
 int
-net_route_v4_del(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
+net_route_v4_del(spotify_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
                  const in_addr_t *gw, const char *iface, uint32_t table,
                  int metric)
 {
@@ -349,7 +349,7 @@ net_route_v4_del(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
     }
 
     argv_msg(D_ROUTE, &argv);
-    if (!openvpn_execve_check(&argv, ctx->es, 0, "ERROR: Linux route delete command failed"))
+    if (!spotify_execve_check(&argv, ctx->es, 0, "ERROR: Linux route delete command failed"))
     {
         ret = -1;
     }
@@ -360,7 +360,7 @@ net_route_v4_del(openvpn_net_ctx_t *ctx, const in_addr_t *dst, int prefixlen,
 }
 
 int
-net_route_v6_del(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
+net_route_v6_del(spotify_net_ctx_t *ctx, const struct in6_addr *dst,
                  int prefixlen, const struct in6_addr *gw, const char *iface,
                  uint32_t table, int metric)
 {
@@ -384,7 +384,7 @@ net_route_v6_del(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
     }
 
     argv_msg(D_ROUTE, &argv);
-    if (!openvpn_execve_check(&argv, ctx->es, 0, "ERROR: Linux route -6 del command failed"))
+    if (!spotify_execve_check(&argv, ctx->es, 0, "ERROR: Linux route -6 del command failed"))
     {
         ret = -1;
     }
@@ -395,7 +395,7 @@ net_route_v6_del(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
 }
 
 int
-net_route_v4_best_gw(openvpn_net_ctx_t *ctx, const in_addr_t *dst,
+net_route_v4_best_gw(spotify_net_ctx_t *ctx, const in_addr_t *dst,
                      in_addr_t *best_gw, char *best_iface)
 {
     best_iface[0] = '\0';

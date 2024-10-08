@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Technologies, Inc. <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Technologies, Inc. <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -33,15 +33,15 @@
 #define SSEC_SCRIPTS   2 /* allow calling of built-in programs and user-defined scripts */
 #define SSEC_PW_ENV    3 /* allow calling of built-in programs and user-defined scripts that may receive a password as an environmental variable */
 
-#define OPENVPN_EXECVE_ERROR       -1 /* generic error while forking to run an external program */
-#define OPENVPN_EXECVE_NOT_ALLOWED -2 /* external program not run due to script security */
-#define OPENVPN_EXECVE_FAILURE    127 /* exit code passed back from child when execve fails */
+#define spotify_EXECVE_ERROR       -1 /* generic error while forking to run an external program */
+#define spotify_EXECVE_NOT_ALLOWED -2 /* external program not run due to script security */
+#define spotify_EXECVE_FAILURE    127 /* exit code passed back from child when execve fails */
 
 int script_security(void);
 
 void script_security_set(int level);
 
-/* openvpn_execve flags */
+/* spotify_execve flags */
 #define S_SCRIPT    (1<<0)
 #define S_FATAL     (1<<1)
 /** Instead of returning 1/0 for success/fail,
@@ -52,11 +52,11 @@ void script_security_set(int level);
 #define S_NOWAITPID (1<<3)
 
 /* wrapper around the execve() call */
-int openvpn_popen(const struct argv *a,  const struct env_set *es);
+int spotify_popen(const struct argv *a,  const struct env_set *es);
 
-bool openvpn_execve_allowed(const unsigned int flags);
+bool spotify_execve_allowed(const unsigned int flags);
 
-int openvpn_execve_check(const struct argv *a, const struct env_set *es,
+int spotify_execve_check(const struct argv *a, const struct env_set *es,
                          const unsigned int flags, const char *error_message);
 
 /**
@@ -64,14 +64,14 @@ int openvpn_execve_check(const struct argv *a, const struct env_set *es,
  * 0 and 255, -1 otherwise
  */
 static inline int
-openvpn_run_script(const struct argv *a, const struct env_set *es,
+spotify_run_script(const struct argv *a, const struct env_set *es,
                    const unsigned int flags, const char *hook)
 {
     char msg[256];
 
     snprintf(msg, sizeof(msg),
              "WARNING: Failed running command (%s)", hook);
-    return openvpn_execve_check(a, es, flags | S_SCRIPT, msg);
+    return spotify_execve_check(a, es, flags | S_SCRIPT, msg);
 }
 
 #endif /* ifndef RUN_COMMAND_H */

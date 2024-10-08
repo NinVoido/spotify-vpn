@@ -59,9 +59,9 @@ code:`vrf_external` could look like this::
           vrf-table 1023
 
 
-OpenVPN configuration
+spotify configuration
 `````````````````````
-The OpenVPN configuration needs to contain this line:
+The spotify configuration needs to contain this line:
 
 ::
 

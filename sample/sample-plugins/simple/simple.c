@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -22,7 +22,7 @@
  */
 
 /*
- * This file implements a simple OpenVPN plugin module which
+ * This file implements a simple spotify plugin module which
  * will examine the username/password provided by a client,
  * and make an accept/deny determination.  Will run
  * on Windows or *nix.
@@ -34,7 +34,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "openvpn-plugin.h"
+#include "spotify-plugin.h"
 
 /*
  * Our context, where we keep our state.
@@ -71,8 +71,8 @@ get_env(const char *name, const char *envp[])
     return NULL;
 }
 
-OPENVPN_EXPORT openvpn_plugin_handle_t
-openvpn_plugin_open_v1(unsigned int *type_mask, const char *argv[], const char *envp[])
+spotify_EXPORT spotify_plugin_handle_t
+spotify_plugin_open_v1(unsigned int *type_mask, const char *argv[], const char *envp[])
 {
     struct plugin_context *context;
 
@@ -96,13 +96,13 @@ openvpn_plugin_open_v1(unsigned int *type_mask, const char *argv[], const char *
      * We are only interested in intercepting the
      * --auth-user-pass-verify callback.
      */
-    *type_mask = OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY);
+    *type_mask = spotify_PLUGIN_MASK(spotify_PLUGIN_AUTH_USER_PASS_VERIFY);
 
-    return (openvpn_plugin_handle_t) context;
+    return (spotify_plugin_handle_t) context;
 }
 
-OPENVPN_EXPORT int
-openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const char *argv[], const char *envp[])
+spotify_EXPORT int
+spotify_plugin_func_v1(spotify_plugin_handle_t handle, const int type, const char *argv[], const char *envp[])
 {
     struct plugin_context *context = (struct plugin_context *) handle;
 
@@ -114,16 +114,16 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
     if (username && !strcmp(username, context->username)
         && password && !strcmp(password, context->password))
     {
-        return OPENVPN_PLUGIN_FUNC_SUCCESS;
+        return spotify_PLUGIN_FUNC_SUCCESS;
     }
     else
     {
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_close_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void
+spotify_plugin_close_v1(spotify_plugin_handle_t handle)
 {
     struct plugin_context *context = (struct plugin_context *) handle;
     free(context);

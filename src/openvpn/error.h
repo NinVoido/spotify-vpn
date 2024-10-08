@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -41,38 +41,38 @@ struct gc_arena;
 
 /*
  * Where should messages be printed before syslog is opened?
- * Not used if OPENVPN_DEBUG_COMMAND_LINE is defined.
+ * Not used if spotify_DEBUG_COMMAND_LINE is defined.
  */
-#define OPENVPN_MSG_FP   stdout
-#define OPENVPN_ERROR_FP stderr
+#define spotify_MSG_FP   stdout
+#define spotify_ERROR_FP stderr
 
 /*
  * Exit status codes
  */
 
-#define OPENVPN_EXIT_STATUS_GOOD                    0
-#define OPENVPN_EXIT_STATUS_ERROR                   1
-#define OPENVPN_EXIT_STATUS_USAGE                   1
-#define OPENVPN_EXIT_STATUS_CANNOT_OPEN_DEBUG_FILE  1
+#define spotify_EXIT_STATUS_GOOD                    0
+#define spotify_EXIT_STATUS_ERROR                   1
+#define spotify_EXIT_STATUS_USAGE                   1
+#define spotify_EXIT_STATUS_CANNOT_OPEN_DEBUG_FILE  1
 
 /*
  * Special command line debugging mode.
- * If OPENVPN_DEBUG_COMMAND_LINE
+ * If spotify_DEBUG_COMMAND_LINE
  * is defined, contents of argc/argv will
- * be dumped to OPENVPN_DEBUG_FILE as well
- * as all other OpenVPN messages.
+ * be dumped to spotify_DEBUG_FILE as well
+ * as all other spotify messages.
  */
 
-/* #define OPENVPN_DEBUG_COMMAND_LINE */
-#define OPENVPN_DEBUG_FILE PACKAGE ".log"
+/* #define spotify_DEBUG_COMMAND_LINE */
+#define spotify_DEBUG_FILE PACKAGE ".log"
 
 /* String and Error functions */
 
 #ifdef _WIN32
-#define openvpn_errno() GetLastError()
+#define spotify_errno() GetLastError()
 const char *strerror_win32(DWORD errnum, struct gc_arena *gc);
 #else
-#define openvpn_errno() errno
+#define spotify_errno() errno
 #endif
 
 /*
@@ -210,7 +210,7 @@ __attribute__((__noreturn__))
  * Linux's sys/cdefs.h under GPLv2 */
 #ifndef static_assert
 #define static_assert(expr, diagnostic) \
-    extern int (*__OpenVPN_static_assert_function(void)) \
+    extern int (*__spotify_static_assert_function(void)) \
     [!!sizeof(struct { int __error_if_negative : (expr) ? 2 : -1; })]
 #endif
 
@@ -248,7 +248,7 @@ int get_orig_stderr(void);
 #endif
 
 /* exit program */
-void openvpn_exit(const int status);
+void spotify_exit(const int status);
 
 /* exit program on out of memory error */
 void out_of_memory(void);
@@ -376,7 +376,7 @@ nonfatal(const unsigned int err)
 }
 
 static inline int
-openvpn_errno_maybe_crt(bool *crt_error)
+spotify_errno_maybe_crt(bool *crt_error)
 {
     int err = 0;
     *crt_error = false;

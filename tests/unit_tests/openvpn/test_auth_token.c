@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2016-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2016-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -58,25 +58,25 @@ auth_set_client_reason(struct tls_multi *multi, const char *reason)
 
 static const char *now0key0 = "SESS_ID_AT_0123456789abcdefAAAAAAAAAAAAAAAAAAAAAE5JsQJOVfo8jnI3RL3tBaR5NkE4yPfcylFUHmHSc5Bu";
 
-static const char *zeroinline = "-----BEGIN OpenVPN auth-token server key-----\n"
+static const char *zeroinline = "-----BEGIN spotify auth-token server key-----\n"
                                 "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
                                 "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n"
                                 "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n"
-                                "-----END OpenVPN auth-token server key-----";
+                                "-----END spotify auth-token server key-----";
 
-static const char *allx01inline = "-----BEGIN OpenVPN auth-token server key-----\n"
+static const char *allx01inline = "-----BEGIN spotify auth-token server key-----\n"
                                   "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\n"
                                   "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\n"
                                   "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=\n"
-                                  "-----END OpenVPN auth-token server key-----";
+                                  "-----END spotify auth-token server key-----";
 
-static const char *random_key = "-----BEGIN OpenVPN auth-token server key-----\n"
+static const char *random_key = "-----BEGIN spotify auth-token server key-----\n"
                                 "+mmmf7IQ5cymtMVjKYTWk8IOcYanRlpQmV9Tb3EjkHYxueBVDg3yqRgzeBlVGzNLD//rAPiOVhau\n"
                                 "3NDBjNOQB8951bfs7Cc2mYfay92Bh2gRJ5XEM/DMfzCWN+7uU6NWoTTHr4FuojnIQtjtqVAj/JS9\n"
                                 "w+dTSp/vYHl+c7uHd19uVRu/qLqV85+rm4tUGIjO7FfYuwyPqwmhuIsi3hs9QkSimh888FmBpoKY\n"
                                 "/tbKVTJZmSERKti9KEwtV2eVAR0znN5KW7lCB3mHVAhN7bUpcoDjfCzYIFARxwswTFu9gFkwqUMY\n"
                                 "I1KUOgIsVNs4llACioeXplYekWETR+YkJwDc/A==\n"
-                                "-----END OpenVPN auth-token server key-----";
+                                "-----END spotify auth-token server key-----";
 
 static const char *random_token = "SESS_ID_AT_ThhRItzOKNKrh3dfAAAAAFwzHpwAAAAAXDMenDdrq0RoH3dkA1f7O3wO+7kZcx2DusVZrRmFlWQM9HOb";
 
@@ -410,7 +410,7 @@ auth_token_test_key_load(void **state)
 int
 main(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
     const struct CMUnitTest tests[] = {
         cmocka_unit_test_setup_teardown(auth_token_basic_test, setup, teardown),
         cmocka_unit_test_setup_teardown(auth_token_fail_invalid_key, setup, teardown),

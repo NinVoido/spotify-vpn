@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -81,7 +81,7 @@ struct mroute_addr {
     union {
         uint8_t raw_addr[MR_MAX_ADDR_LEN]; /* actual address */
         struct {
-            uint8_t addr[OPENVPN_ETH_ALEN];
+            uint8_t addr[spotify_ETH_ALEN];
             uint16_t vid;
         } ether;
         struct {
@@ -126,10 +126,10 @@ struct mroute_helper {
     int net_len_refcount[MR_HELPER_NET_LEN]; /* refcount of each netlength */
 };
 
-struct openvpn_sockaddr;
+struct spotify_sockaddr;
 
-bool mroute_extract_openvpn_sockaddr(struct mroute_addr *addr,
-                                     const struct openvpn_sockaddr *osaddr,
+bool mroute_extract_spotify_sockaddr(struct mroute_addr *addr,
+                                     const struct spotify_sockaddr *osaddr,
                                      bool use_port);
 
 bool mroute_learnable_address(const struct mroute_addr *addr,

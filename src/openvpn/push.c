@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -307,7 +307,7 @@ parse_auth_pending_keywords(const struct buffer *buffer,
 #ifdef ENABLE_MANAGEMENT
         if (management)
         {
-            management_set_state(management, OPENVPN_STATE_AUTH_PENDING,
+            management_set_state(management, spotify_STATE_AUTH_PENDING,
                                  "", NULL, NULL, NULL, NULL);
         }
 #endif
@@ -323,7 +323,7 @@ parse_auth_pending_keywords(const struct buffer *buffer,
      * buf_parse is called, as it will insert \0 bytes into the buffer */
     if (management)
     {
-        management_set_state(management, OPENVPN_STATE_AUTH_PENDING,
+        management_set_state(management, spotify_STATE_AUTH_PENDING,
                              BSTR(&buf), NULL, NULL, NULL, NULL);
     }
 #endif
@@ -981,7 +981,7 @@ process_incoming_push_request(struct context *c)
     {
         time_t now;
 
-        openvpn_time(&now);
+        spotify_time(&now);
         if (c->c2.sent_push_reply_expiry > now)
         {
             ret = PUSH_MSG_ALREADY_REPLIED;

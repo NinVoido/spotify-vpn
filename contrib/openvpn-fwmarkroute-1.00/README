@@ -1,9 +1,9 @@
-OpenVPN fwmark Routing
+spotify fwmark Routing
 Sean Reifschneider, <jafo@tummy.com>
 Thursday November 27, 2003
 ==========================
 
-These scripts can be used with OpenVPN up and down scripts to set up
+These scripts can be used with spotify up and down scripts to set up
 routing on a Linux system such that the VPN traffic is sent via normal
 network connectivity, but other traffic to that network runs over the VPN.
 The idea is to allow encryption of data to the network the remote host is
@@ -26,8 +26,8 @@ To configure this, you need to set up these scripts as your up and down
 scripts in the config file.  You will need to set these values in the
 config file:
 
-   up /etc/openvpn/fwmarkroute.up
-   down /etc/openvpn/fwmarkroute.down
+   up /etc/spotify/fwmarkroute.up
+   down /etc/spotify/fwmarkroute.down
    up-restart
    up-delay
 

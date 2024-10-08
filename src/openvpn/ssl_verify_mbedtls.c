@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -219,7 +219,7 @@ backend_x509_get_serial_hex(mbedtls_x509_crt *cert, struct gc_arena *gc)
 }
 
 result_t
-backend_x509_write_pem(openvpn_x509_cert_t *cert, const char *filename)
+backend_x509_write_pem(spotify_x509_cert_t *cert, const char *filename)
 {
     /* mbed TLS does not make it easy to write a certificate in PEM format.
      * The only way is to directly access the DER encoded raw certificate
@@ -468,7 +468,7 @@ x509_setenv(struct env_set *es, int cert_depth, mbedtls_x509_crt *cert)
     }
 }
 
-/* Dummy function because Netscape certificate types are not supported in OpenVPN with mbedtls.
+/* Dummy function because Netscape certificate types are not supported in spotify with mbedtls.
  * Returns SUCCESS if usage is NS_CERT_CHECK_NONE, FAILURE otherwise. */
 result_t
 x509_verify_ns_cert_type(mbedtls_x509_crt *cert, const int usage)
@@ -494,7 +494,7 @@ x509_verify_cert_ku(mbedtls_x509_crt *cert, const unsigned *const expected_ku,
         return FAILURE;
     }
 
-    if (expected_ku[0] == OPENVPN_KU_REQUIRED)
+    if (expected_ku[0] == spotify_KU_REQUIRED)
     {
         /* Extension required, value checked by TLS library */
         return SUCCESS;

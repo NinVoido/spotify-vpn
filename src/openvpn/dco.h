@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -7,7 +7,7 @@
  *
  *  Copyright (C) 2021-2024 Arne Schwabe <arne@rfc2549.org>
  *  Copyright (C) 2021-2024 Antonio Quartulli <a@unstable.cc>
- *  Copyright (C) 2021-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2021-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -118,7 +118,7 @@ bool ovpn_dco_init(int mode, dco_context_t *dco);
  * @param dev       the name of the interface to create
  * @return          0 on success or a negative error code otherwise
  */
-int open_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx, const char *dev);
+int open_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx, const char *dev);
 
 /**
  * Close/destroy a DCO interface
@@ -126,7 +126,7 @@ int open_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx, const char *dev);
  * @param tt        the tuntap context
  * @param ctx       the networking API context
  */
-void close_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx);
+void close_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx);
 
 /**
  * Read data from the DCO communication channel (i.e. a control packet)
@@ -290,13 +290,13 @@ ovpn_dco_init(int mode, dco_context_t *dco)
 }
 
 static inline int
-open_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx, const char *dev)
+open_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx, const char *dev)
 {
     return 0;
 }
 
 static inline void
-close_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
 }
 

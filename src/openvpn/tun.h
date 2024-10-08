@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -280,9 +280,9 @@ tuntap_ring_empty(struct tuntap *tt)
  */
 
 void open_tun(const char *dev, const char *dev_type, const char *dev_node,
-              struct tuntap *tt, openvpn_net_ctx_t *ctx);
+              struct tuntap *tt, spotify_net_ctx_t *ctx);
 
-void close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx);
+void close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx);
 
 void tun_open_device(struct tuntap *tt, const char *dev_node,
                      const char **device_guid, struct gc_arena *gc);
@@ -296,7 +296,7 @@ int read_tun(struct tuntap *tt, uint8_t *buf, int len);
 void tuncfg(const char *dev, const char *dev_type, const char *dev_node,
             int persist_mode, const char *username,
             const char *groupname, const struct tuntap_options *options,
-            openvpn_net_ctx_t *ctx);
+            spotify_net_ctx_t *ctx);
 
 const char *guess_tuntap_dev(const char *dev,
                              const char *dev_type,
@@ -315,7 +315,7 @@ struct tuntap *init_tun(const char *dev,        /* --dev option */
                         struct addrinfo *remote_public,
                         const bool strict_warn,
                         struct env_set *es,
-                        openvpn_net_ctx_t *ctx,
+                        spotify_net_ctx_t *ctx,
                         struct tuntap *tt);
 
 void init_tun_post(struct tuntap *tt,
@@ -335,7 +335,7 @@ void do_ifconfig_setenv(const struct tuntap *tt,
  * @param ctx       the networking API opaque context
  */
 void do_ifconfig(struct tuntap *tt, const char *ifname, int tun_mtu,
-                 const struct env_set *es, openvpn_net_ctx_t *ctx);
+                 const struct env_set *es, spotify_net_ctx_t *ctx);
 
 /**
  * undo_ifconfig - undo configuration of the tunnel interface
@@ -343,7 +343,7 @@ void do_ifconfig(struct tuntap *tt, const char *ifname, int tun_mtu,
  * @param tt    the tuntap interface context
  * @param ctx   the networking API opaque context
  */
-void undo_ifconfig(struct tuntap *tt, openvpn_net_ctx_t *ctx);
+void undo_ifconfig(struct tuntap *tt, spotify_net_ctx_t *ctx);
 
 bool is_dev_type(const char *dev, const char *dev_type, const char *match_type);
 
@@ -359,7 +359,7 @@ void check_subnet_conflict(const in_addr_t ip,
                            const in_addr_t netmask,
                            const char *prefix);
 
-void warn_on_use_of_common_subnets(openvpn_net_ctx_t *ctx);
+void warn_on_use_of_common_subnets(spotify_net_ctx_t *ctx);
 
 /**
  * Return a string representation of the tun backed driver type
@@ -600,18 +600,18 @@ read_wintun(struct tuntap *tt, struct buffer *buf)
 static inline bool
 is_ip_packet_valid(const struct buffer *buf)
 {
-    const struct openvpn_iphdr *ih = (const struct openvpn_iphdr *)BPTR(buf);
+    const struct spotify_iphdr *ih = (const struct spotify_iphdr *)BPTR(buf);
 
-    if (OPENVPN_IPH_GET_VER(ih->version_len) == 4)
+    if (spotify_IPH_GET_VER(ih->version_len) == 4)
     {
-        if (BLEN(buf) < sizeof(struct openvpn_iphdr))
+        if (BLEN(buf) < sizeof(struct spotify_iphdr))
         {
             return false;
         }
     }
-    else if (OPENVPN_IPH_GET_VER(ih->version_len) == 6)
+    else if (spotify_IPH_GET_VER(ih->version_len) == 6)
     {
-        if (BLEN(buf) < sizeof(struct openvpn_ipv6hdr))
+        if (BLEN(buf) < sizeof(struct spotify_ipv6hdr))
         {
             return false;
         }
@@ -692,7 +692,7 @@ tuntap_is_dco_win(struct tuntap *tt)
 static inline bool
 tuntap_is_dco_win_timeout(struct tuntap *tt, int status)
 {
-    return tuntap_is_dco_win(tt) && (status < 0) && (openvpn_errno() == ERROR_NETNAME_DELETED);
+    return tuntap_is_dco_win(tt) && (status < 0) && (spotify_errno() == ERROR_NETNAME_DELETED);
 }
 
 #else  /* ifdef _WIN32 */

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -111,8 +111,8 @@ struct log_entry
     const char *string;
     in_addr_t local_ip;
     struct in6_addr local_ip6;
-    struct openvpn_sockaddr local_sock;
-    struct openvpn_sockaddr remote_sock;
+    struct spotify_sockaddr local_sock;
+    struct spotify_sockaddr remote_sock;
     union log_entry_union u;
 };
 
@@ -174,7 +174,7 @@ struct management_callback
 {
     void *arg;
 
-#define MCF_SERVER (1<<0)  /* is OpenVPN being run as a server? */
+#define MCF_SERVER (1<<0)  /* is spotify being run as a server? */
     unsigned int flags;
 
     void (*status) (void *arg, const int version, struct status_output *so);
@@ -281,7 +281,7 @@ struct man_connection {
 
     socket_descriptor_t sd_top;
     socket_descriptor_t sd_cli;
-    struct openvpn_sockaddr remote;
+    struct spotify_sockaddr remote;
 
 #ifdef _WIN32
     struct net_event_win32 ne32;
@@ -464,45 +464,45 @@ management_enable_def_auth(const struct management *man)
 }
 
 /*
- * OpenVPN tells the management layer what state it's in
+ * spotify tells the management layer what state it's in
  */
 
 /* client/server states */
-#define OPENVPN_STATE_INITIAL       0  /* Initial, undefined state */
-#define OPENVPN_STATE_CONNECTING    1  /* Management interface has been initialized */
-#define OPENVPN_STATE_ASSIGN_IP     2  /* Assigning IP address to virtual network interface */
-#define OPENVPN_STATE_ADD_ROUTES    3  /* Adding routes to system */
-#define OPENVPN_STATE_CONNECTED     4  /* Initialization sequence completed */
-#define OPENVPN_STATE_RECONNECTING  5  /* Restart */
-#define OPENVPN_STATE_EXITING       6  /* Exit */
+#define spotify_STATE_INITIAL       0  /* Initial, undefined state */
+#define spotify_STATE_CONNECTING    1  /* Management interface has been initialized */
+#define spotify_STATE_ASSIGN_IP     2  /* Assigning IP address to virtual network interface */
+#define spotify_STATE_ADD_ROUTES    3  /* Adding routes to system */
+#define spotify_STATE_CONNECTED     4  /* Initialization sequence completed */
+#define spotify_STATE_RECONNECTING  5  /* Restart */
+#define spotify_STATE_EXITING       6  /* Exit */
 
 /* client-only states */
-#define OPENVPN_STATE_WAIT          7  /* Waiting for initial response from server */
-#define OPENVPN_STATE_AUTH          8  /* Authenticating with server */
-#define OPENVPN_STATE_GET_CONFIG    9  /* Downloading configuration from server */
-#define OPENVPN_STATE_RESOLVE       10 /* DNS lookup */
-#define OPENVPN_STATE_TCP_CONNECT   11 /* Connecting to TCP server */
-#define OPENVPN_STATE_AUTH_PENDING  12 /* Waiting in auth-pending mode
+#define spotify_STATE_WAIT          7  /* Waiting for initial response from server */
+#define spotify_STATE_AUTH          8  /* Authenticating with server */
+#define spotify_STATE_GET_CONFIG    9  /* Downloading configuration from server */
+#define spotify_STATE_RESOLVE       10 /* DNS lookup */
+#define spotify_STATE_TCP_CONNECT   11 /* Connecting to TCP server */
+#define spotify_STATE_AUTH_PENDING  12 /* Waiting in auth-pending mode
                                         * technically variant of GET_CONFIG */
 
-#define OPENVPN_STATE_CLIENT_BASE   7  /* Base index of client-only states */
+#define spotify_STATE_CLIENT_BASE   7  /* Base index of client-only states */
 
 void management_set_state(struct management *man,
                           const int state,
                           const char *detail,
                           const in_addr_t *tun_local_ip,
                           const struct in6_addr *tun_local_ip6,
-                          const struct openvpn_sockaddr *local_addr,
-                          const struct openvpn_sockaddr *remote_addr);
+                          const struct spotify_sockaddr *local_addr,
+                          const struct spotify_sockaddr *remote_addr);
 
 /*
- * The management object keeps track of OpenVPN --echo
+ * The management object keeps track of spotify --echo
  * parameters.
  */
 void management_echo(struct management *man, const char *string, const bool pull);
 
 /*
- * OpenVPN calls here to indicate a password failure
+ * spotify calls here to indicate a password failure
  */
 
 void management_auth_failure(struct management *man, const char *type, const char *reason);

@@ -3,7 +3,7 @@
  *
  *  Copyright (C) 2020-2024 Antonio Quartulli <a@unstable.cc>
  *  Copyright (C) 2020-2024 Arne Schwabe <arne@rfc2549.org>
- *  Copyright (C) 2020-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2020-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2

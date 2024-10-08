@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -77,7 +77,7 @@ do_pre_decrypt_check(struct multi_context *m,
     verdict = tls_pre_decrypt_lite(tas, state, &m->top.c2.from, &m->top.c2.buf);
 
     hmac_ctx_t *hmac = m->top.c2.session_id_hmac;
-    struct openvpn_sockaddr *from = &m->top.c2.from.dest;
+    struct spotify_sockaddr *from = &m->top.c2.from.dest;
     int handwindow = m->top.options.handshake_window;
 
     if (verdict == VERDICT_VALID_RESET_V3 || verdict == VERDICT_VALID_RESET_V2)
@@ -192,7 +192,7 @@ multi_get_create_instance_udp(struct multi_context *m, bool *floated)
     struct multi_instance *mi = NULL;
     struct hash *hash = m->hash;
 
-    if (mroute_extract_openvpn_sockaddr(&real, &m->top.c2.from.dest, true)
+    if (mroute_extract_spotify_sockaddr(&real, &m->top.c2.from.dest, true)
         && m->top.c2.buf.len > 0)
     {
         struct hash_element *he;

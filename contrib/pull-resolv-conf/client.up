@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2005-2018 OpenVPN Inc
+# Copyright (c) 2005-2018 spotify Inc
 # Licensed under the GPL version 2
 
 # First version by Jesse Adelman
@@ -8,30 +8,30 @@
 # http://www.boldandbusted.com/
 
 # PURPOSE: This script automatically sets the proper /etc/resolv.conf entries
-# as pulled down from an OpenVPN server.
+# as pulled down from an spotify server.
 
 # INSTALL NOTES:
-# Place this in /etc/openvpn/client.up
-# Then, add the following to your /etc/openvpn/<clientconfig>.conf:
+# Place this in /etc/spotify/client.up
+# Then, add the following to your /etc/spotify/<clientconfig>.conf:
 #   client
-#   up /etc/openvpn/client.up
-# Next, "chmod a+x /etc/openvpn/client.up"
+#   up /etc/spotify/client.up
+# Next, "chmod a+x /etc/spotify/client.up"
 
 # USAGE NOTES:
 # Note that this script is best served with the companion "client.down"
 # script.
 
-# Tested under Debian lenny with OpenVPN 2.1_rc11
+# Tested under Debian lenny with spotify 2.1_rc11
 # It should work with any UNIX with a POSIX sh, /etc/resolv.conf or resolvconf
 
-# This runs with the context of the OpenVPN UID/GID 
+# This runs with the context of the spotify UID/GID 
 # at the time of execution. This generally means that
 # the client "up" script will run fine, but the "down" script
-# will require the use of the OpenVPN "down-root" plugin
-# which is in the plugins/ directory of the OpenVPN source tree
+# will require the use of the spotify "down-root" plugin
+# which is in the plugins/ directory of the spotify source tree
 
 # A horrid work around, from a security perspective,
-# is to run OpenVPN as root. THIS IS NOT RECOMMENDED. You have
+# is to run spotify as root. THIS IS NOT RECOMMENDED. You have
 # been WARNED.
 PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
 

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- * Copyright (C) 2023-2024 OpenVPN Inc <sales@openvpn.net>
+ * Copyright (C) 2023-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -196,7 +196,7 @@ crypto_pem_encode_certificate(void **state)
     tls_ctx_client_new(&ctx);
     tls_ctx_load_cert_file(&ctx, unittest_cert, true);
 
-    openvpn_x509_cert_t *cert = NULL;
+    spotify_x509_cert_t *cert = NULL;
 
     /* we do not have methods to fetch certificates from ssl contexts, use
      * internal TLS library methods for the unit test */
@@ -285,16 +285,16 @@ init_implicit_iv(struct crypto_options *co)
     if (cipher_ctx_mode_aead(cipher))
     {
         size_t impl_iv_len = cipher_ctx_iv_length(cipher) - sizeof(packet_id_type);
-        ASSERT(cipher_ctx_iv_length(cipher) <= OPENVPN_MAX_IV_LENGTH);
-        ASSERT(cipher_ctx_iv_length(cipher) >= OPENVPN_AEAD_MIN_IV_LEN);
+        ASSERT(cipher_ctx_iv_length(cipher) <= spotify_MAX_IV_LENGTH);
+        ASSERT(cipher_ctx_iv_length(cipher) >= spotify_AEAD_MIN_IV_LEN);
 
         /* Generate dummy implicit IV */
         ASSERT(rand_bytes(co->key_ctx_bi.encrypt.implicit_iv,
-                          OPENVPN_MAX_IV_LENGTH));
+                          spotify_MAX_IV_LENGTH));
         co->key_ctx_bi.encrypt.implicit_iv_len = impl_iv_len;
 
         memcpy(co->key_ctx_bi.decrypt.implicit_iv,
-               co->key_ctx_bi.encrypt.implicit_iv, OPENVPN_MAX_IV_LENGTH);
+               co->key_ctx_bi.encrypt.implicit_iv, spotify_MAX_IV_LENGTH);
         co->key_ctx_bi.decrypt.implicit_iv_len = impl_iv_len;
     }
 }
@@ -313,7 +313,7 @@ init_frame_parameters(struct frame *frame)
     /* ACK array and remote SESSION ID (part of the ACK array) */
     overhead += ACK_SIZE(RELIABLE_ACK_SIZE);
 
-    /* Previous OpenVPN version calculated the maximum size and buffer of a
+    /* Previous spotify version calculated the maximum size and buffer of a
      * control frame depending on the overhead of the data channel frame
      * overhead and limited its maximum size to 1250. Since control frames
      * also need to fit into data channel buffer we have the same
@@ -376,10 +376,10 @@ do_data_channel_round_trip(struct crypto_options *co)
         ASSERT(buf_init(&encrypt_workspace, frame.buf.headroom));
 
         /* encrypt */
-        openvpn_encrypt(&buf, encrypt_workspace, co);
+        spotify_encrypt(&buf, encrypt_workspace, co);
 
         /* decrypt */
-        openvpn_decrypt(&buf, decrypt_workspace, co, &frame, BPTR(&buf));
+        spotify_decrypt(&buf, decrypt_workspace, co, &frame, BPTR(&buf));
 
         /* compare */
         assert_int_equal(buf.len, src.len);
@@ -507,7 +507,7 @@ test_data_channel_roundtrip_bf_cbc(void **state)
 int
 main(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
 
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(crypto_pem_encode_certificate),

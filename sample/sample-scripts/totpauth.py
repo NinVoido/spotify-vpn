@@ -1,5 +1,5 @@
 #! /usr/bin/python3
-# Copyright (c) 2021 OpenVPN Inc <sales@openvpn.net>
+# Copyright (c) 2021 spotify Inc <sales@spotify.net>
 # Copyright (c) 2021 Arne Schwabe <arne@rfc2549.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,14 +27,14 @@ from base64 import standard_b64decode
 import pyotp
 
 # Example script demonstrating how to use the auth-pending API in
-# OpenVPN. This script is provided under MIT license to allow easy
+# spotify. This script is provided under MIT license to allow easy
 # modification for other purposes.
 #
-# This needs support of crtext support on the client (e.g. OpenVPN for Android)
+# This needs support of crtext support on the client (e.g. spotify for Android)
 # See also the management-notes.txt file for more information about the auth pending
 # protocol
 #
-# To use this script add the following lines in the openvpn config
+# To use this script add the following lines in the spotify config
 
 # client-crresponse /path/to/totpauth.py
 # auth-user-pass-verify /path/to/totpauth.py via-file
@@ -75,7 +75,7 @@ def main():
         # Read the crresponse from the argument file
         # and convert it into text. A failure because of bad user
         # input (e.g. invalid base64) will make the script throw
-        # an error and make OpenVPN return AUTH_FAILED
+        # an error and make spotify return AUTH_FAILED
         with open(sys.argv[1], 'r') as crinput:
             response = crinput.read()
             response = standard_b64decode(response)

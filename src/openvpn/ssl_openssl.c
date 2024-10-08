@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -316,7 +316,7 @@ tls_ctx_set_options(struct tls_root_ctx *ctx, unsigned int ssl_flags)
     sslopt |= SSL_OP_CIPHER_SERVER_PREFERENCE;
 #endif
     sslopt |= SSL_OP_NO_COMPRESSION;
-    /* Disable TLS renegotiations. OpenVPN's renegotiation creates new SSL
+    /* Disable TLS renegotiations. spotify's renegotiation creates new SSL
      * session and does not depend on this feature. And TLS renegotiations have
      * been problematic in the past */
 #ifdef SSL_OP_NO_RENEGOTIATION
@@ -855,7 +855,7 @@ load_pkey_from_uri(const char *uri, SSL_CTX *ssl_ctx)
     OSSL_STORE_CTX *store_ctx = NULL;
     OSSL_STORE_INFO *info = NULL;
 
-    UI_METHOD *ui_method = UI_create_method("openvpn");
+    UI_METHOD *ui_method = UI_create_method("spotify");
     if (!ui_method)
     {
         msg(M_WARN, "OpenSSL UI creation failed");
@@ -1101,7 +1101,7 @@ tls_ctx_load_cert_uri(struct tls_root_ctx *tls_ctx, const char *uri)
 
     ASSERT(NULL != tls_ctx);
 
-    UI_METHOD *ui_method = UI_create_method("openvpn");
+    UI_METHOD *ui_method = UI_create_method("spotify");
     if (!ui_method)
     {
         msg(M_WARN, "OpenSSL UI method creation failed");
@@ -1433,7 +1433,7 @@ rsa_priv_dec(int flen, const unsigned char *from, unsigned char *to, RSA *rsa, i
 
 /* called at RSA_free */
 static int
-openvpn_extkey_rsa_finish(RSA *rsa)
+spotify_extkey_rsa_finish(RSA *rsa)
 {
     /* meth was allocated in tls_ctx_use_management_external_key() ; since
      * this function is called when the parent RSA object is destroyed,
@@ -1483,7 +1483,7 @@ get_sig_from_man(const unsigned char *dgst, unsigned int dgstlen,
     char *out_b64 = NULL;
     int len = -1;
 
-    int bencret = openvpn_base64_encode(dgst, dgstlen, &in_b64);
+    int bencret = spotify_base64_encode(dgst, dgstlen, &in_b64);
 
     if (management && bencret > 0)
     {
@@ -1492,7 +1492,7 @@ get_sig_from_man(const unsigned char *dgst, unsigned int dgstlen,
     }
     if (out_b64)
     {
-        len = openvpn_base64_decode(out_b64, sig, siglen);
+        len = spotify_base64_decode(out_b64, sig, siglen);
     }
 
     free(in_b64);
@@ -1531,7 +1531,7 @@ tls_ctx_use_external_rsa_key(struct tls_root_ctx *ctx, EVP_PKEY *pkey)
     ASSERT(NULL != pub_rsa);
 
     /* allocate custom RSA method object */
-    rsa_meth = RSA_meth_new("OpenVPN external private key RSA Method",
+    rsa_meth = RSA_meth_new("spotify external private key RSA Method",
                             RSA_METHOD_FLAG_NO_CHECK);
     check_malloc_return(rsa_meth);
     RSA_meth_set_pub_enc(rsa_meth, rsa_pub_enc);
@@ -1539,7 +1539,7 @@ tls_ctx_use_external_rsa_key(struct tls_root_ctx *ctx, EVP_PKEY *pkey)
     RSA_meth_set_priv_enc(rsa_meth, rsa_priv_enc);
     RSA_meth_set_priv_dec(rsa_meth, rsa_priv_dec);
     RSA_meth_set_init(rsa_meth, NULL);
-    RSA_meth_set_finish(rsa_meth, openvpn_extkey_rsa_finish);
+    RSA_meth_set_finish(rsa_meth, spotify_extkey_rsa_finish);
     RSA_meth_set0_app_data(rsa_meth, NULL);
 
     /* allocate RSA object */
@@ -1588,7 +1588,7 @@ err:
 
 /* called when EC_KEY is destroyed */
 static void
-openvpn_extkey_ec_finish(EC_KEY *ec)
+spotify_extkey_ec_finish(EC_KEY *ec)
 {
     /* release the method structure */
     const EC_KEY_METHOD *ec_meth = EC_KEY_get_method(ec);
@@ -1667,7 +1667,7 @@ tls_ctx_use_external_ec_key(struct tls_root_ctx *ctx, EVP_PKEY *pkey)
     }
 
     /* Among init methods, we only need the finish method */
-    EC_KEY_METHOD_set_init(ec_method, NULL, openvpn_extkey_ec_finish, NULL, NULL, NULL, NULL);
+    EC_KEY_METHOD_set_init(ec_method, NULL, spotify_extkey_ec_finish, NULL, NULL, NULL, NULL);
     EC_KEY_METHOD_set_sign(ec_method, ecdsa_sign, ecdsa_sign_setup, ecdsa_sign_sig);
 
     ec = EC_KEY_dup(EVP_PKEY_get0_EC_KEY(pkey));
@@ -2578,7 +2578,7 @@ show_available_tls_ciphers_list(const char *cipher_list,
         else if (NULL == pair)
         {
             /* No translation found, print warning */
-            printf("%s (No IANA name known to OpenVPN, use OpenSSL name.)\n",
+            printf("%s (No IANA name known to spotify, use OpenSSL name.)\n",
                    cipher_name);
         }
         else

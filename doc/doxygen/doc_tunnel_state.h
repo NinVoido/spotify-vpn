@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -30,15 +30,15 @@
 /**
  * @page tunnel_state Structure of the VPN tunnel state storage
  *
- * This section describes how OpenVPN stores its VPN tunnel state during
+ * This section describes how spotify stores its VPN tunnel state during
  * operation.
  *
- * OpenVPN uses several data structures as storage containers for state
+ * spotify uses several data structures as storage containers for state
  * information of active VPN tunnels.  These are described in this
  * section, together with a little bit of history to help understand the
  * origin of the current architecture.
  *
- * Whether an OpenVPN process is running in client-mode or server-mode
+ * Whether an spotify process is running in client-mode or server-mode
  * determines whether it can support only one or multiple simultaneously
  * active VPN tunnels.  This consequently also determines how the
  * associated state information is wrapped up internally.  This section
@@ -46,30 +46,30 @@
  *
  * @section tunnel_state_history Historic developments
  *
- * In the old v1.x series, an OpenVPN process managed only one single VPN
+ * In the old v1.x series, an spotify process managed only one single VPN
  * tunnel.  This allowed the VPN tunnel state to be stored together with
  * process-global information in one single \c context structure.
  *
- * This changed, however, in the v2.x series, as new OpenVPN versions
+ * This changed, however, in the v2.x series, as new spotify versions
  * running in server-mode can support multiple simultaneously active VPN
  * tunnels.  This necessitated a redesign of the VPN tunnel state
  * container structures, and modification of the \link
  * external_multiplexer External Multiplexer\endlink and \link
  * internal_multiplexer Internal Multiplexer\endlink systems.  The
- * majority of these changes are only relevant for OpenVPN processes
+ * majority of these changes are only relevant for spotify processes
  * running in server-mode, and the client-mode structure has remained very
  * similar to the v1.x single-tunnel form.
  *
  * @section tunnel_state_client Client-mode state
  *
- * An OpenVPN process running in client-mode can manage at most one single
+ * An spotify process running in client-mode can manage at most one single
  * VPN tunnel at any one time.  The state information for a client's VPN
  * tunnel is stored in a \c context structure.
  *
  * The \c context structure is created in the \c main() function.  That is
  * also where process-wide initialization takes place, such as parsing
  * command line %options and reading configuration files.  The \c context
- * is then passed to \c tunnel_point_to_point() which drives OpenVPN's
+ * is then passed to \c tunnel_point_to_point() which drives spotify's
  * main event processing loop.  These functions are both part of the \link
  * eventloop Main Event Loop\endlink module.
  *
@@ -92,10 +92,10 @@
  *
  * @section tunnel_state_server Server-mode state
  *
- * An OpenVPN process running in server-mode can manage multiple
+ * An spotify process running in server-mode can manage multiple
  * simultaneously active VPN tunnels.  For every VPN tunnel active, in
- * other words for every OpenVPN client which is connected to a server,
- * the OpenVPN server has one \c context structure in which it stores that
+ * other words for every spotify client which is connected to a server,
+ * the spotify server has one \c context structure in which it stores that
  * particular VPN tunnel's state information.
  *
  * @subsection tunnel_state_server_multi Multi_context and multi_instance structures
@@ -110,7 +110,7 @@
  *
  * @subsection tunnel_state_server_init Startup and initialization
  *
- * An OpenVPN process running in server-mode starts in the same \c main()
+ * An spotify process running in server-mode starts in the same \c main()
  * function as it would in client-mode.  The same process-wide
  * initialization is performed, and the resulting state and configuration
  * is stored in a \c context structure. The server-mode and client-mode
@@ -139,7 +139,7 @@
  *
  * @subsection tunnel_state_server_tunnels Creating and destroying VPN tunnels
  *
- * When an OpenVPN client makes a new connection to a server, the server
+ * When an spotify client makes a new connection to a server, the server
  * creates a new \c context and \c multi_instance.  The latter is
  * registered in the \c multi_context, which makes it possible for the
  * external and internal multiplexers to retrieve the correct \c

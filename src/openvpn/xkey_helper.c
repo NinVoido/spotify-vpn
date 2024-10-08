@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -261,7 +261,7 @@ xkey_management_sign(void *unused, unsigned char *sig, size_t *siglen,
     char *out_b64 = NULL;
     int len = -1;
 
-    int bencret = openvpn_base64_encode(tbs, (int) tbslen, &in_b64);
+    int bencret = spotify_base64_encode(tbs, (int) tbslen, &in_b64);
 
     if (management && bencret > 0)
     {
@@ -269,7 +269,7 @@ xkey_management_sign(void *unused, unsigned char *sig, size_t *siglen,
     }
     if (out_b64)
     {
-        len = openvpn_base64_decode(out_b64, sig, (int) *siglen);
+        len = spotify_base64_decode(out_b64, sig, (int) *siglen);
     }
     free(in_b64);
     free(out_b64);

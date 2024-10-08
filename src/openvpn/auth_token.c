@@ -7,7 +7,7 @@
 #include "base64.h"
 #include "buffer.h"
 #include "crypto.h"
-#include "openvpn.h"
+#include "spotify.h"
 #include "ssl_common.h"
 #include "auth_token.h"
 #include "push.h"
@@ -16,7 +16,7 @@
 #include "ssl_verify.h"
 #include <inttypes.h>
 
-const char *auth_token_pem_name = "OpenVPN auth-token server key";
+const char *auth_token_pem_name = "spotify auth-token server key";
 
 #define AUTH_TOKEN_SESSION_ID_LEN 12
 #define AUTH_TOKEN_SESSION_ID_BASE64_LEN (AUTH_TOKEN_SESSION_ID_LEN * 8 / 6)
@@ -189,12 +189,12 @@ generate_auth_token(const struct user_pass *up, struct tls_multi *multi)
          * our base64 decode function only decode the session ID
          */
         old_tstamp_initial[12] = '\0';
-        ASSERT(openvpn_base64_decode(old_tstamp_initial, old_tstamp_decode, 9) == 9);
+        ASSERT(spotify_base64_decode(old_tstamp_initial, old_tstamp_decode, 9) == 9);
 
         memcpy(&initial_timestamp, &old_tstamp_decode, sizeof(initial_timestamp));
 
         old_tstamp_initial[0] = '\0';
-        ASSERT(openvpn_base64_decode(old_sessid, sessid, AUTH_TOKEN_SESSION_ID_LEN) == AUTH_TOKEN_SESSION_ID_LEN);
+        ASSERT(spotify_base64_decode(old_sessid, sessid, AUTH_TOKEN_SESSION_ID_LEN) == AUTH_TOKEN_SESSION_ID_LEN);
     }
     else if (!rand_bytes(sessid, AUTH_TOKEN_SESSION_ID_LEN))
     {
@@ -240,7 +240,7 @@ generate_auth_token(const struct user_pass *up, struct tls_multi *multi)
     ASSERT(buf_write(&token, hmac_output, sizeof(hmac_output)));
 
     char *b64output = NULL;
-    openvpn_base64_encode(BPTR(&token), BLEN(&token), &b64output);
+    spotify_base64_encode(BPTR(&token), BLEN(&token), &b64output);
 
     struct buffer session_token = alloc_buf_gc(
         strlen(SESSION_ID_PREFIX) + strlen(b64output) + 1, &gc);
@@ -297,7 +297,7 @@ verify_auth_token(struct user_pass *up, struct tls_multi *multi,
      */
     ASSERT(up && !up->protected);
     uint8_t b64decoded[USER_PASS_LEN];
-    int decoded_len = openvpn_base64_decode(up->password + strlen(SESSION_ID_PREFIX),
+    int decoded_len = spotify_base64_decode(up->password + strlen(SESSION_ID_PREFIX),
                                             b64decoded, USER_PASS_LEN);
 
     /*

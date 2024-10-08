@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -21,8 +21,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef OPENVPN_MSG_H_
-#define OPENVPN_MSG_H_
+#ifndef spotify_MSG_H_
+#define spotify_MSG_H_
 
 #include <windef.h>
 #include <ws2tcpip.h>
@@ -153,4 +153,4 @@ typedef struct {
     int mtu;
 } set_mtu_message_t;
 
-#endif /* ifndef OPENVPN_MSG_H_ */
+#endif /* ifndef spotify_MSG_H_ */

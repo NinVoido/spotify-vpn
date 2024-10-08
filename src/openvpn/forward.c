@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -342,7 +342,7 @@ check_connection_established(struct context *c)
             if (management)
             {
                 management_set_state(management,
-                                     OPENVPN_STATE_GET_CONFIG,
+                                     spotify_STATE_GET_CONFIG,
                                      NULL,
                                      NULL,
                                      NULL,
@@ -475,7 +475,7 @@ check_add_routes(struct context *c)
  * whenever there is sufficient activity on tun or link, so this function
  * is only ever called to raise the TERM signal.
  *
- * With DCO, OpenVPN does not see incoming or outgoing data packets anymore
+ * With DCO, spotify does not see incoming or outgoing data packets anymore
  * and the logic needs to change - we permit the event to trigger and check
  * kernel DCO counters here, returning and rearming the timer if there was
  * sufficient traffic.
@@ -665,7 +665,7 @@ encrypt_sign(struct context *c, bool comp_frag)
         /* Get the key we will use to encrypt the packet. */
         tls_pre_encrypt(c->c2.tls_multi, &c->c2.buf, &co);
         /* If using P_DATA_V2, prepend the 1-byte opcode and 3-byte peer-id to the
-         * packet before openvpn_encrypt(), so we can authenticate the opcode too.
+         * packet before spotify_encrypt(), so we can authenticate the opcode too.
          */
         if (c->c2.buf.len > 0 && c->c2.tls_multi->use_peer_id)
         {
@@ -678,7 +678,7 @@ encrypt_sign(struct context *c, bool comp_frag)
     }
 
     /* Encrypt and authenticate the packet */
-    openvpn_encrypt(&c->c2.buf, b->encrypt_buf, co);
+    spotify_encrypt(&c->c2.buf, b->encrypt_buf, co);
 
     /* Do packet administration */
     if (c->c2.tls_multi)
@@ -1119,7 +1119,7 @@ process_incoming_link_part1(struct context *c, struct link_socket_info *lsi, boo
         }
 
         /* authenticate and decrypt the incoming packet */
-        decrypt_status = openvpn_decrypt(&c->c2.buf, c->c2.buffers->decrypt_buf,
+        decrypt_status = spotify_decrypt(&c->c2.buf, c->c2.buffers->decrypt_buf,
                                          co, &c->c2.frame, ad_start);
 
         if (!decrypt_status && link_socket_connection_oriented(c->c2.link_socket))
@@ -1194,7 +1194,7 @@ process_incoming_link_part2(struct context *c, struct link_socket_info *lsi, con
             c->c2.max_recv_size_local = max_int(c->c2.original_recv_size, c->c2.max_recv_size_local);
         }
 
-        /* Did we just receive an openvpn ping packet? */
+        /* Did we just receive an spotify ping packet? */
         if (is_ping_msg(&c->c2.buf))
         {
             dmsg(D_PING, "RECEIVED PING PACKET");
@@ -1368,14 +1368,14 @@ read_incoming_tun(struct context *c)
  *
  * On Windows and OS X when netwotk adapter is disabled or
  * disconnected, platform starts to use tun as external interface.
- * When packet is sent to tun, it comes to openvpn, encapsulated
+ * When packet is sent to tun, it comes to spotify, encapsulated
  * and sent to routing table, which sends it again to tun.
  */
 static void
 drop_if_recursive_routing(struct context *c, struct buffer *buf)
 {
     bool drop = false;
-    struct openvpn_sockaddr tun_sa;
+    struct spotify_sockaddr tun_sa;
     int ip_hdr_offset = 0;
 
     if (c->c2.to_link_addr == NULL) /* no remote addr known */
@@ -1389,10 +1389,10 @@ drop_if_recursive_routing(struct context *c, struct buffer *buf)
 
     if (proto_ver == 4)
     {
-        const struct openvpn_iphdr *pip;
+        const struct spotify_iphdr *pip;
 
         /* make sure we got whole IP header */
-        if (BLEN(buf) < ((int) sizeof(struct openvpn_iphdr) + ip_hdr_offset))
+        if (BLEN(buf) < ((int) sizeof(struct spotify_iphdr) + ip_hdr_offset))
         {
             return;
         }
@@ -1403,7 +1403,7 @@ drop_if_recursive_routing(struct context *c, struct buffer *buf)
             return;
         }
 
-        pip = (struct openvpn_iphdr *) (BPTR(buf) + ip_hdr_offset);
+        pip = (struct spotify_iphdr *) (BPTR(buf) + ip_hdr_offset);
 
         /* drop packets with same dest addr as gateway */
         if (tun_sa.addr.in4.sin_addr.s_addr == pip->daddr)
@@ -1413,10 +1413,10 @@ drop_if_recursive_routing(struct context *c, struct buffer *buf)
     }
     else if (proto_ver == 6)
     {
-        const struct openvpn_ipv6hdr *pip6;
+        const struct spotify_ipv6hdr *pip6;
 
         /* make sure we got whole IPv6 header */
-        if (BLEN(buf) < ((int) sizeof(struct openvpn_ipv6hdr) + ip_hdr_offset))
+        if (BLEN(buf) < ((int) sizeof(struct spotify_ipv6hdr) + ip_hdr_offset))
         {
             return;
         }
@@ -1428,7 +1428,7 @@ drop_if_recursive_routing(struct context *c, struct buffer *buf)
         }
 
         /* drop packets with same dest addr as gateway */
-        pip6 = (struct openvpn_ipv6hdr *) (BPTR(buf) + ip_hdr_offset);
+        pip6 = (struct spotify_ipv6hdr *) (BPTR(buf) + ip_hdr_offset);
         if (IN6_ARE_ADDR_EQUAL(&tun_sa.addr.in6.sin6_addr, &pip6->daddr))
         {
             drop = true;
@@ -1524,7 +1524,7 @@ void
 ipv6_send_icmp_unreachable(struct context *c, struct buffer *buf, bool client)
 {
 #define MAX_ICMPV6LEN 1280
-    struct openvpn_icmp6hdr icmp6out;
+    struct spotify_icmp6hdr icmp6out;
     CLEAR(icmp6out);
 
     /*
@@ -1535,15 +1535,15 @@ ipv6_send_icmp_unreachable(struct context *c, struct buffer *buf, bool client)
 
     is_ipv6(TUNNEL_TYPE(c->c1.tuntap), &inputipbuf);
 
-    if (BLEN(&inputipbuf) < (int)sizeof(struct openvpn_ipv6hdr))
+    if (BLEN(&inputipbuf) < (int)sizeof(struct spotify_ipv6hdr))
     {
         return;
     }
 
-    const struct openvpn_ipv6hdr *pip6 = (struct openvpn_ipv6hdr *)BPTR(&inputipbuf);
+    const struct spotify_ipv6hdr *pip6 = (struct spotify_ipv6hdr *)BPTR(&inputipbuf);
 
     /* Copy version, traffic class, flow label from input packet */
-    struct openvpn_ipv6hdr pip6out = *pip6;
+    struct spotify_ipv6hdr pip6out = *pip6;
 
     pip6out.version_prio = pip6->version_prio;
     pip6out.daddr = pip6->saddr;
@@ -1562,23 +1562,23 @@ ipv6_send_icmp_unreachable(struct context *c, struct buffer *buf, bool client)
         inet_pton(AF_INET6, "fe80::7", &pip6out.saddr);
     }
 
-    pip6out.nexthdr = OPENVPN_IPPROTO_ICMPV6;
+    pip6out.nexthdr = spotify_IPPROTO_ICMPV6;
 
     /*
      * The ICMPv6 unreachable code worked best in my (arne) tests with Windows,
      * Linux and Android. Windows did not like the administratively prohibited
      * return code (no fast fail)
      */
-    icmp6out.icmp6_type = OPENVPN_ICMP6_DESTINATION_UNREACHABLE;
-    icmp6out.icmp6_code = OPENVPN_ICMP6_DU_NOROUTE;
+    icmp6out.icmp6_type = spotify_ICMP6_DESTINATION_UNREACHABLE;
+    icmp6out.icmp6_code = spotify_ICMP6_DU_NOROUTE;
 
-    int icmpheader_len = sizeof(struct openvpn_ipv6hdr)
-                         + sizeof(struct openvpn_icmp6hdr);
+    int icmpheader_len = sizeof(struct spotify_ipv6hdr)
+                         + sizeof(struct spotify_icmp6hdr);
     int totalheader_len = icmpheader_len;
 
     if (TUNNEL_TYPE(c->c1.tuntap) == DEV_TYPE_TAP)
     {
-        totalheader_len += sizeof(struct openvpn_ethhdr);
+        totalheader_len += sizeof(struct spotify_ethhdr);
     }
 
     /*
@@ -1590,7 +1590,7 @@ ipv6_send_icmp_unreachable(struct context *c, struct buffer *buf, bool client)
                                    c->c2.frame.tun_mtu - icmpheader_len);
     int payload_len = min_int(max_payload_size, BLEN(&inputipbuf));
 
-    pip6out.payload_len = htons(sizeof(struct openvpn_icmp6hdr) + payload_len);
+    pip6out.payload_len = htons(sizeof(struct spotify_icmp6hdr) + payload_len);
 
     /* Construct the packet as outgoing packet back to the client */
     struct buffer *outbuf;
@@ -1611,37 +1611,37 @@ ipv6_send_icmp_unreachable(struct context *c, struct buffer *buf, bool client)
     ASSERT(buf_copy_n(outbuf, &inputipbuf, payload_len));
 
     /* ICMP Header, copy into buffer to allow checksum calculation */
-    ASSERT(buf_write_prepend(outbuf, &icmp6out, sizeof(struct openvpn_icmp6hdr)));
+    ASSERT(buf_write_prepend(outbuf, &icmp6out, sizeof(struct spotify_icmp6hdr)));
 
     /* Calculate checksum over the packet and write to header */
 
     uint16_t new_csum = ip_checksum(AF_INET6, BPTR(outbuf), BLEN(outbuf),
                                     (const uint8_t *)&pip6out.saddr,
-                                    (uint8_t *)&pip6out.daddr, OPENVPN_IPPROTO_ICMPV6);
-    ((struct openvpn_icmp6hdr *) BPTR(outbuf))->icmp6_cksum = htons(new_csum);
+                                    (uint8_t *)&pip6out.daddr, spotify_IPPROTO_ICMPV6);
+    ((struct spotify_icmp6hdr *) BPTR(outbuf))->icmp6_cksum = htons(new_csum);
 
 
     /* IPv6 Header */
-    ASSERT(buf_write_prepend(outbuf, &pip6out, sizeof(struct openvpn_ipv6hdr)));
+    ASSERT(buf_write_prepend(outbuf, &pip6out, sizeof(struct spotify_ipv6hdr)));
 
     /*
      * Tap mode, we also need to create an Ethernet header.
      */
     if (TUNNEL_TYPE(c->c1.tuntap) == DEV_TYPE_TAP)
     {
-        if (BLEN(buf) < (int)sizeof(struct openvpn_ethhdr))
+        if (BLEN(buf) < (int)sizeof(struct spotify_ethhdr))
         {
             return;
         }
 
-        const struct openvpn_ethhdr *orig_ethhdr = (struct openvpn_ethhdr *) BPTR(buf);
+        const struct spotify_ethhdr *orig_ethhdr = (struct spotify_ethhdr *) BPTR(buf);
 
         /* Copy frametype and reverse source/destination for the response */
-        struct openvpn_ethhdr ethhdr;
-        memcpy(ethhdr.source, orig_ethhdr->dest, OPENVPN_ETH_ALEN);
-        memcpy(ethhdr.dest, orig_ethhdr->source, OPENVPN_ETH_ALEN);
-        ethhdr.proto = htons(OPENVPN_ETH_P_IPV6);
-        ASSERT(buf_write_prepend(outbuf, &ethhdr, sizeof(struct openvpn_ethhdr)));
+        struct spotify_ethhdr ethhdr;
+        memcpy(ethhdr.source, orig_ethhdr->dest, spotify_ETH_ALEN);
+        memcpy(ethhdr.dest, orig_ethhdr->source, spotify_ETH_ALEN);
+        ethhdr.proto = htons(spotify_ETH_P_IPV6);
+        ASSERT(buf_write_prepend(outbuf, &ethhdr, sizeof(struct spotify_ethhdr)));
     }
 #undef MAX_ICMPV6LEN
 }
@@ -1828,7 +1828,7 @@ process_outgoing_link(struct context *c)
         }
 
         /* Check return status */
-        error_code = openvpn_errno();
+        error_code = spotify_errno();
         check_status(size, "write", c->c2.link_socket, NULL);
 
         if (size > 0)
@@ -2063,7 +2063,7 @@ io_wait_dowork(struct context *c, const unsigned int flags)
     struct event_set_return esr[4];
 
     /* These shifts all depend on EVENT_READ (=1) and EVENT_WRITE (=2)
-     * and are added to the shift. Check openvpn.h for more details.
+     * and are added to the shift. Check spotify.h for more details.
      */
     static int socket_shift = SOCKET_SHIFT;
     static int tun_shift = TUN_SHIFT;

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -278,13 +278,13 @@ static inline void
 usec_timer_start(struct usec_timer *obj)
 {
     CLEAR(*obj);
-    openvpn_gettimeofday(&obj->start, NULL);
+    spotify_gettimeofday(&obj->start, NULL);
 }
 
 static inline void
 usec_timer_end(struct usec_timer *obj)
 {
-    openvpn_gettimeofday(&obj->end, NULL);
+    spotify_gettimeofday(&obj->end, NULL);
 }
 
 #endif /* HAVE_GETTIMEOFDAY */

@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CONFIGURATION_TYPES "Release;Debug;ASAN")
-project(openvpn)
+project(spotify)
 
-# This CMake file implements building OpenVPN with CMAKE
+# This CMake file implements building spotify with CMAKE
 #
-# Note that this is *NOT* the official way to build openvpn on anything
+# Note that this is *NOT* the official way to build spotify on anything
 # other than Windows/mingw despite working on other platforms too. You will need
 # to add -DUNSUPPORTED_BUILDS=true to build on non Windows platforms.
 #
@@ -40,7 +40,7 @@ option(ENABLE_LZO "BUILD with lzo" ON)
 option(ENABLE_PKCS11 "BUILD with pkcs11-helper" ON)
 option(USE_WERROR "Treat compiler warnings as errors (-Werror)" ON)
 
-set(PLUGIN_DIR /usr/local/lib/openvpn/plugins CACHE FILEPATH "Location of the plugin directory")
+set(PLUGIN_DIR /usr/local/lib/spotify/plugins CACHE FILEPATH "Location of the plugin directory")
 
 # Create machine readable compile commands
 option(ENABLE_COMPILE_COMMANDS "Generate compile_commands.json and a symlink for clangd to find it" OFF)
@@ -114,10 +114,10 @@ execute_process(
     )
 include(${CMAKE_CURRENT_BINARY_DIR}/version.cmake)
 
-set(OPENVPN_VERSION_MAJOR ${PRODUCT_VERSION_MAJOR})
-set(OPENVPN_VERSION_MINOR ${PRODUCT_VERSION_MINOR})
-set(OPENVPN_VERSION_PATCH ${PRODUCT_VERSION_PATCH})
-set(OPENVPN_VERSION_RESOURCE ${PRODUCT_VERSION_RESOURCE})
+set(spotify_VERSION_MAJOR ${PRODUCT_VERSION_MAJOR})
+set(spotify_VERSION_MINOR ${PRODUCT_VERSION_MINOR})
+set(spotify_VERSION_PATCH ${PRODUCT_VERSION_PATCH})
+set(spotify_VERSION_RESOURCE ${PRODUCT_VERSION_RESOURCE})
 
 set(CMAKE_C_STANDARD 11)
 
@@ -346,248 +346,248 @@ add_custom_command(
 set(HAVE_CONFIG_VERSION_H YES)
 
 configure_file(config.h.cmake.in config.h)
-configure_file(include/openvpn-plugin.h.in openvpn-plugin.h)
+configure_file(include/spotify-plugin.h.in spotify-plugin.h)
 # TODO we should remove the need for this, and always include config.h
 add_definitions(-DHAVE_CONFIG_H)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(doc)
-add_subdirectory(src/openvpnmsica)
-add_subdirectory(src/openvpnserv)
+add_subdirectory(src/spotifymsica)
+add_subdirectory(src/spotifyserv)
 add_subdirectory(src/tapctl)
 
 set(SOURCE_FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config.h
     ${CMAKE_CURRENT_BINARY_DIR}/config-version.h
-    ${CMAKE_CURRENT_BINARY_DIR}/openvpn-plugin.h
+    ${CMAKE_CURRENT_BINARY_DIR}/spotify-plugin.h
 
     src/compat/compat-basename.c
     src/compat/compat-daemon.c
     src/compat/compat-dirname.c
     src/compat/compat-gettimeofday.c
     src/compat/compat-strsep.c
-    src/openvpn/argv.c
-    src/openvpn/argv.h
-    src/openvpn/base64.c
-    src/openvpn/base64.h
-    src/openvpn/basic.h
-    src/openvpn/buffer.c
-    src/openvpn/buffer.h
-    src/openvpn/circ_list.h
-    src/openvpn/clinat.c
-    src/openvpn/clinat.h
-    src/openvpn/common.h
-    src/openvpn/comp-lz4.c
-    src/openvpn/comp-lz4.h
-    src/openvpn/comp.c
-    src/openvpn/comp.h
-    src/openvpn/compstub.c
-    src/openvpn/console.c
-    src/openvpn/console_builtin.c
-    src/openvpn/console.h
-    src/openvpn/crypto.c
-    src/openvpn/crypto.h
-    src/openvpn/crypto_backend.h
-    src/openvpn/crypto_openssl.c
-    src/openvpn/crypto_openssl.h
-    src/openvpn/crypto_mbedtls.c
-    src/openvpn/crypto_mbedtls.h
-    src/openvpn/cryptoapi.c
-    src/openvpn/cryptoapi.h
-    src/openvpn/dco.c
-    src/openvpn/dco.h
-    src/openvpn/dco_win.c
-    src/openvpn/dco_win.h
-    src/openvpn/dco_linux.c
-    src/openvpn/dco_linux.h
-    src/openvpn/dco_freebsd.c
-    src/openvpn/dco_freebsd.h
-    src/openvpn/dhcp.c
-    src/openvpn/dhcp.h
-    src/openvpn/dns.c
-    src/openvpn/dns.h
-    src/openvpn/errlevel.h
-    src/openvpn/env_set.c
-    src/openvpn/env_set.h
-    src/openvpn/error.c
-    src/openvpn/error.h
-    src/openvpn/event.c
-    src/openvpn/event.h
-    src/openvpn/fdmisc.c
-    src/openvpn/fdmisc.h
-    src/openvpn/forward.c
-    src/openvpn/forward.h
-    src/openvpn/fragment.c
-    src/openvpn/fragment.h
-    src/openvpn/gremlin.c
-    src/openvpn/gremlin.h
-    src/openvpn/helper.c
-    src/openvpn/helper.h
-    src/openvpn/httpdigest.c
-    src/openvpn/httpdigest.h
-    src/openvpn/init.c
-    src/openvpn/init.h
-    src/openvpn/integer.h
-    src/openvpn/interval.c
-    src/openvpn/interval.h
-    src/openvpn/list.c
-    src/openvpn/list.h
-    src/openvpn/lladdr.c
-    src/openvpn/lladdr.h
-    src/openvpn/lzo.c
-    src/openvpn/lzo.h
-    src/openvpn/manage.c
-    src/openvpn/manage.h
-    src/openvpn/mbuf.c
-    src/openvpn/mbuf.h
-    src/openvpn/memdbg.h
-    src/openvpn/misc.c
-    src/openvpn/misc.h
-    src/openvpn/mroute.c
-    src/openvpn/mroute.h
-    src/openvpn/mss.c
-    src/openvpn/mss.h
-    src/openvpn/mstats.c
-    src/openvpn/mstats.h
-    src/openvpn/mtcp.c
-    src/openvpn/mtcp.h
-    src/openvpn/mtu.c
-    src/openvpn/mtu.h
-    src/openvpn/mudp.c
-    src/openvpn/mudp.h
-    src/openvpn/multi.c
-    src/openvpn/multi.h
-    src/openvpn/ntlm.c
-    src/openvpn/ntlm.h
-    src/openvpn/occ.c
-    src/openvpn/occ.h
-    src/openvpn/openvpn.c
-    src/openvpn/openvpn.h
-    src/openvpn/openvpn_win32_resources.rc
-    src/openvpn/options.c
-    src/openvpn/options.h
-    src/openvpn/options_util.c
-    src/openvpn/options_util.h
-    src/openvpn/otime.c
-    src/openvpn/otime.h
-    src/openvpn/ovpn_dco_win.h
-    src/openvpn/packet_id.c
-    src/openvpn/packet_id.h
-    src/openvpn/perf.c
-    src/openvpn/perf.h
-    src/openvpn/ping.c
-    src/openvpn/ping.h
-    src/openvpn/pkcs11.c
-    src/openvpn/pkcs11.h
-    src/openvpn/pkcs11_backend.h
-    src/openvpn/pkcs11_openssl.c
-    src/openvpn/pkcs11_mbedtls.c
-    src/openvpn/platform.c
-    src/openvpn/platform.h
-    src/openvpn/plugin.c
-    src/openvpn/plugin.h
-    src/openvpn/pool.c
-    src/openvpn/pool.h
-    src/openvpn/proto.c
-    src/openvpn/proto.h
-    src/openvpn/proxy.c
-    src/openvpn/proxy.h
-    src/openvpn/ps.c
-    src/openvpn/ps.h
-    src/openvpn/push.c
-    src/openvpn/push.h
-    src/openvpn/pushlist.h
-    src/openvpn/reflect_filter.c
-    src/openvpn/reflect_filter.h
-    src/openvpn/reliable.c
-    src/openvpn/reliable.h
-    src/openvpn/route.c
-    src/openvpn/route.h
-    src/openvpn/run_command.c
-    src/openvpn/run_command.h
-    src/openvpn/schedule.c
-    src/openvpn/schedule.h
-    src/openvpn/session_id.c
-    src/openvpn/session_id.h
-    src/openvpn/shaper.c
-    src/openvpn/shaper.h
-    src/openvpn/sig.c
-    src/openvpn/sig.h
-    src/openvpn/socket.c
-    src/openvpn/socket.h
-    src/openvpn/socks.c
-    src/openvpn/socks.h
-    src/openvpn/ssl.c
-    src/openvpn/ssl.h
-    src/openvpn/ssl_backend.h
-    src/openvpn/ssl_common.h
-    src/openvpn/ssl_openssl.c
-    src/openvpn/ssl_openssl.h
-    src/openvpn/ssl_mbedtls.c
-    src/openvpn/ssl_mbedtls.h
-    src/openvpn/ssl_verify.c
-    src/openvpn/ssl_verify.h
-    src/openvpn/ssl_verify_backend.h
-    src/openvpn/ssl_verify_openssl.c
-    src/openvpn/ssl_verify_openssl.h
-    src/openvpn/ssl_verify_mbedtls.c
-    src/openvpn/ssl_verify_mbedtls.h
-    src/openvpn/status.c
-    src/openvpn/status.h
-    src/openvpn/syshead.h
-    src/openvpn/tls_crypt.c
-    src/openvpn/tun.c
-    src/openvpn/tun.h
-    src/openvpn/tun_afunix.c
-    src/openvpn/tun_afunix.h
-    src/openvpn/networking_sitnl.c
-    src/openvpn/networking_freebsd.c
-    src/openvpn/auth_token.c
-    src/openvpn/auth_token.h
-    src/openvpn/ssl_ncp.c
-    src/openvpn/ssl_ncp.h
-    src/openvpn/ssl_pkt.c
-    src/openvpn/ssl_pkt.h
-    src/openvpn/ssl_util.c
-    src/openvpn/ssl_util.h
-    src/openvpn/vlan.c
-    src/openvpn/vlan.h
-    src/openvpn/wfp_block.c
-    src/openvpn/wfp_block.h
-    src/openvpn/win32.c
-    src/openvpn/win32-util.c
-    src/openvpn/win32.h
-    src/openvpn/win32-util.h
-    src/openvpn/xkey_helper.c
-    src/openvpn/xkey_provider.c
+    src/spotify/argv.c
+    src/spotify/argv.h
+    src/spotify/base64.c
+    src/spotify/base64.h
+    src/spotify/basic.h
+    src/spotify/buffer.c
+    src/spotify/buffer.h
+    src/spotify/circ_list.h
+    src/spotify/clinat.c
+    src/spotify/clinat.h
+    src/spotify/common.h
+    src/spotify/comp-lz4.c
+    src/spotify/comp-lz4.h
+    src/spotify/comp.c
+    src/spotify/comp.h
+    src/spotify/compstub.c
+    src/spotify/console.c
+    src/spotify/console_builtin.c
+    src/spotify/console.h
+    src/spotify/crypto.c
+    src/spotify/crypto.h
+    src/spotify/crypto_backend.h
+    src/spotify/crypto_openssl.c
+    src/spotify/crypto_openssl.h
+    src/spotify/crypto_mbedtls.c
+    src/spotify/crypto_mbedtls.h
+    src/spotify/cryptoapi.c
+    src/spotify/cryptoapi.h
+    src/spotify/dco.c
+    src/spotify/dco.h
+    src/spotify/dco_win.c
+    src/spotify/dco_win.h
+    src/spotify/dco_linux.c
+    src/spotify/dco_linux.h
+    src/spotify/dco_freebsd.c
+    src/spotify/dco_freebsd.h
+    src/spotify/dhcp.c
+    src/spotify/dhcp.h
+    src/spotify/dns.c
+    src/spotify/dns.h
+    src/spotify/errlevel.h
+    src/spotify/env_set.c
+    src/spotify/env_set.h
+    src/spotify/error.c
+    src/spotify/error.h
+    src/spotify/event.c
+    src/spotify/event.h
+    src/spotify/fdmisc.c
+    src/spotify/fdmisc.h
+    src/spotify/forward.c
+    src/spotify/forward.h
+    src/spotify/fragment.c
+    src/spotify/fragment.h
+    src/spotify/gremlin.c
+    src/spotify/gremlin.h
+    src/spotify/helper.c
+    src/spotify/helper.h
+    src/spotify/httpdigest.c
+    src/spotify/httpdigest.h
+    src/spotify/init.c
+    src/spotify/init.h
+    src/spotify/integer.h
+    src/spotify/interval.c
+    src/spotify/interval.h
+    src/spotify/list.c
+    src/spotify/list.h
+    src/spotify/lladdr.c
+    src/spotify/lladdr.h
+    src/spotify/lzo.c
+    src/spotify/lzo.h
+    src/spotify/manage.c
+    src/spotify/manage.h
+    src/spotify/mbuf.c
+    src/spotify/mbuf.h
+    src/spotify/memdbg.h
+    src/spotify/misc.c
+    src/spotify/misc.h
+    src/spotify/mroute.c
+    src/spotify/mroute.h
+    src/spotify/mss.c
+    src/spotify/mss.h
+    src/spotify/mstats.c
+    src/spotify/mstats.h
+    src/spotify/mtcp.c
+    src/spotify/mtcp.h
+    src/spotify/mtu.c
+    src/spotify/mtu.h
+    src/spotify/mudp.c
+    src/spotify/mudp.h
+    src/spotify/multi.c
+    src/spotify/multi.h
+    src/spotify/ntlm.c
+    src/spotify/ntlm.h
+    src/spotify/occ.c
+    src/spotify/occ.h
+    src/spotify/spotify.c
+    src/spotify/spotify.h
+    src/spotify/spotify_win32_resources.rc
+    src/spotify/options.c
+    src/spotify/options.h
+    src/spotify/options_util.c
+    src/spotify/options_util.h
+    src/spotify/otime.c
+    src/spotify/otime.h
+    src/spotify/ovpn_dco_win.h
+    src/spotify/packet_id.c
+    src/spotify/packet_id.h
+    src/spotify/perf.c
+    src/spotify/perf.h
+    src/spotify/ping.c
+    src/spotify/ping.h
+    src/spotify/pkcs11.c
+    src/spotify/pkcs11.h
+    src/spotify/pkcs11_backend.h
+    src/spotify/pkcs11_openssl.c
+    src/spotify/pkcs11_mbedtls.c
+    src/spotify/platform.c
+    src/spotify/platform.h
+    src/spotify/plugin.c
+    src/spotify/plugin.h
+    src/spotify/pool.c
+    src/spotify/pool.h
+    src/spotify/proto.c
+    src/spotify/proto.h
+    src/spotify/proxy.c
+    src/spotify/proxy.h
+    src/spotify/ps.c
+    src/spotify/ps.h
+    src/spotify/push.c
+    src/spotify/push.h
+    src/spotify/pushlist.h
+    src/spotify/reflect_filter.c
+    src/spotify/reflect_filter.h
+    src/spotify/reliable.c
+    src/spotify/reliable.h
+    src/spotify/route.c
+    src/spotify/route.h
+    src/spotify/run_command.c
+    src/spotify/run_command.h
+    src/spotify/schedule.c
+    src/spotify/schedule.h
+    src/spotify/session_id.c
+    src/spotify/session_id.h
+    src/spotify/shaper.c
+    src/spotify/shaper.h
+    src/spotify/sig.c
+    src/spotify/sig.h
+    src/spotify/socket.c
+    src/spotify/socket.h
+    src/spotify/socks.c
+    src/spotify/socks.h
+    src/spotify/ssl.c
+    src/spotify/ssl.h
+    src/spotify/ssl_backend.h
+    src/spotify/ssl_common.h
+    src/spotify/ssl_openssl.c
+    src/spotify/ssl_openssl.h
+    src/spotify/ssl_mbedtls.c
+    src/spotify/ssl_mbedtls.h
+    src/spotify/ssl_verify.c
+    src/spotify/ssl_verify.h
+    src/spotify/ssl_verify_backend.h
+    src/spotify/ssl_verify_openssl.c
+    src/spotify/ssl_verify_openssl.h
+    src/spotify/ssl_verify_mbedtls.c
+    src/spotify/ssl_verify_mbedtls.h
+    src/spotify/status.c
+    src/spotify/status.h
+    src/spotify/syshead.h
+    src/spotify/tls_crypt.c
+    src/spotify/tun.c
+    src/spotify/tun.h
+    src/spotify/tun_afunix.c
+    src/spotify/tun_afunix.h
+    src/spotify/networking_sitnl.c
+    src/spotify/networking_freebsd.c
+    src/spotify/auth_token.c
+    src/spotify/auth_token.h
+    src/spotify/ssl_ncp.c
+    src/spotify/ssl_ncp.h
+    src/spotify/ssl_pkt.c
+    src/spotify/ssl_pkt.h
+    src/spotify/ssl_util.c
+    src/spotify/ssl_util.h
+    src/spotify/vlan.c
+    src/spotify/vlan.h
+    src/spotify/wfp_block.c
+    src/spotify/wfp_block.h
+    src/spotify/win32.c
+    src/spotify/win32-util.c
+    src/spotify/win32.h
+    src/spotify/win32-util.h
+    src/spotify/xkey_helper.c
+    src/spotify/xkey_provider.c
     )
 
-add_executable(openvpn ${SOURCE_FILES})
+add_executable(spotify ${SOURCE_FILES})
 
-add_library_deps(openvpn)
+add_library_deps(spotify)
 
 if(MINGW)
-    target_compile_options(openvpn PRIVATE -municode -UUNICODE)
-    target_link_options(openvpn PRIVATE -municode)
+    target_compile_options(spotify PRIVATE -municode -UUNICODE)
+    target_link_options(spotify PRIVATE -municode)
 endif()
 
 if (MSVC)
     # we have our own manifest
-    target_link_options(openvpn PRIVATE /MANIFEST:NO)
+    target_link_options(spotify PRIVATE /MANIFEST:NO)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    target_link_libraries(openvpn PUBLIC -ldl)
+    target_link_libraries(spotify PUBLIC -ldl)
 endif ()
 
 if (NOT WIN32)
-    target_compile_options(openvpn PRIVATE -DPLUGIN_LIBDIR=\"${PLUGIN_DIR}\")
+    target_compile_options(spotify PRIVATE -DPLUGIN_LIBDIR=\"${PLUGIN_DIR}\")
 
     find_library(resolv resolv)
     # some platform like BSDs already include resolver functionality in the libc and not have an extra resolv library
     if (${resolv} OR APPLE)
-        target_link_libraries(openvpn PUBLIC -lresolv)
+        target_link_libraries(spotify PUBLIC -lresolv)
     endif ()
 endif ()
 
@@ -671,159 +671,159 @@ if (BUILD_TESTING)
         if (NOT ${test_name} STREQUAL "test_networking")
             add_test(${test_name} ${test_name})
             # for compat with autotools make check
-            set(_UT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/unit_tests/openvpn)
+            set(_UT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests/unit_tests/spotify)
             set_tests_properties(${test_name} PROPERTIES
                 ENVIRONMENT "srcdir=${_UT_SOURCE_DIR}")
         endif ()
         add_executable(${test_name}
-            tests/unit_tests/openvpn/${test_name}.c
-            tests/unit_tests/openvpn/mock_msg.c
-            tests/unit_tests/openvpn/mock_msg.h
-            src/openvpn/platform.c
-            src/openvpn/win32-util.c
+            tests/unit_tests/spotify/${test_name}.c
+            tests/unit_tests/spotify/mock_msg.c
+            tests/unit_tests/spotify/mock_msg.h
+            src/spotify/platform.c
+            src/spotify/win32-util.c
             src/compat/compat-gettimeofday.c
             )
 
         add_library_deps(${test_name})
         target_link_libraries(${test_name} PUBLIC ${CMOCKA_LIBRARIES})
 
-        target_include_directories(${test_name} PRIVATE src/openvpn)
+        target_include_directories(${test_name} PRIVATE src/spotify)
 
         # for compat with IDEs like Clion that ignore the tests properties
         # for the environment variable srcdir when running tests as fallback
-        target_compile_definitions(${test_name} PRIVATE "-DUNIT_TEST_SOURCEDIR=\"${CMAKE_SOURCE_DIR}/tests/unit_tests/openvpn\"")
+        target_compile_definitions(${test_name} PRIVATE "-DUNIT_TEST_SOURCEDIR=\"${CMAKE_SOURCE_DIR}/tests/unit_tests/spotify\"")
 
         if (NOT ${test_name} STREQUAL "test_buffer")
             target_sources(${test_name} PRIVATE
-                src/openvpn/buffer.c
+                src/spotify/buffer.c
                 )
         endif ()
 
     endforeach()
 
     target_sources(test_auth_token PRIVATE
-        src/openvpn/base64.c
-        src/openvpn/crypto_mbedtls.c
-        src/openvpn/crypto_openssl.c
-        src/openvpn/crypto.c
-        src/openvpn/otime.c
-        src/openvpn/packet_id.c
+        src/spotify/base64.c
+        src/spotify/crypto_mbedtls.c
+        src/spotify/crypto_openssl.c
+        src/spotify/crypto.c
+        src/spotify/otime.c
+        src/spotify/packet_id.c
         )
 
     target_sources(test_buffer PRIVATE
-        tests/unit_tests/openvpn/mock_get_random.c
+        tests/unit_tests/spotify/mock_get_random.c
         )
 
     target_sources(test_crypto PRIVATE
-        src/openvpn/crypto_mbedtls.c
-        src/openvpn/crypto_openssl.c
-        src/openvpn/crypto.c
-        src/openvpn/otime.c
-        src/openvpn/packet_id.c
-        src/openvpn/mtu.c
-        src/openvpn/mss.c
+        src/spotify/crypto_mbedtls.c
+        src/spotify/crypto_openssl.c
+        src/spotify/crypto.c
+        src/spotify/otime.c
+        src/spotify/packet_id.c
+        src/spotify/mtu.c
+        src/spotify/mss.c
         )
 
     target_sources(test_ssl PRIVATE
-            tests/unit_tests/openvpn/mock_management.c
-            tests/unit_tests/openvpn/mock_ssl_dependencies.c
-            tests/unit_tests/openvpn/mock_win32_execve.c
-            src/openvpn/argv.c
-            src/openvpn/base64.c
-            src/openvpn/crypto.c
-            src/openvpn/crypto_mbedtls.c
-            src/openvpn/crypto_openssl.c
-            src/openvpn/cryptoapi.c
-            src/openvpn/env_set.c
-            src/openvpn/mss.c
-            src/openvpn/mtu.c
-            src/openvpn/options_util.c
-            src/openvpn/otime.c
-            src/openvpn/packet_id.c
-            src/openvpn/run_command.c
-            src/openvpn/ssl_mbedtls.c
-            src/openvpn/ssl_openssl.c
-            src/openvpn/ssl_util.c
-            src/openvpn/ssl_verify_mbedtls.c
-            src/openvpn/ssl_verify_openssl.c
-            src/openvpn/xkey_helper.c
-            src/openvpn/xkey_provider.c
+            tests/unit_tests/spotify/mock_management.c
+            tests/unit_tests/spotify/mock_ssl_dependencies.c
+            tests/unit_tests/spotify/mock_win32_execve.c
+            src/spotify/argv.c
+            src/spotify/base64.c
+            src/spotify/crypto.c
+            src/spotify/crypto_mbedtls.c
+            src/spotify/crypto_openssl.c
+            src/spotify/cryptoapi.c
+            src/spotify/env_set.c
+            src/spotify/mss.c
+            src/spotify/mtu.c
+            src/spotify/options_util.c
+            src/spotify/otime.c
+            src/spotify/packet_id.c
+            src/spotify/run_command.c
+            src/spotify/ssl_mbedtls.c
+            src/spotify/ssl_openssl.c
+            src/spotify/ssl_util.c
+            src/spotify/ssl_verify_mbedtls.c
+            src/spotify/ssl_verify_openssl.c
+            src/spotify/xkey_helper.c
+            src/spotify/xkey_provider.c
     )
 
     target_sources(test_misc PRIVATE
-        tests/unit_tests/openvpn/mock_get_random.c
-        src/openvpn/options_util.c
-        src/openvpn/ssl_util.c
-        src/openvpn/list.c
+        tests/unit_tests/spotify/mock_get_random.c
+        src/spotify/options_util.c
+        src/spotify/ssl_util.c
+        src/spotify/list.c
         )
 
     target_sources(test_ncp PRIVATE
-        src/openvpn/crypto_mbedtls.c
-        src/openvpn/crypto_openssl.c
-        src/openvpn/crypto.c
-        src/openvpn/otime.c
-        src/openvpn/packet_id.c
-        src/openvpn/ssl_util.c
+        src/spotify/crypto_mbedtls.c
+        src/spotify/crypto_openssl.c
+        src/spotify/crypto.c
+        src/spotify/otime.c
+        src/spotify/packet_id.c
+        src/spotify/ssl_util.c
         src/compat/compat-strsep.c
         )
 
     target_sources(test_packet_id PRIVATE
-        tests/unit_tests/openvpn/mock_get_random.c
-        src/openvpn/otime.c
-        src/openvpn/packet_id.c
-        src/openvpn/reliable.c
-        src/openvpn/session_id.c
+        tests/unit_tests/spotify/mock_get_random.c
+        src/spotify/otime.c
+        src/spotify/packet_id.c
+        src/spotify/reliable.c
+        src/spotify/session_id.c
         )
 
     target_sources(test_pkt PRIVATE
-        tests/unit_tests/openvpn/mock_win32_execve.c
-        src/openvpn/argv.c
-        src/openvpn/base64.c
-        src/openvpn/crypto_mbedtls.c
-        src/openvpn/crypto_openssl.c
-        src/openvpn/crypto.c
-        src/openvpn/env_set.c
-        src/openvpn/otime.c
-        src/openvpn/packet_id.c
-        src/openvpn/reliable.c
-        src/openvpn/run_command.c
-        src/openvpn/session_id.c
-        src/openvpn/ssl_pkt.c
-        src/openvpn/tls_crypt.c
+        tests/unit_tests/spotify/mock_win32_execve.c
+        src/spotify/argv.c
+        src/spotify/base64.c
+        src/spotify/crypto_mbedtls.c
+        src/spotify/crypto_openssl.c
+        src/spotify/crypto.c
+        src/spotify/env_set.c
+        src/spotify/otime.c
+        src/spotify/packet_id.c
+        src/spotify/reliable.c
+        src/spotify/run_command.c
+        src/spotify/session_id.c
+        src/spotify/ssl_pkt.c
+        src/spotify/tls_crypt.c
         )
 
     target_sources(test_provider PRIVATE
-        tests/unit_tests/openvpn/mock_get_random.c
-        src/openvpn/xkey_provider.c
-        src/openvpn/xkey_helper.c
-        src/openvpn/base64.c
+        tests/unit_tests/spotify/mock_get_random.c
+        src/spotify/xkey_provider.c
+        src/spotify/xkey_helper.c
+        src/spotify/base64.c
         )
 
     target_sources(test_user_pass PRIVATE
-        tests/unit_tests/openvpn/mock_get_random.c
-        tests/unit_tests/openvpn/mock_win32_execve.c
-        src/openvpn/base64.c
-        src/openvpn/console.c
-        src/openvpn/env_set.c
-        src/openvpn/run_command.c
+        tests/unit_tests/spotify/mock_get_random.c
+        tests/unit_tests/spotify/mock_win32_execve.c
+        src/spotify/base64.c
+        src/spotify/console.c
+        src/spotify/env_set.c
+        src/spotify/run_command.c
         )
 
     if (TARGET test_argv)
         target_link_options(test_argv PRIVATE -Wl,--wrap=parse_line)
         target_sources(test_argv PRIVATE
-            tests/unit_tests/openvpn/mock_get_random.c
-            src/openvpn/argv.c
+            tests/unit_tests/spotify/mock_get_random.c
+            src/spotify/argv.c
             )
     endif ()
 
     if (TARGET test_cryptoapi)
         target_sources(test_cryptoapi PRIVATE
-            tests/unit_tests/openvpn/mock_get_random.c
-            tests/unit_tests/openvpn/cert_data.h
-            tests/unit_tests/openvpn/pkey_test_utils.c
-            src/openvpn/xkey_provider.c
-            src/openvpn/xkey_helper.c
-            src/openvpn/base64.c
+            tests/unit_tests/spotify/mock_get_random.c
+            tests/unit_tests/spotify/cert_data.h
+            tests/unit_tests/spotify/pkey_test_utils.c
+            src/spotify/xkey_provider.c
+            src/spotify/xkey_helper.c
+            src/spotify/base64.c
             )
     endif ()
 
@@ -831,12 +831,12 @@ if (BUILD_TESTING)
         target_link_options(test_networking PRIVATE -Wl,--wrap=parse_line)
         target_compile_options(test_networking PRIVATE -UNDEBUG)
         target_sources(test_networking PRIVATE
-            src/openvpn/networking_sitnl.c
-            src/openvpn/crypto_mbedtls.c
-            src/openvpn/crypto_openssl.c
-            src/openvpn/crypto.c
-            src/openvpn/otime.c
-            src/openvpn/packet_id.c
+            src/spotify/networking_sitnl.c
+            src/spotify/crypto_mbedtls.c
+            src/spotify/crypto_openssl.c
+            src/spotify/crypto.c
+            src/spotify/otime.c
+            src/spotify/packet_id.c
             )
     endif ()
 
@@ -847,16 +847,16 @@ if (BUILD_TESTING)
             -Wl,--wrap=buffer_write_file
             -Wl,--wrap=rand_bytes)
         target_sources(test_tls_crypt PRIVATE
-            tests/unit_tests/openvpn/mock_win32_execve.c
-            src/openvpn/argv.c
-            src/openvpn/base64.c
-            src/openvpn/crypto_mbedtls.c
-            src/openvpn/crypto_openssl.c
-            src/openvpn/crypto.c
-            src/openvpn/env_set.c
-            src/openvpn/otime.c
-            src/openvpn/packet_id.c
-            src/openvpn/run_command.c
+            tests/unit_tests/spotify/mock_win32_execve.c
+            src/spotify/argv.c
+            src/spotify/base64.c
+            src/spotify/crypto_mbedtls.c
+            src/spotify/crypto_openssl.c
+            src/spotify/crypto.c
+            src/spotify/env_set.c
+            src/spotify/otime.c
+            src/spotify/packet_id.c
+            src/spotify/run_command.c
             )
     endif ()
 
@@ -867,17 +867,17 @@ if (BUILD_TESTING)
             -DSOFTHSM2_UTIL_PATH=\"${SOFTHSM2_UTIL}\"
             )
         target_sources(test_pkcs11 PRIVATE
-            tests/unit_tests/openvpn/mock_get_random.c
-            tests/unit_tests/openvpn/pkey_test_utils.c
-            src/openvpn/argv.c
-            src/openvpn/base64.c
-            src/openvpn/env_set.c
-            src/openvpn/otime.c
-            src/openvpn/pkcs11.c
-            src/openvpn/pkcs11_openssl.c
-            src/openvpn/run_command.c
-            src/openvpn/xkey_helper.c
-            src/openvpn/xkey_provider.c
+            tests/unit_tests/spotify/mock_get_random.c
+            tests/unit_tests/spotify/pkey_test_utils.c
+            src/spotify/argv.c
+            src/spotify/base64.c
+            src/spotify/env_set.c
+            src/spotify/otime.c
+            src/spotify/pkcs11.c
+            src/spotify/pkcs11_openssl.c
+            src/spotify/run_command.c
+            src/spotify/xkey_helper.c
+            src/spotify/xkey_provider.c
             )
     endif ()
 

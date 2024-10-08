@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -149,10 +149,10 @@ in_addr_t
 dhcp_extract_router_msg(struct buffer *ipbuf)
 {
     struct dhcp_full *df = (struct dhcp_full *) BPTR(ipbuf);
-    const int optlen = BLEN(ipbuf) - (sizeof(struct openvpn_iphdr) + sizeof(struct openvpn_udphdr) + sizeof(struct dhcp));
+    const int optlen = BLEN(ipbuf) - (sizeof(struct spotify_iphdr) + sizeof(struct spotify_udphdr) + sizeof(struct dhcp));
 
     if (optlen >= 0
-        && df->ip.protocol == OPENVPN_IPPROTO_UDP
+        && df->ip.protocol == spotify_IPPROTO_UDP
         && df->udp.source == htons(BOOTPS_PORT)
         && df->udp.dest == htons(BOOTPC_PORT)
         && df->dhcp.op == BOOTREPLY)
@@ -166,9 +166,9 @@ dhcp_extract_router_msg(struct buffer *ipbuf)
             /* recompute the UDP checksum */
             df->udp.check = 0;
             df->udp.check = htons(ip_checksum(AF_INET, (uint8_t *)&df->udp,
-                                              sizeof(struct openvpn_udphdr) + sizeof(struct dhcp) + optlen,
+                                              sizeof(struct spotify_udphdr) + sizeof(struct dhcp) + optlen,
                                               (uint8_t *)&df->ip.saddr, (uint8_t *)&df->ip.daddr,
-                                              OPENVPN_IPPROTO_UDP));
+                                              spotify_IPPROTO_UDP));
 
             /* only return the extracted Router address if DHCPACK */
             if (message_type == DHCPACK)

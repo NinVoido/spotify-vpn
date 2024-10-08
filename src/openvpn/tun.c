@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -35,7 +35,7 @@
 
 #include "syshead.h"
 
-#include "openvpn.h"
+#include "spotify.h"
 #include "tun.h"
 #include "fdmisc.h"
 #include "common.h"
@@ -50,7 +50,7 @@
 #include "memdbg.h"
 
 #ifdef _WIN32
-#include "openvpn-msg.h"
+#include "spotify-msg.h"
 #endif
 
 #include <string.h>
@@ -629,8 +629,8 @@ check_addr_clash(const char *name,
 /*
  * Issue a warning if ip/netmask (on the virtual IP network) conflicts with
  * the settings on the local LAN.  This is designed to flag issues where
- * (for example) the OpenVPN server LAN is running on 192.168.1.x, but then
- * an OpenVPN client tries to connect from a public location that is also running
+ * (for example) the spotify server LAN is running on 192.168.1.x, but then
+ * an spotify client tries to connect from a public location that is also running
  * off of a router set to 192.168.1.x.
  */
 void
@@ -665,7 +665,7 @@ check_subnet_conflict(const in_addr_t ip,
 }
 
 void
-warn_on_use_of_common_subnets(openvpn_net_ctx_t *ctx)
+warn_on_use_of_common_subnets(spotify_net_ctx_t *ctx)
 {
     struct gc_arena gc = gc_new();
     struct route_gateway_info rgi;
@@ -841,7 +841,7 @@ init_tun(const char *dev,        /* --dev option */
          struct addrinfo *remote_public,
          const bool strict_warn,
          struct env_set *es,
-         openvpn_net_ctx_t *ctx,
+         spotify_net_ctx_t *ctx,
          struct tuntap *tt)
 {
     if (!tt)
@@ -1110,7 +1110,7 @@ create_arbitrary_remote( struct tuntap *tt )
  */
 static void
 do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
-                 const struct env_set *es, openvpn_net_ctx_t *ctx)
+                 const struct env_set *es, spotify_net_ctx_t *ctx)
 {
 #if !defined(TARGET_LINUX)
     struct argv argv = argv_new();
@@ -1143,7 +1143,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
 #elif defined(TARGET_SOLARIS)
     argv_printf(&argv, "%s %s inet6 unplumb", IFCONFIG_PATH, ifname);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, es, 0, NULL);
+    spotify_execve_check(&argv, es, 0, NULL);
 
     if (tt->type == DEV_TYPE_TUN)
     {
@@ -1159,7 +1159,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
         argv_printf(&argv, "%s %s inet6 plumb up", IFCONFIG_PATH, ifname);
         argv_msg(M_INFO, &argv);
 
-        if (!openvpn_execve_check(&argv, es, 0,
+        if (!spotify_execve_check(&argv, es, 0,
                                   "Solaris ifconfig IPv6 (prepare) failed"))
         {
             solaris_error_close(tt, es, ifname, true);
@@ -1179,7 +1179,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
     }
     argv_msg(M_INFO, &argv);
 
-    if (!openvpn_execve_check(&argv, es, 0, "Solaris ifconfig IPv6 failed"))
+    if (!spotify_execve_check(&argv, es, 0, "Solaris ifconfig IPv6 failed"))
     {
         solaris_error_close(tt, es, ifname, true);
     }
@@ -1189,7 +1189,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
         argv_printf(&argv, "%s %s inet6 mtu %d", IFCONFIG_PATH,
                     ifname, tun_mtu);
         argv_msg(M_INFO, &argv);
-        openvpn_execve_check(&argv, es, 0, "Solaris ifconfig IPv6 mtu failed");
+        spotify_execve_check(&argv, es, 0, "Solaris ifconfig IPv6 mtu failed");
     }
 #elif defined(TARGET_OPENBSD) || defined(TARGET_NETBSD) \
     || defined(TARGET_DARWIN) || defined(TARGET_FREEBSD) \
@@ -1198,7 +1198,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
                 ifconfig_ipv6_local, tt->netbits_ipv6, tun_mtu);
     argv_msg(M_INFO, &argv);
 
-    openvpn_execve_check(&argv, es, S_FATAL,
+    spotify_execve_check(&argv, es, S_FATAL,
                          "generic BSD ifconfig inet6 failed");
 
 #if defined(TARGET_FREEBSD) && __FreeBSD_version >= 1200000 \
@@ -1210,7 +1210,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
      *
      * The "is this interface already up?" test is a non-zero time window
      * which we manage to hit with our ifconfig often enough to cause
-     * frequent fails in the openvpn test environment.
+     * frequent fails in the spotify test environment.
      *
      * Thus: assume that the system might interfere, wait for things to
      * settle (it's a very short time window), and remove -ifdisable again.
@@ -1221,7 +1221,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
     argv_printf(&argv, "%s %s inet6 -ifdisabled", IFCONFIG_PATH, ifname);
     argv_msg(M_INFO, &argv);
 
-    openvpn_execve_check(&argv, es, S_FATAL,
+    spotify_execve_check(&argv, es, S_FATAL,
                          "FreeBSD BSD 'ifconfig inet6 -ifdisabled' failed");
 #endif
 
@@ -1234,7 +1234,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
     es = env_set_create(NULL);
     env_set_add(es, "ODMDIR=/etc/objrepos");
 
-    openvpn_execve_check(&argv, es, S_FATAL,
+    spotify_execve_check(&argv, es, S_FATAL,
                          "generic BSD ifconfig inet6 failed");
 
     env_set_destroy(es);
@@ -1309,7 +1309,7 @@ do_ifconfig_ipv6(struct tuntap *tt, const char *ifname, int tun_mtu,
  */
 static void
 do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
-                 const struct env_set *es, openvpn_net_ctx_t *ctx)
+                 const struct env_set *es, spotify_net_ctx_t *ctx)
 {
 #if !defined(_WIN32) && !defined(TARGET_ANDROID)
     /*
@@ -1377,7 +1377,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
                     ifconfig_local, ifconfig_remote_netmask, tun_mtu);
 
         argv_msg(M_INFO, &argv);
-        if (!openvpn_execve_check(&argv, es, 0, "Solaris ifconfig phase-1 failed"))
+        if (!spotify_execve_check(&argv, es, 0, "Solaris ifconfig phase-1 failed"))
         {
             solaris_error_close(tt, es, ifname, false);
         }
@@ -1399,7 +1399,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
     }
 
     argv_msg(M_INFO, &argv);
-    if (!openvpn_execve_check(&argv, es, 0, "Solaris ifconfig phase-2 failed"))
+    if (!spotify_execve_check(&argv, es, 0, "Solaris ifconfig phase-2 failed"))
     {
         solaris_error_close(tt, es, ifname, false);
     }
@@ -1450,7 +1450,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
                     ifconfig_remote_netmask, tun_mtu);
     }
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, es, S_FATAL, "OpenBSD ifconfig failed");
+    spotify_execve_check(&argv, es, S_FATAL, "OpenBSD ifconfig failed");
 
     /* Add a network route for the local tun interface */
     if (!tun_p2p && tt->type == DEV_TYPE_TUN)
@@ -1492,7 +1492,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
                     ifconfig_remote_netmask, tun_mtu);
     }
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, es, S_FATAL, "NetBSD ifconfig failed");
+    spotify_execve_check(&argv, es, S_FATAL, "NetBSD ifconfig failed");
 
     /* Add a network route for the local tun interface */
     if (!tun_p2p && tt->type == DEV_TYPE_TUN)
@@ -1513,7 +1513,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
 
     argv_printf(&argv, "%s %s delete", IFCONFIG_PATH, ifname);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, es, 0, NULL);
+    spotify_execve_check(&argv, es, 0, NULL);
     msg(M_INFO,
         "NOTE: Tried to delete pre-existing tun/tap instance -- No Problem if failure");
 
@@ -1539,7 +1539,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
     }
 
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, es, S_FATAL, "Mac OS X ifconfig failed");
+    spotify_execve_check(&argv, es, S_FATAL, "Mac OS X ifconfig failed");
 
     /* Add a network route for the local tun interface */
     if (!tun_p2p && tt->type == DEV_TYPE_TUN)
@@ -1570,7 +1570,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
     }
 
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, es, S_FATAL, "FreeBSD ifconfig failed");
+    spotify_execve_check(&argv, es, S_FATAL, "FreeBSD ifconfig failed");
 
 #elif defined(TARGET_AIX)
     {
@@ -1588,7 +1588,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
                     ifname, ifconfig_local, ifconfig_remote_netmask, tun_mtu);
 
         argv_msg(M_INFO, &argv);
-        openvpn_execve_check(&argv, aix_es, S_FATAL, "AIX ifconfig failed");
+        spotify_execve_check(&argv, aix_es, S_FATAL, "AIX ifconfig failed");
 
         env_set_destroy(aix_es);
     }
@@ -1644,7 +1644,7 @@ do_ifconfig_ipv4(struct tuntap *tt, const char *ifname, int tun_mtu,
 /* execute the ifconfig command through the shell */
 void
 do_ifconfig(struct tuntap *tt, const char *ifname, int tun_mtu,
-            const struct env_set *es, openvpn_net_ctx_t *ctx)
+            const struct env_set *es, spotify_net_ctx_t *ctx)
 {
     msg(D_LOW, "do_ifconfig, ipv4=%d, ipv6=%d", tt->did_ifconfig_setup,
         tt->did_ifconfig_ipv6_setup);
@@ -1653,7 +1653,7 @@ do_ifconfig(struct tuntap *tt, const char *ifname, int tun_mtu,
     if (management)
     {
         management_set_state(management,
-                             OPENVPN_STATE_ASSIGN_IP,
+                             spotify_STATE_ASSIGN_IP,
                              NULL,
                              &tt->local,
                              &tt->local_ipv6,
@@ -1677,7 +1677,7 @@ do_ifconfig(struct tuntap *tt, const char *ifname, int tun_mtu,
 }
 
 static void
-undo_ifconfig_ipv4(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+undo_ifconfig_ipv4(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
 #if defined(TARGET_LINUX)
     int netbits = netmask_to_netbits2(tt->remote_netmask);
@@ -1707,7 +1707,7 @@ undo_ifconfig_ipv4(struct tuntap *tt, openvpn_net_ctx_t *ctx)
     argv_printf(&argv, "%s %s %s -alias", IFCONFIG_PATH,
                 tt->actual_name, ifconfig_local);
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, NULL, 0, "FreeBSD ip addr del failed");
+    spotify_execve_check(&argv, NULL, 0, "FreeBSD ip addr del failed");
 
     argv_free(&argv);
     gc_free(&gc);
@@ -1716,7 +1716,7 @@ undo_ifconfig_ipv4(struct tuntap *tt, openvpn_net_ctx_t *ctx)
 }
 
 static void
-undo_ifconfig_ipv6(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+undo_ifconfig_ipv6(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
 #if defined(TARGET_LINUX)
     if (net_addr_v6_del(ctx, tt->actual_name, &tt->local_ipv6,
@@ -1733,7 +1733,7 @@ undo_ifconfig_ipv6(struct tuntap *tt, openvpn_net_ctx_t *ctx)
                 tt->actual_name, ifconfig_ipv6_local, tt->netbits_ipv6);
 
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, NULL, 0, "FreeBSD ip -6 addr del failed");
+    spotify_execve_check(&argv, NULL, 0, "FreeBSD ip -6 addr del failed");
 
     argv_free(&argv);
     gc_free(&gc);
@@ -1742,7 +1742,7 @@ undo_ifconfig_ipv6(struct tuntap *tt, openvpn_net_ctx_t *ctx)
 }
 
 void
-undo_ifconfig(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+undo_ifconfig(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     if (tt->backend_driver != DRIVER_NULL && tt->backend_driver != DRIVER_AFUNIX)
     {
@@ -1818,11 +1818,11 @@ write_tun_header(struct tuntap *tt, uint8_t *buf, int len)
     {
         u_int32_t type;
         struct iovec iv[2];
-        struct openvpn_iphdr *iph;
+        struct spotify_iphdr *iph;
 
-        iph = (struct openvpn_iphdr *) buf;
+        iph = (struct spotify_iphdr *) buf;
 
-        if (OPENVPN_IPH_GET_VER(iph->version_len) == 6)
+        if (spotify_IPH_GET_VER(iph->version_len) == 6)
         {
             type = htonl(AF_INET6);
         }
@@ -1962,7 +1962,7 @@ open_tun_generic(const char *dev, const char *dev_type, const char *dev_node,
 #if defined(TARGET_LINUX) || defined(TARGET_FREEBSD)
 static void
 open_tun_dco_generic(const char *dev, const char *dev_type,
-                     struct tuntap *tt, openvpn_net_ctx_t *ctx)
+                     struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     char dynamic_name[256];
     bool dynamic_opened = false;
@@ -2047,7 +2047,7 @@ close_tun_generic(struct tuntap *tt)
 #if defined (TARGET_ANDROID)
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
 #define ANDROID_TUNNAME "vpnservice-tun"
     struct user_pass up;
@@ -2115,7 +2115,7 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
 }
 
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -2145,7 +2145,7 @@ read_tun(struct tuntap *tt, uint8_t *buf, int len)
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     struct ifreq ifr;
 
@@ -2260,7 +2260,7 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     ASSERT(0);
 }
@@ -2277,7 +2277,7 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
 void
 tuncfg(const char *dev, const char *dev_type, const char *dev_node,
        int persist_mode, const char *username, const char *groupname,
-       const struct tuntap_options *options, openvpn_net_ctx_t *ctx)
+       const struct tuntap_options *options, spotify_net_ctx_t *ctx)
 {
     struct tuntap *tt;
 
@@ -2324,7 +2324,7 @@ tuncfg(const char *dev, const char *dev_type, const char *dev_node,
 #endif /* ENABLE_FEATURE_TUN_PERSIST */
 
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -2358,7 +2358,7 @@ read_tun(struct tuntap *tt, uint8_t *buf, int len)
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     int if_fd = -1, ip_muxid = -1, arp_muxid = -1, arp_fd = -1, ppa = -1;
     struct lifreq ifr;
@@ -2593,7 +2593,7 @@ solaris_close_tun(struct tuntap *tt)
         argv_printf( &argv, "%s %s inet6 unplumb",
                      IFCONFIG_PATH, tt->actual_name );
         argv_msg(M_INFO, &argv);
-        openvpn_execve_check(&argv, NULL, 0, "Solaris ifconfig inet6 unplumb failed");
+        spotify_execve_check(&argv, NULL, 0, "Solaris ifconfig inet6 unplumb failed");
         argv_free(&argv);
     }
 
@@ -2641,7 +2641,7 @@ solaris_close_tun(struct tuntap *tt)
  * Close TUN device.
  */
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -2664,7 +2664,7 @@ solaris_error_close(struct tuntap *tt, const struct env_set *es,
         argv_printf( &argv, "%s %s inet6 unplumb",
                      IFCONFIG_PATH, actual );
         argv_msg(M_INFO, &argv);
-        openvpn_execve_check(&argv, es, 0, "Solaris ifconfig inet6 unplumb failed");
+        spotify_execve_check(&argv, es, 0, "Solaris ifconfig inet6 unplumb failed");
     }
 
     argv_printf(&argv,
@@ -2673,7 +2673,7 @@ solaris_error_close(struct tuntap *tt, const struct env_set *es,
                 actual);
 
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, es, 0, "Solaris ifconfig unplumb failed");
+    spotify_execve_check(&argv, es, 0, "Solaris ifconfig unplumb failed");
     close_tun(tt, NULL);
     msg(M_FATAL, "Solaris ifconfig failed");
     argv_free(&argv);
@@ -2703,7 +2703,7 @@ read_tun(struct tuntap *tt, uint8_t *buf, int len)
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     open_tun_generic(dev, dev_type, dev_node, tt);
 
@@ -2738,7 +2738,7 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
  */
 
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -2762,7 +2762,7 @@ close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
     close_tun_generic(tt);
 
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, NULL, 0, "OpenBSD 'destroy tun interface' failed (non-critical)");
+    spotify_execve_check(&argv, NULL, 0, "OpenBSD 'destroy tun interface' failed (non-critical)");
 
     free(tt);
     argv_free(&argv);
@@ -2793,12 +2793,12 @@ read_tun(struct tuntap *tt, uint8_t *buf, int len)
  * Note: --dev tap3 works *if* the interface is created externally by
  *         "ifconfig tap3 create"
  *         (and for devices beyond tap3, "mknod /dev/tapN c ...")
- *       but we do not have code to do that inside OpenVPN
+ *       but we do not have code to do that inside spotify
  */
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     /* on NetBSD, tap (but not tun) devices are opened by
      * opening /dev/tap and then querying the system about the
@@ -2847,12 +2847,12 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
     }
 }
 
-/* the current way OpenVPN handles tun devices on NetBSD leads to
+/* the current way spotify handles tun devices on NetBSD leads to
  * lingering tunX interfaces after close -> for a full cleanup, they
  * need to be explicitly destroyed
  */
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -2876,7 +2876,7 @@ close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
     close_tun_generic(tt);
 
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, NULL, 0, "NetBSD 'destroy tun interface' failed (non-critical)");
+    spotify_execve_check(&argv, NULL, 0, "NetBSD 'destroy tun interface' failed (non-critical)");
 
     free(tt);
     argv_free(&argv);
@@ -2902,11 +2902,11 @@ write_tun(struct tuntap *tt, uint8_t *buf, int len)
     {
         u_int32_t type;
         struct iovec iv[2];
-        struct openvpn_iphdr *iph;
+        struct spotify_iphdr *iph;
 
-        iph = (struct openvpn_iphdr *) buf;
+        iph = (struct spotify_iphdr *) buf;
 
-        if (OPENVPN_IPH_GET_VER(iph->version_len) == 6)
+        if (spotify_IPH_GET_VER(iph->version_len) == 6)
         {
             type = htonl(AF_INET6);
         }
@@ -2966,7 +2966,7 @@ freebsd_modify_read_write_return(int len)
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     if (tun_dco_enabled(tt))
     {
@@ -3004,11 +3004,11 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
  *          unloaded, or until removed with the ifconfig(8) command."
  *          (verified for FreeBSD 6.3, 7.4, 8.2 and 9, same for tap(4))
  *
- * so, to avoid lingering tun/tap interfaces after OpenVPN quits,
+ * so, to avoid lingering tun/tap interfaces after spotify quits,
  * we need to call "ifconfig ... destroy" for cleanup
  */
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -3031,7 +3031,7 @@ close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
     close_tun_generic(tt);
 
     argv_msg(M_INFO, &argv);
-    openvpn_execve_check(&argv, NULL, 0,
+    spotify_execve_check(&argv, NULL, 0,
                          "FreeBSD 'destroy tun interface' failed (non-critical)");
 
     free(tt);
@@ -3109,7 +3109,7 @@ dragonfly_modify_read_write_return(int len)
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     open_tun_generic(dev, dev_type, dev_node, tt);
 
@@ -3125,7 +3125,7 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
 }
 
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -3338,7 +3338,7 @@ open_darwin_utun(const char *dev, const char *dev_type, const char *dev_node, st
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
 #ifdef HAVE_NET_IF_UTUN_H
     /* If dev_node does not start start with utun assume regular tun/tap */
@@ -3392,7 +3392,7 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
 }
 
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -3407,7 +3407,7 @@ close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
         argv_printf(&argv, "%s delete -inet6 %s",
                     ROUTE_PATH, ifconfig_ipv6_local );
         argv_msg(M_INFO, &argv);
-        openvpn_execve_check(&argv, NULL, 0, "MacOS X 'remove inet6 route' failed (non-critical)");
+        spotify_execve_check(&argv, NULL, 0, "MacOS X 'remove inet6 route' failed (non-critical)");
     }
 
     close_tun_generic(tt);
@@ -3446,7 +3446,7 @@ read_tun(struct tuntap *tt, uint8_t *buf, int len)
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     char tunname[256];
     char dynamic_name[20];
@@ -3509,7 +3509,7 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
         argv_printf(&argv, "%s %s create", IFCONFIG_PATH, dev);
         argv_msg(M_INFO, &argv);
         env_set_add( es, "ODMDIR=/etc/objrepos" );
-        openvpn_execve_check(&argv, es, S_FATAL, "AIX 'create tun interface' failed");
+        spotify_execve_check(&argv, es, S_FATAL, "AIX 'create tun interface' failed");
         env_set_destroy(es);
         argv_free(&argv);
     }
@@ -3535,7 +3535,7 @@ open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tun
 /* tap devices need to be manually destroyed on AIX
  */
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -3558,7 +3558,7 @@ close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
     close_tun_generic(tt);
     argv_msg(M_INFO, &argv);
     env_set_add( es, "ODMDIR=/etc/objrepos" );
-    openvpn_execve_check(&argv, es, 0, "AIX 'destroy tap interface' failed (non-critical)");
+    spotify_execve_check(&argv, es, 0, "AIX 'destroy tap interface' failed (non-critical)");
 
     free(tt);
     env_set_destroy(es);
@@ -5289,7 +5289,7 @@ exec_command(const char *prefix, const struct argv *a, int n, int msglevel)
         management_sleep(0);
         netcmd_semaphore_lock();
         argv_msg_prefix(M_INFO, a, prefix);
-        status = openvpn_execve_check(a, NULL, 0, "ERROR: command failed");
+        status = spotify_execve_check(a, NULL, 0, "ERROR: command failed");
         netcmd_semaphore_release();
         if (status)
         {
@@ -5319,13 +5319,13 @@ ipconfig_register_dns(const struct env_set *es)
                 get_win_sys_path(),
                 WIN_IPCONFIG_PATH_SUFFIX);
     argv_msg(D_TUNTAP_INFO, &argv);
-    openvpn_execve_check(&argv, es, 0, err);
+    spotify_execve_check(&argv, es, 0, err);
 
     argv_printf(&argv, "%s%s /registerdns",
                 get_win_sys_path(),
                 WIN_IPCONFIG_PATH_SUFFIX);
     argv_msg(D_TUNTAP_INFO, &argv);
-    openvpn_execve_check(&argv, es, 0, err);
+    spotify_execve_check(&argv, es, 0, err);
     argv_free(&argv);
 
     netcmd_semaphore_release();
@@ -5875,8 +5875,8 @@ write_dhcp_str(struct buffer *buf, const int type, const char *str, bool *error)
  *  - at start the length of the entire option is given
  *  - each subdomain is preceded by its length
  *  - each searchdomain is separated by a NUL character
- * e.g. if you want "openvpn.net" and "duckduckgo.com" then you end up with
- *  0x1D  0x7 openvpn 0x3 net 0x00 0x0A duckduckgo 0x3 com 0x00
+ * e.g. if you want "spotify.net" and "duckduckgo.com" then you end up with
+ *  0x1D  0x7 spotify 0x3 net 0x00 0x0A duckduckgo 0x3 com 0x00
  */
 static void
 write_dhcp_search_str(struct buffer *buf, const int type, const char *const *str_array,
@@ -5999,7 +5999,7 @@ fork_dhcp_action(struct tuntap *tt)
         const int verb = 3;
         const int pre_sleep = 1;
 
-        buf_printf(&cmd, "openvpn --verb %d --tap-sleep %d", verb, pre_sleep);
+        buf_printf(&cmd, "spotify --verb %d --tap-sleep %d", verb, pre_sleep);
         if (tt->options.dhcp_pre_release)
         {
             buf_printf(&cmd, " --dhcp-pre-release");
@@ -6097,7 +6097,7 @@ fork_register_dns_action(struct tuntap *tt)
         struct buffer cmd = alloc_buf_gc(256, &gc);
         const int verb = 3;
 
-        buf_printf(&cmd, "openvpn --verb %d --register-dns --rdns-internal", verb);
+        buf_printf(&cmd, "spotify --verb %d --register-dns --rdns-internal", verb);
         fork_to_self(BSTR(&cmd));
         gc_free(&gc);
     }
@@ -6355,7 +6355,7 @@ wintun_register_ring_buffer(struct tuntap *tt, const char *device_guid)
                 case ERROR_ACCESS_DENIED:
                     msg(M_FATAL, "ERROR:  Wintun requires SYSTEM privileges and therefore "
                         "should be used with interactive service. If you want to "
-                        "use openvpn from command line, you need to do SYSTEM "
+                        "use spotify from command line, you need to do SYSTEM "
                         "elevation yourself (for example with psexec).");
                     break;
 
@@ -6770,7 +6770,7 @@ tuntap_post_open(struct tuntap *tt, const char *device_guid)
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     if ((tt->options.dhcp_options & DHCP_OPTIONS_DHCP_REQUIRED)
         && tt->backend_driver != WINDOWS_DRIVER_TAP_WINDOWS6)
@@ -6944,7 +6944,7 @@ close_tun_handle(struct tuntap *tt)
 }
 
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 
@@ -7097,13 +7097,13 @@ ipset2ascii_all(struct gc_arena *gc)
 
 void
 open_tun(const char *dev, const char *dev_type, const char *dev_node, struct tuntap *tt,
-         openvpn_net_ctx_t *ctx)
+         spotify_net_ctx_t *ctx)
 {
     open_tun_generic(dev, dev_type, dev_node, tt);
 }
 
 void
-close_tun(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     ASSERT(tt);
 

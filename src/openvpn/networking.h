@@ -32,12 +32,12 @@ struct context;
 #elif ENABLE_IPROUTE
 #include "networking_iproute2.h"
 #elif defined(TARGET_FREEBSD)
-typedef void *openvpn_net_ctx_t;
-typedef char openvpn_net_iface_t;
+typedef void *spotify_net_ctx_t;
+typedef char spotify_net_iface_t;
 #else  /* ifdef ENABLE_SITNL */
 /* define mock types to ensure code builds on any platform */
-typedef void *openvpn_net_ctx_t;
-typedef void *openvpn_net_iface_t;
+typedef void *spotify_net_ctx_t;
+typedef void *spotify_net_iface_t;
 #endif /* ifdef ENABLE_SITNL */
 
 /* Only the iproute2 backend implements these functions,
@@ -45,7 +45,7 @@ typedef void *openvpn_net_iface_t;
  */
 #if !defined(ENABLE_IPROUTE)
 static inline int
-net_ctx_init(struct context *c, openvpn_net_ctx_t *ctx)
+net_ctx_init(struct context *c, spotify_net_ctx_t *ctx)
 {
     (void)c;
     (void)ctx;
@@ -54,13 +54,13 @@ net_ctx_init(struct context *c, openvpn_net_ctx_t *ctx)
 }
 
 static inline void
-net_ctx_reset(openvpn_net_ctx_t *ctx)
+net_ctx_reset(spotify_net_ctx_t *ctx)
 {
     (void)ctx;
 }
 
 static inline void
-net_ctx_free(openvpn_net_ctx_t *ctx)
+net_ctx_free(spotify_net_ctx_t *ctx)
 {
     (void)ctx;
 }
@@ -71,26 +71,26 @@ net_ctx_free(openvpn_net_ctx_t *ctx)
 /**
  * Initialize the platform specific context object
  *
- * @param c         openvpn generic context
+ * @param c         spotify generic context
  * @param ctx       the implementation specific context to initialize
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_ctx_init(struct context *c, openvpn_net_ctx_t *ctx);
+int net_ctx_init(struct context *c, spotify_net_ctx_t *ctx);
 
 /**
  * Release resources allocated by the internal garbage collector
  *
  * @param ctx       the implementation specific context
  */
-void net_ctx_reset(openvpn_net_ctx_t *ctx);
+void net_ctx_reset(spotify_net_ctx_t *ctx);
 
 /**
  * Release all resources allocated within the platform specific context object
  *
  * @param ctx       the implementation specific context to release
  */
-void net_ctx_free(openvpn_net_ctx_t *ctx);
+void net_ctx_free(spotify_net_ctx_t *ctx);
 
 /**
  * Add a new interface
@@ -102,7 +102,7 @@ void net_ctx_free(openvpn_net_ctx_t *ctx);
  *
  * @return          0 on success, negative error code on error
  */
-int net_iface_new(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
+int net_iface_new(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface,
                   const char *type, void *arg);
 
 /**
@@ -114,7 +114,7 @@ int net_iface_new(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_iface_type(openvpn_net_ctx_t *ctx, const char *iface,
+int net_iface_type(spotify_net_ctx_t *ctx, const char *iface,
                    char type[IFACE_TYPE_LEN_MAX]);
 
 /**
@@ -124,7 +124,7 @@ int net_iface_type(openvpn_net_ctx_t *ctx, const char *iface,
  * @param iface     interface to delete
  * @return int 0 on success, negative error code on error
  */
-int net_iface_del(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface);
+int net_iface_del(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface);
 
 /**
  * Bring interface up or down.
@@ -135,7 +135,7 @@ int net_iface_del(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface);
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_iface_up(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
+int net_iface_up(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface,
                  bool up);
 
 /**
@@ -147,8 +147,8 @@ int net_iface_up(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_iface_mtu_set(openvpn_net_ctx_t *ctx,
-                      const openvpn_net_iface_t *iface, uint32_t mtu);
+int net_iface_mtu_set(spotify_net_ctx_t *ctx,
+                      const spotify_net_iface_t *iface, uint32_t mtu);
 
 /**
  * Set the Link Layer (Ethernet) address of the TAP interface
@@ -159,7 +159,7 @@ int net_iface_mtu_set(openvpn_net_ctx_t *ctx,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_addr_ll_set(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
+int net_addr_ll_set(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface,
                     uint8_t *addr);
 
 /**
@@ -172,7 +172,7 @@ int net_addr_ll_set(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_addr_v4_add(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
+int net_addr_v4_add(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface,
                     const in_addr_t *addr, int prefixlen);
 
 /**
@@ -186,7 +186,7 @@ int net_addr_v4_add(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
  * @return          0 on success, a negative error code otherwise
  */
 
-int net_addr_v6_add(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
+int net_addr_v6_add(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface,
                     const struct in6_addr *addr, int prefixlen);
 
 /**
@@ -198,7 +198,7 @@ int net_addr_v6_add(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_addr_v4_del(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
+int net_addr_v4_del(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface,
                     const in_addr_t *addr, int prefixlen);
 
 /**
@@ -210,7 +210,7 @@ int net_addr_v4_del(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_addr_v6_del(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
+int net_addr_v6_del(spotify_net_ctx_t *ctx, const spotify_net_iface_t *iface,
                     const struct in6_addr *addr, int prefixlen);
 
 /**
@@ -223,8 +223,8 @@ int net_addr_v6_del(openvpn_net_ctx_t *ctx, const openvpn_net_iface_t *iface,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_addr_ptp_v4_add(openvpn_net_ctx_t *ctx,
-                        const openvpn_net_iface_t *iface,
+int net_addr_ptp_v4_add(spotify_net_ctx_t *ctx,
+                        const spotify_net_iface_t *iface,
                         const in_addr_t *local, const in_addr_t *remote);
 
 /**
@@ -237,8 +237,8 @@ int net_addr_ptp_v4_add(openvpn_net_ctx_t *ctx,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_addr_ptp_v4_del(openvpn_net_ctx_t *ctx,
-                        const openvpn_net_iface_t *iface,
+int net_addr_ptp_v4_del(spotify_net_ctx_t *ctx,
+                        const spotify_net_iface_t *iface,
                         const in_addr_t *local, const in_addr_t *remote);
 
 #endif /* ENABLE_SITNL || ENABLE_IPROUTE */
@@ -258,9 +258,9 @@ int net_addr_ptp_v4_del(openvpn_net_ctx_t *ctx,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_route_v4_add(openvpn_net_ctx_t *ctx, const in_addr_t *dst,
+int net_route_v4_add(spotify_net_ctx_t *ctx, const in_addr_t *dst,
                      int prefixlen, const in_addr_t *gw,
-                     const openvpn_net_iface_t *iface, uint32_t table,
+                     const spotify_net_iface_t *iface, uint32_t table,
                      int metric);
 
 /**
@@ -277,9 +277,9 @@ int net_route_v4_add(openvpn_net_ctx_t *ctx, const in_addr_t *dst,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_route_v6_add(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
+int net_route_v6_add(spotify_net_ctx_t *ctx, const struct in6_addr *dst,
                      int prefixlen, const struct in6_addr *gw,
-                     const openvpn_net_iface_t *iface,
+                     const spotify_net_iface_t *iface,
                      uint32_t table, int metric);
 
 /**
@@ -296,9 +296,9 @@ int net_route_v6_add(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_route_v4_del(openvpn_net_ctx_t *ctx, const in_addr_t *dst,
+int net_route_v4_del(spotify_net_ctx_t *ctx, const in_addr_t *dst,
                      int prefixlen, const in_addr_t *gw,
-                     const openvpn_net_iface_t *iface, uint32_t table,
+                     const spotify_net_iface_t *iface, uint32_t table,
                      int metric);
 
 /**
@@ -315,9 +315,9 @@ int net_route_v4_del(openvpn_net_ctx_t *ctx, const in_addr_t *dst,
  *
  * @return          0 on success, a negative error code otherwise
  */
-int net_route_v6_del(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
+int net_route_v6_del(spotify_net_ctx_t *ctx, const struct in6_addr *dst,
                      int prefixlen, const struct in6_addr *gw,
-                     const openvpn_net_iface_t *iface,
+                     const spotify_net_iface_t *iface,
                      uint32_t table, int metric);
 
 #endif /* ENABLE_SITNL || ENABLE_IPROUTE || TARGET_FREEBSD */
@@ -335,8 +335,8 @@ int net_route_v6_del(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
  *
  * @return              0 on success, a negative error code otherwise
  */
-int net_route_v4_best_gw(openvpn_net_ctx_t *ctx, const in_addr_t *dst,
-                         in_addr_t *best_gw, openvpn_net_iface_t *best_iface);
+int net_route_v4_best_gw(spotify_net_ctx_t *ctx, const in_addr_t *dst,
+                         in_addr_t *best_gw, spotify_net_iface_t *best_iface);
 
 /**
  * Retrieve the gateway and outgoing interface for the specified IPv6
@@ -349,9 +349,9 @@ int net_route_v4_best_gw(openvpn_net_ctx_t *ctx, const in_addr_t *dst,
  *
  * @return              0 on success, a negative error code otherwise
  */
-int net_route_v6_best_gw(openvpn_net_ctx_t *ctx, const struct in6_addr *dst,
+int net_route_v6_best_gw(spotify_net_ctx_t *ctx, const struct in6_addr *dst,
                          struct in6_addr *best_gw,
-                         openvpn_net_iface_t *best_iface);
+                         spotify_net_iface_t *best_iface);
 
 #endif /* ENABLE_SITNL || ENABLE_IPROUTE */
 

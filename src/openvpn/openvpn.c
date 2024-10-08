@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -48,7 +48,7 @@ process_signal_p2p(struct context *c)
 
 /**************************************************************************/
 /**
- * Main event loop for OpenVPN in client mode, where only one VPN tunnel
+ * Main event loop for spotify in client mode, where only one VPN tunnel
  * is active.
  * @ingroup eventloop
  *
@@ -139,10 +139,10 @@ uninit_early(struct context *c)
 
 /**************************************************************************/
 /**
- * OpenVPN's main init-run-cleanup loop.
+ * spotify's main init-run-cleanup loop.
  * @ingroup eventloop
  *
- * This function contains the two outer OpenVPN loops.  Its structure is
+ * This function contains the two outer spotify loops.  Its structure is
  * as follows:
  *  - Once-per-process initialization.
  *  - Outer loop, run at startup and then once per \c SIGHUP:
@@ -159,7 +159,7 @@ uninit_early(struct context *c)
  */
 static
 int
-openvpn_main(int argc, char *argv[])
+spotify_main(int argc, char *argv[])
 {
     struct context c;
 
@@ -220,7 +220,7 @@ openvpn_main(int argc, char *argv[])
             /* plugins may contribute options configuration */
             init_verb_mute(&c, IVM_LEVEL_1);
             init_plugins(&c);
-            open_plugins(&c, true, OPENVPN_PLUGIN_INIT_PRE_CONFIG_PARSE);
+            open_plugins(&c, true, spotify_PLUGIN_INIT_PRE_CONFIG_PARSE);
 #endif
 
             /* Early initialisation that need to happen before option
@@ -354,7 +354,7 @@ openvpn_main(int argc, char *argv[])
     /* uninitialize program-wide statics */
     uninit_static();
 
-    openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+    spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     return 0;                               /* NOTREACHED */
 }
 
@@ -378,7 +378,7 @@ wmain(int argc, wchar_t *wargv[])
         WideCharToMultiByte(CP_UTF8, 0, wargv[i], -1, argv[i], n, NULL, NULL);
     }
 
-    ret = openvpn_main(argc, argv);
+    ret = spotify_main(argc, argv);
 
     for (i = 0; i < argc; i++)
     {
@@ -392,6 +392,6 @@ wmain(int argc, wchar_t *wargv[])
 int
 main(int argc, char *argv[])
 {
-    return openvpn_main(argc, argv);
+    return spotify_main(argc, argv);
 }
 #endif /* ifdef _WIN32 */

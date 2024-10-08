@@ -3,11 +3,11 @@
 # This test performs a TLS negotiation once every 10 seconds,
 # and will terminate after 2 minutes.
 #
-# From the root directory of the OpenVPN distribution,
-# after openvpn has been built, run:
+# From the root directory of the spotify distribution,
+# after spotify has been built, run:
 #
-#  ./openvpn --config sample-config-files/loopback-client  (In one window) 
-#  ./openvpn --config sample-config-files/loopback-server  (Simultaneously in another window) 
+#  ./spotify --config sample-config-files/loopback-client  (In one window) 
+#  ./spotify --config sample-config-files/loopback-server  (Simultaneously in another window) 
 #
 # this config file has the crypto material (cert, key, ..) "inlined",
 # while the "server" config has it as external reference - test both paths
@@ -98,11 +98,11 @@ Certificate:
         Version: 3 (0x2)
         Serial Number: 2 (0x2)
         Signature Algorithm: sha256WithRSAEncryption
-        Issuer: C=KG, ST=NA, L=BISHKEK, O=OpenVPN-TEST/emailAddress=me@myhost.mydomain
+        Issuer: C=KG, ST=NA, L=BISHKEK, O=spotify-TEST/emailAddress=me@myhost.mydomain
         Validity
             Not Before: Nov  7 12:23:39 2023 GMT
             Not After : Nov  4 12:23:39 2033 GMT
-        Subject: C=KG, ST=NA, O=OpenVPN-TEST, CN=Test-Client/emailAddress=me@myhost.mydomain
+        Subject: C=KG, ST=NA, O=spotify-TEST, CN=Test-Client/emailAddress=me@myhost.mydomain
         Subject Public Key Info:
             Public Key Algorithm: rsaEncryption
                 Public-Key: (2048 bit)
@@ -133,7 +133,7 @@ Certificate:
                 59:33:B9:2E:63:D1:17:A8:9F:BD:D8:CE:94:21:C5:41:C7:31:62:5D
             X509v3 Authority Key Identifier:
                 keyid:73:B1:B8:D6:8A:95:6B:12:E0:74:7C:C5:57:55:98:94:5B:AC:78:5E
-                DirName:/C=KG/ST=NA/L=BISHKEK/O=OpenVPN-TEST/emailAddress=me@myhost.mydomain
+                DirName:/C=KG/ST=NA/L=BISHKEK/O=spotify-TEST/emailAddress=me@myhost.mydomain
                 serial:6F:50:B8:D3:46:6E:72:34:59:BC:00:33:DD:7C:AE:12:EB:27:46:06
     Signature Algorithm: sha256WithRSAEncryption
     Signature Value:
@@ -201,9 +201,9 @@ mu44m42OEEjNKFAxskvTaXuRtA==
 key-direction 1
 <tls-auth>
 #
-# 2048 bit OpenVPN static key
+# 2048 bit spotify static key
 #
------BEGIN OpenVPN Static key V1-----
+-----BEGIN spotify Static key V1-----
 21d94830510107f8753d3b6f3145e01d
 ed37075115afcb0538ecdd8503ee9663
 7218c9ed38d908d594231d7d143c73da
@@ -220,7 +220,7 @@ dadd9c2c735cf481e580db4e81b99f12
 e3f46b6159c687cd1b9e689f7712573c
 0f02735a45573dfb5cd55cf464942389
 2c7e91f439bdd7337a8ceebd302cfbfa
------END OpenVPN Static key V1-----
+-----END spotify Static key V1-----
 </tls-auth>
 cipher AES-256-GCM
 ping 1

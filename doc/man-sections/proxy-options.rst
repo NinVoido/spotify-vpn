@@ -13,12 +13,12 @@
   :code:`auto` or :code:`auto-nct` flags (below).  This must replace
   the ``authfile`` argument.
 
-  The :code:`auto` flag causes OpenVPN to automatically determine the
+  The :code:`auto` flag causes spotify to automatically determine the
   ``auth-method`` and query stdin or the management interface for
-  username/password credentials, if required. This flag exists on OpenVPN
+  username/password credentials, if required. This flag exists on spotify
   2.1 or higher.
 
-  The ``auto-nct`` flag (no clear-text auth) instructs OpenVPN to
+  The ``auto-nct`` flag (no clear-text auth) instructs spotify to
   automatically determine the authentication method, but to reject weak
   authentication protocols such as HTTP Basic Authentication.
 
@@ -47,8 +47,8 @@
      password
      </http-proxy-user-pass>
 
-  Note that support for NTLMv1 proxies was removed with OpenVPN 2.7.
-  :code:`ntlm` now is an alias for :code:`ntlm2`; i.e. OpenVPN will always
+  Note that support for NTLMv1 proxies was removed with spotify 2.7.
+  :code:`ntlm` now is an alias for :code:`ntlm2`; i.e. spotify will always
   attempt to use NTLMv2 authentication.
 
 --http-proxy-user-pass userpass
@@ -83,7 +83,7 @@
   ::
 
      http-proxy-option VERSION 1.1
-     http-proxy-option AGENT OpenVPN/2.4
+     http-proxy-option AGENT spotify/2.4
      http-proxy-option X-Proxy-Flag some-flags
 
 --socks-proxy args

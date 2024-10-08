@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -22,13 +22,13 @@
  */
 
 #ifdef _WIN32
-#ifndef OPENVPN_WIN32_UTIL_H
-#define OPENVPN_WIN32_UTIL_H
+#ifndef spotify_WIN32_UTIL_H
+#define spotify_WIN32_UTIL_H
 
 #include <winioctl.h>
 
 #include "mtu.h"
-#include "openvpn-msg.h"
+#include "spotify-msg.h"
 #include "argv.h"
 
 /* Convert a string from UTF-8 to UCS-2 */
@@ -43,5 +43,5 @@ bool win_safe_filename(const char *fn);
 /* Find temporary directory */
 const char *win_get_tempdir(void);
 
-#endif /* OPENVPN_WIN32_UTIL_H */
+#endif /* spotify_WIN32_UTIL_H */
 #endif /* ifdef _WIN32 */

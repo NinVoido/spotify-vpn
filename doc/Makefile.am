@@ -1,11 +1,11 @@
 #
-#  OpenVPN -- An application to securely tunnel IP networks
+#  spotify -- An application to securely tunnel IP networks
 #             over a single UDP port, with support for SSL/TLS-based
 #             session authentication and key exchange,
 #             packet encryption, packet authentication, and
 #             packet compression.
 #
-#  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+#  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
 #  Copyright (C) 2006-2012 Alon Bar-Lev <alon.barlev@gmail.com>
 #
 
@@ -17,13 +17,13 @@ SUBDIRS = doxygen
 # NOTE: Remember to add source .rst files to $(dist_noinst_DATA) below
 #       This could be automated with GNU Make, but we need BSD Make support
 #
-build_man_pages = openvpn.8 openvpn-examples.5
-build_html_pages = openvpn.8.html openvpn-examples.5.html
+build_man_pages = spotify.8 spotify-examples.5
+build_html_pages = spotify.8.html spotify-examples.5.html
 
 dist_doc_DATA = \
 	management-notes.txt gui-notes.txt
 
-openvpn_sections = \
+spotify_sections = \
 	man-sections/advanced-options.rst \
 	man-sections/cipher-negotiation.rst \
 	man-sections/client-options.rst \
@@ -49,7 +49,7 @@ openvpn_sections = \
 	man-sections/vpn-network-options.rst \
 	man-sections/windows-options.rst
 
-openvpn_examples_sections = \
+spotify_examples_sections = \
 	man-sections/example-fingerprint.rst \
 	man-sections/examples.rst
 
@@ -57,20 +57,20 @@ dist_noinst_DATA = \
 	android.txt \
 	interactive-service-notes.rst \
 	keying-material-exporter.txt \
-	openvpn.8.rst \
-	openvpn-examples.5.rst \
+	spotify.8.rst \
+	spotify-examples.5.rst \
 	README.man \
 	README.plugins \
 	tls-crypt-v2.txt \
-	$(openvpn_sections) \
-	$(openvpn_examples_sections) \
+	$(spotify_sections) \
+	$(spotify_examples_sections) \
 	CMakeLists.txt
 
 EXTRA_DIST = tests
 
 # dependencies
-openvpn.8 openvpn.8.html: $(openvpn_sections)
-openvpn-examples.5 openvpn-examples.5.html: $(openvpn_examples_sections)
+spotify.8 spotify.8.html: $(spotify_sections)
+spotify-examples.5 spotify-examples.5.html: $(spotify_examples_sections)
 
 ######  GENERIC  RULES  ##########
 

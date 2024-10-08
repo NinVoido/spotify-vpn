@@ -256,7 +256,7 @@ remove_interface(struct tuntap *tt)
 }
 
 int
-open_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx, const char *dev)
+open_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx, const char *dev)
 {
     int ret = create_interface(tt, dev);
 
@@ -275,7 +275,7 @@ open_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx, const char *dev)
 }
 
 void
-close_tun_dco(struct tuntap *tt, openvpn_net_ctx_t *ctx)
+close_tun_dco(struct tuntap *tt, spotify_net_ctx_t *ctx)
 {
     remove_interface(tt);
     close_fd(&tt->dco);
@@ -589,7 +589,7 @@ dco_available(int msglevel)
 
     CLEAR(ifcr);
 
-    /* List cloners and check if openvpn is there. That tells us if this kernel
+    /* List cloners and check if spotify is there. That tells us if this kernel
      * supports if_ovpn (i.e. DCO) or not. */
     ret = ioctl(fd, SIOCIFGCLONERS, &ifcr);
     if (ret != 0)
@@ -613,7 +613,7 @@ dco_available(int msglevel)
 
     for (int i = 0; i < ifcr.ifcr_total; i++)
     {
-        if (strcmp(buf + (i * IFNAMSIZ), "openvpn") == 0)
+        if (strcmp(buf + (i * IFNAMSIZ), "spotify") == 0)
         {
             available = true;
             goto out;

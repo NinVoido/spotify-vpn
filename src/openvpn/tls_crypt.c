@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2016-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2016-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -37,8 +37,8 @@
 
 #include "tls_crypt.h"
 
-const char *tls_crypt_v2_cli_pem_name = "OpenVPN tls-crypt-v2 client key";
-const char *tls_crypt_v2_srv_pem_name = "OpenVPN tls-crypt-v2 server key";
+const char *tls_crypt_v2_cli_pem_name = "spotify tls-crypt-v2 client key";
+const char *tls_crypt_v2_srv_pem_name = "spotify tls-crypt-v2 server key";
 
 /** Metadata contains user-specified data */
 static const uint8_t TLS_CRYPT_METADATA_TYPE_USER           = 0x00;
@@ -68,7 +68,7 @@ tls_crypt_init_key(struct key_ctx_bi *key, struct key2 *keydata,
     {
         msg(M_FATAL, "ERROR: --tls-crypt not supported");
     }
-    crypto_read_openvpn_key(&kt, key, key_file, key_inline, key_direction,
+    crypto_read_spotify_key(&kt, key, key_file, key_inline, key_direction,
                             "Control Channel Encryption", "tls-crypt", keydata);
 }
 
@@ -585,7 +585,7 @@ tls_crypt_v2_verify_metadata(const struct tls_wrap_ctx *ctx,
     argv_parse_cmd(&argv, opt->tls_crypt_v2_verify_script);
     argv_msg_prefix(D_TLS_DEBUG, &argv, "Executing tls-crypt-v2-verify");
 
-    ret = openvpn_run_script(&argv, es, 0, "--tls-crypt-v2-verify");
+    ret = spotify_run_script(&argv, es, 0, "--tls-crypt-v2-verify");
 
     argv_free(&argv);
     env_set_destroy(es);
@@ -701,9 +701,9 @@ tls_crypt_v2_write_client_key_file(const char *filename,
     if (b64_metadata)
     {
         size_t b64_length = strlen(b64_metadata);
-        metadata = alloc_buf_gc(OPENVPN_BASE64_DECODED_LENGTH(b64_length) + 1, &gc);
+        metadata = alloc_buf_gc(spotify_BASE64_DECODED_LENGTH(b64_length) + 1, &gc);
         ASSERT(buf_write(&metadata, &TLS_CRYPT_METADATA_TYPE_USER, 1));
-        int decoded_len = openvpn_base64_decode(b64_metadata, BEND(&metadata),
+        int decoded_len = spotify_base64_decode(b64_metadata, BEND(&metadata),
                                                 BCAP(&metadata));
         if (decoded_len < 0)
         {

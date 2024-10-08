@@ -3,11 +3,11 @@ Certificate:
         Version: 3 (0x2)
         Serial Number: 6 (0x6)
         Signature Algorithm: sha256WithRSAEncryption
-        Issuer: C=KG, ST=NA, L=BISHKEK, O=OpenVPN-TEST/emailAddress=me@myhost.mydomain
+        Issuer: C=KG, ST=NA, L=BISHKEK, O=spotify-TEST/emailAddress=me@myhost.mydomain
         Validity
             Not Before: Nov  7 12:23:40 2023 GMT
             Not After : Nov  4 12:23:40 2033 GMT
-        Subject: C=KG, ST=NA, O=OpenVPN-TEST, CN=Test-Server-EC/emailAddress=me@myhost.mydomain
+        Subject: C=KG, ST=NA, O=spotify-TEST, CN=Test-Server-EC/emailAddress=me@myhost.mydomain
         Subject Public Key Info:
             Public Key Algorithm: id-ecPublicKey
                 Public-Key: (256 bit)
@@ -29,7 +29,7 @@ Certificate:
                 F8:8F:75:E8:88:59:99:F2:4B:B1:0E:FC:51:52:6E:DD:2E:C9:13:90
             X509v3 Authority Key Identifier:
                 keyid:73:B1:B8:D6:8A:95:6B:12:E0:74:7C:C5:57:55:98:94:5B:AC:78:5E
-                DirName:/C=KG/ST=NA/L=BISHKEK/O=OpenVPN-TEST/emailAddress=me@myhost.mydomain
+                DirName:/C=KG/ST=NA/L=BISHKEK/O=spotify-TEST/emailAddress=me@myhost.mydomain
                 serial:6F:50:B8:D3:46:6E:72:34:59:BC:00:33:DD:7C:AE:12:EB:27:46:06
             X509v3 Extended Key Usage:
                 TLS Web Server Authentication

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -78,49 +78,49 @@ plugin_type_name(const int type)
 {
     switch (type)
     {
-        case OPENVPN_PLUGIN_UP:
+        case spotify_PLUGIN_UP:
             return "PLUGIN_UP";
 
-        case OPENVPN_PLUGIN_DOWN:
+        case spotify_PLUGIN_DOWN:
             return "PLUGIN_DOWN";
 
-        case OPENVPN_PLUGIN_ROUTE_UP:
+        case spotify_PLUGIN_ROUTE_UP:
             return "PLUGIN_ROUTE_UP";
 
-        case OPENVPN_PLUGIN_IPCHANGE:
+        case spotify_PLUGIN_IPCHANGE:
             return "PLUGIN_IPCHANGE";
 
-        case OPENVPN_PLUGIN_TLS_VERIFY:
+        case spotify_PLUGIN_TLS_VERIFY:
             return "PLUGIN_TLS_VERIFY";
 
-        case OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY:
+        case spotify_PLUGIN_AUTH_USER_PASS_VERIFY:
             return "PLUGIN_AUTH_USER_PASS_VERIFY";
 
-        case OPENVPN_PLUGIN_CLIENT_CONNECT:
+        case spotify_PLUGIN_CLIENT_CONNECT:
             return "PLUGIN_CLIENT_CONNECT";
 
-        case OPENVPN_PLUGIN_CLIENT_CONNECT_V2:
+        case spotify_PLUGIN_CLIENT_CONNECT_V2:
             return "PLUGIN_CLIENT_CONNECT_V2";
 
-        case OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER:
+        case spotify_PLUGIN_CLIENT_CONNECT_DEFER:
             return "PLUGIN_CLIENT_CONNECT_DEFER";
 
-        case OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2:
+        case spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2:
             return "PLUGIN_CLIENT_CONNECT_DEFER_V2";
 
-        case OPENVPN_PLUGIN_CLIENT_DISCONNECT:
+        case spotify_PLUGIN_CLIENT_DISCONNECT:
             return "PLUGIN_CLIENT_DISCONNECT";
 
-        case OPENVPN_PLUGIN_LEARN_ADDRESS:
+        case spotify_PLUGIN_LEARN_ADDRESS:
             return "PLUGIN_LEARN_ADDRESS";
 
-        case OPENVPN_PLUGIN_TLS_FINAL:
+        case spotify_PLUGIN_TLS_FINAL:
             return "PLUGIN_TLS_FINAL";
 
-        case OPENVPN_PLUGIN_ROUTE_PREDOWN:
+        case spotify_PLUGIN_ROUTE_PREDOWN:
             return "PLUGIN_ROUTE_PREDOWN";
 
-        case OPENVPN_PLUGIN_CLIENT_CRRESPONSE:
+        case spotify_PLUGIN_CLIENT_CRRESPONSE:
             return "PLUGIN_CRRESPONSE";
 
         default:
@@ -135,9 +135,9 @@ plugin_mask_string(const unsigned int type_mask, struct gc_arena *gc)
     bool first = true;
     int i;
 
-    for (i = 0; i < OPENVPN_PLUGIN_N; ++i)
+    for (i = 0; i < spotify_PLUGIN_N; ++i)
     {
-        if (OPENVPN_PLUGIN_MASK(i) & type_mask)
+        if (spotify_PLUGIN_MASK(i) & type_mask)
         {
             if (!first)
             {
@@ -153,7 +153,7 @@ plugin_mask_string(const unsigned int type_mask, struct gc_arena *gc)
 static inline unsigned int
 plugin_supported_types(void)
 {
-    return ((1<<OPENVPN_PLUGIN_N)-1);
+    return ((1<<spotify_PLUGIN_N)-1);
 }
 
 struct plugin_option_list *
@@ -250,8 +250,8 @@ plugin_init_item(struct plugin *p, const struct plugin_option *o)
      *    --plugin ./fancyplug.so            -> $CWD/fancyplug.so
      *    --plugin /usr/lib/my/fancyplug.so  -> /usr/lib/my/fancyplug.so
      *
-     * Please note that $CWD means the directory OpenVPN is either started from
-     * or the directory OpenVPN have changed into using --cd before --plugin
+     * Please note that $CWD means the directory spotify is either started from
+     * or the directory spotify have changed into using --cd before --plugin
      * was parsed.
      *
      */
@@ -300,27 +300,27 @@ plugin_init_item(struct plugin *p, const struct plugin_option *o)
 
 #endif /* ifndef _WIN32 */
 
-    PLUGIN_SYM(open1, "openvpn_plugin_open_v1", 0);
-    PLUGIN_SYM(open2, "openvpn_plugin_open_v2", 0);
-    PLUGIN_SYM(open3, "openvpn_plugin_open_v3", 0);
-    PLUGIN_SYM(func1, "openvpn_plugin_func_v1", 0);
-    PLUGIN_SYM(func2, "openvpn_plugin_func_v2", 0);
-    PLUGIN_SYM(func3, "openvpn_plugin_func_v3", 0);
-    PLUGIN_SYM(close, "openvpn_plugin_close_v1", PLUGIN_SYMBOL_REQUIRED);
-    PLUGIN_SYM(abort, "openvpn_plugin_abort_v1", 0);
-    PLUGIN_SYM(client_constructor, "openvpn_plugin_client_constructor_v1", 0);
-    PLUGIN_SYM(client_destructor, "openvpn_plugin_client_destructor_v1", 0);
-    PLUGIN_SYM(min_version_required, "openvpn_plugin_min_version_required_v1", 0);
-    PLUGIN_SYM(initialization_point, "openvpn_plugin_select_initialization_point_v1", 0);
+    PLUGIN_SYM(open1, "spotify_plugin_open_v1", 0);
+    PLUGIN_SYM(open2, "spotify_plugin_open_v2", 0);
+    PLUGIN_SYM(open3, "spotify_plugin_open_v3", 0);
+    PLUGIN_SYM(func1, "spotify_plugin_func_v1", 0);
+    PLUGIN_SYM(func2, "spotify_plugin_func_v2", 0);
+    PLUGIN_SYM(func3, "spotify_plugin_func_v3", 0);
+    PLUGIN_SYM(close, "spotify_plugin_close_v1", PLUGIN_SYMBOL_REQUIRED);
+    PLUGIN_SYM(abort, "spotify_plugin_abort_v1", 0);
+    PLUGIN_SYM(client_constructor, "spotify_plugin_client_constructor_v1", 0);
+    PLUGIN_SYM(client_destructor, "spotify_plugin_client_destructor_v1", 0);
+    PLUGIN_SYM(min_version_required, "spotify_plugin_min_version_required_v1", 0);
+    PLUGIN_SYM(initialization_point, "spotify_plugin_select_initialization_point_v1", 0);
 
     if (!p->open1 && !p->open2 && !p->open3)
     {
-        msg(M_FATAL, "PLUGIN: symbol openvpn_plugin_open_vX is undefined in plugin: %s", p->so_pathname);
+        msg(M_FATAL, "PLUGIN: symbol spotify_plugin_open_vX is undefined in plugin: %s", p->so_pathname);
     }
 
     if (!p->func1 && !p->func2 && !p->func3)
     {
-        msg(M_FATAL, "PLUGIN: symbol openvpn_plugin_func_vX is undefined in plugin: %s", p->so_pathname);
+        msg(M_FATAL, "PLUGIN: symbol spotify_plugin_func_vX is undefined in plugin: %s", p->so_pathname);
     }
 
     /*
@@ -329,11 +329,11 @@ plugin_init_item(struct plugin *p, const struct plugin_option *o)
     if (p->min_version_required)
     {
         const int plugin_needs_version = (*p->min_version_required)();
-        if (plugin_needs_version > OPENVPN_PLUGIN_VERSION)
+        if (plugin_needs_version > spotify_PLUGIN_VERSION)
         {
-            msg(M_FATAL, "PLUGIN_INIT: plugin needs interface version %d, but this version of OpenVPN only supports version %d: %s",
+            msg(M_FATAL, "PLUGIN_INIT: plugin needs interface version %d, but this version of spotify only supports version %d: %s",
                 plugin_needs_version,
-                OPENVPN_PLUGIN_VERSION,
+                spotify_PLUGIN_VERSION,
                 p->so_pathname);
         }
     }
@@ -344,7 +344,7 @@ plugin_init_item(struct plugin *p, const struct plugin_option *o)
     }
     else
     {
-        p->requested_initialization_point = OPENVPN_PLUGIN_INIT_PRE_DAEMON;
+        p->requested_initialization_point = spotify_PLUGIN_INIT_PRE_DAEMON;
     }
 
     if (rel)
@@ -358,7 +358,7 @@ plugin_init_item(struct plugin *p, const struct plugin_option *o)
 }
 
 static void
-plugin_vlog(openvpn_plugin_log_flags_t flags, const char *name, const char *format, va_list arglist)
+plugin_vlog(spotify_plugin_log_flags_t flags, const char *name, const char *format, va_list arglist)
 {
     unsigned int msg_flags = 0;
 
@@ -417,7 +417,7 @@ plugin_vlog(openvpn_plugin_log_flags_t flags, const char *name, const char *form
 }
 
 static void
-plugin_log(openvpn_plugin_log_flags_t flags, const char *name, const char *format, ...)
+plugin_log(spotify_plugin_log_flags_t flags, const char *name, const char *format, ...)
 {
     va_list arglist;
     va_start(arglist, format);
@@ -425,12 +425,12 @@ plugin_log(openvpn_plugin_log_flags_t flags, const char *name, const char *forma
     va_end(arglist);
 }
 
-static struct openvpn_plugin_callbacks callbacks = {
+static struct spotify_plugin_callbacks callbacks = {
     plugin_log,
     plugin_vlog,
     secure_memzero,         /* plugin_secure_memzero */
-    openvpn_base64_encode,  /* plugin_base64_encode */
-    openvpn_base64_decode,  /* plugin_base64_decode */
+    spotify_base64_encode,  /* plugin_base64_encode */
+    spotify_base64_decode,  /* plugin_base64_decode */
 };
 
 
@@ -439,15 +439,15 @@ static struct openvpn_plugin_callbacks callbacks = {
  * inside a struct declaration
  */
 #ifndef CONFIGURE_GIT_REVISION
-#define _OPENVPN_PATCH_LEVEL OPENVPN_VERSION_PATCH
+#define _spotify_PATCH_LEVEL spotify_VERSION_PATCH
 #else
-#define _OPENVPN_PATCH_LEVEL "git:" CONFIGURE_GIT_REVISION CONFIGURE_GIT_FLAGS
+#define _spotify_PATCH_LEVEL "git:" CONFIGURE_GIT_REVISION CONFIGURE_GIT_FLAGS
 #endif
 
 static void
 plugin_open_item(struct plugin *p,
                  const struct plugin_option *o,
-                 struct openvpn_plugin_string_list **retlist,
+                 struct spotify_plugin_string_list **retlist,
                  const char **envp,
                  const int init_point)
 {
@@ -471,20 +471,20 @@ plugin_open_item(struct plugin *p,
          */
         if (p->open3)
         {
-            struct openvpn_plugin_args_open_in args = { p->plugin_type_mask,
+            struct spotify_plugin_args_open_in args = { p->plugin_type_mask,
                                                         (const char **const) o->argv,
                                                         (const char **const) envp,
                                                         &callbacks,
                                                         SSLAPI,
                                                         PACKAGE_VERSION,
-                                                        OPENVPN_VERSION_MAJOR,
-                                                        OPENVPN_VERSION_MINOR,
-                                                        _OPENVPN_PATCH_LEVEL};
-            struct openvpn_plugin_args_open_return retargs;
+                                                        spotify_VERSION_MAJOR,
+                                                        spotify_VERSION_MINOR,
+                                                        _spotify_PATCH_LEVEL};
+            struct spotify_plugin_args_open_return retargs;
 
             CLEAR(retargs);
             retargs.return_list = retlist;
-            if ((*p->open3)(OPENVPN_PLUGINv3_STRUCTVER, &args, &retargs) == OPENVPN_PLUGIN_FUNC_SUCCESS)
+            if ((*p->open3)(spotify_PLUGINv3_STRUCTVER, &args, &retargs) == spotify_PLUGIN_FUNC_SUCCESS)
             {
                 p->plugin_type_mask = retargs.type_mask;
                 p->plugin_handle = retargs.handle;
@@ -536,13 +536,13 @@ plugin_call_item(const struct plugin *p,
                  void *per_client_context,
                  const int type,
                  const struct argv *av,
-                 struct openvpn_plugin_string_list **retlist,
+                 struct spotify_plugin_string_list **retlist,
                  const char **envp,
                  int certdepth,
-                 openvpn_x509_cert_t *current_cert
+                 spotify_x509_cert_t *current_cert
                  )
 {
-    int status = OPENVPN_PLUGIN_FUNC_SUCCESS;
+    int status = spotify_PLUGIN_FUNC_SUCCESS;
 
     /* clear return list */
     if (retlist)
@@ -550,7 +550,7 @@ plugin_call_item(const struct plugin *p,
         *retlist = NULL;
     }
 
-    if (p->plugin_handle && (p->plugin_type_mask & OPENVPN_PLUGIN_MASK(type)))
+    if (p->plugin_handle && (p->plugin_type_mask & spotify_PLUGIN_MASK(type)))
     {
         struct gc_arena gc = gc_new();
         struct argv a = argv_insert_head(av, p->so_pathname);
@@ -563,7 +563,7 @@ plugin_call_item(const struct plugin *p,
          */
         if (p->func3)
         {
-            struct openvpn_plugin_args_func_in args = { type,
+            struct spotify_plugin_args_func_in args = { type,
                                                         (const char **const) a.argv,
                                                         (const char **const) envp,
                                                         p->plugin_handle,
@@ -571,11 +571,11 @@ plugin_call_item(const struct plugin *p,
                                                         (current_cert ? certdepth : -1),
                                                         current_cert };
 
-            struct openvpn_plugin_args_func_return retargs;
+            struct spotify_plugin_args_func_return retargs;
 
             CLEAR(retargs);
             retargs.return_list = retlist;
-            status = (*p->func3)(OPENVPN_PLUGINv3_STRUCTVER, &args, &retargs);
+            status = (*p->func3)(spotify_PLUGINv3_STRUCTVER, &args, &retargs);
         }
         else if (p->func2)
         {
@@ -595,7 +595,7 @@ plugin_call_item(const struct plugin *p,
             plugin_type_name(type),
             status);
 
-        if (status == OPENVPN_PLUGIN_FUNC_ERROR)
+        if (status == spotify_PLUGIN_FUNC_ERROR)
         {
             msg(M_WARN, "PLUGIN_CALL: plugin function %s failed with status %d: %s",
                 plugin_type_name(type),
@@ -800,7 +800,7 @@ plugin_call_ssl(const struct plugin_list *pl,
                 struct plugin_return *pr,
                 struct env_set *es,
                 int certdepth,
-                openvpn_x509_cert_t *current_cert
+                spotify_x509_cert_t *current_cert
                 )
 {
     if (pr)
@@ -833,11 +833,11 @@ plugin_call_ssl(const struct plugin_list *pl,
                                                 );
             switch (status)
             {
-                case OPENVPN_PLUGIN_FUNC_SUCCESS:
+                case spotify_PLUGIN_FUNC_SUCCESS:
                     break;
 
-                case OPENVPN_PLUGIN_FUNC_DEFERRED:
-                    if ((type == OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY)
+                case spotify_PLUGIN_FUNC_DEFERRED:
+                    if ((type == spotify_PLUGIN_AUTH_USER_PASS_VERIFY)
                         && deferred_auth_done)
                     {
                         /*
@@ -852,7 +852,7 @@ plugin_call_ssl(const struct plugin_list *pl,
                          * the plug-ins.
                          *
                          * Since this is considered a critical configuration
-                         * error, we bail out and exit the OpenVPN process.
+                         * error, we bail out and exit the spotify process.
                          */
                         error = true;
                         msg(M_FATAL,
@@ -882,15 +882,15 @@ plugin_call_ssl(const struct plugin_list *pl,
 
         if (error)
         {
-            return OPENVPN_PLUGIN_FUNC_ERROR;
+            return spotify_PLUGIN_FUNC_ERROR;
         }
         else if (deferred_auth_done)
         {
-            return OPENVPN_PLUGIN_FUNC_DEFERRED;
+            return spotify_PLUGIN_FUNC_DEFERRED;
         }
     }
 
-    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+    return spotify_PLUGIN_FUNC_SUCCESS;
 }
 
 void
@@ -940,7 +940,7 @@ plugin_defined(const struct plugin_list *pl, const int type)
         if (pc)
         {
             int i;
-            const unsigned int mask = OPENVPN_PLUGIN_MASK(type);
+            const unsigned int mask = spotify_PLUGIN_MASK(type);
             for (i = 0; i < pc->n; ++i)
             {
                 if (pc->plugins[i].plugin_type_mask & mask)
@@ -959,7 +959,7 @@ plugin_defined(const struct plugin_list *pl, const int type)
  */
 
 static void
-openvpn_plugin_string_list_item_free(struct openvpn_plugin_string_list *l)
+spotify_plugin_string_list_item_free(struct spotify_plugin_string_list *l)
 {
     if (l)
     {
@@ -971,19 +971,19 @@ openvpn_plugin_string_list_item_free(struct openvpn_plugin_string_list *l)
 }
 
 static void
-openvpn_plugin_string_list_free(struct openvpn_plugin_string_list *l)
+spotify_plugin_string_list_free(struct spotify_plugin_string_list *l)
 {
-    struct openvpn_plugin_string_list *next;
+    struct spotify_plugin_string_list *next;
     while (l)
     {
         next = l->next;
-        openvpn_plugin_string_list_item_free(l);
+        spotify_plugin_string_list_item_free(l);
         l = next;
     }
 }
 
-static struct openvpn_plugin_string_list *
-openvpn_plugin_string_list_find(struct openvpn_plugin_string_list *l, const char *name)
+static struct spotify_plugin_string_list *
+spotify_plugin_string_list_find(struct spotify_plugin_string_list *l, const char *name)
 {
     while (l)
     {
@@ -1006,7 +1006,7 @@ plugin_return_get_column(const struct plugin_return *src,
     dest->n = 0;
     for (i = 0; i < src->n; ++i)
     {
-        dest->list[i] = openvpn_plugin_string_list_find(src->list[i], colname);
+        dest->list[i] = spotify_plugin_string_list_find(src->list[i], colname);
     }
     dest->n = i;
 }
@@ -1017,7 +1017,7 @@ plugin_return_free(struct plugin_return *pr)
     int i;
     for (i = 0; i < pr->n; ++i)
     {
-        openvpn_plugin_string_list_free(pr->list[i]);
+        spotify_plugin_string_list_free(pr->list[i]);
     }
     pr->n = 0;
 }
@@ -1030,7 +1030,7 @@ plugin_return_print(const int msglevel, const char *prefix, const struct plugin_
     msg(msglevel, "PLUGIN_RETURN_PRINT %s", prefix);
     for (i = 0; i < pr->n; ++i)
     {
-        struct openvpn_plugin_string_list *l = pr->list[i];
+        struct spotify_plugin_string_list *l = pr->list[i];
         int count = 0;
 
         msg(msglevel, "PLUGIN #%d (%s)", i, prefix);

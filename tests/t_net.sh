@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 IFACE="ovpn-dummy0"
-UNIT_TEST="./unit_tests/openvpn/networking_testdriver"
+UNIT_TEST="./unit_tests/spotify/networking_testdriver"
 LAST_AUTO_TEST=7
 LAST_TEST=8
 
 srcdir="${srcdir:-.}"
 top_builddir="${top_builddir:-..}"
-openvpn="${openvpn:-${top_builddir}/src/openvpn/openvpn}"
+spotify="${spotify:-${top_builddir}/src/spotify/spotify}"
 
 
 # bail out right away on non-linux. NetLink (the object of this test) is only
@@ -79,8 +79,8 @@ elif [ -r "${srcdir}"/t_client.rc ]; then
     . "${srcdir}"/t_client.rc
 fi
 
-if [ ! -x "$openvpn" ]; then
-    echo "no (executable) openvpn binary in current build tree. FAIL." >&2
+if [ ! -x "$spotify" ]; then
+    echo "no (executable) spotify binary in current build tree. FAIL." >&2
     exit 1
 fi
 

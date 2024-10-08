@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -27,17 +27,17 @@
  */
 
 /**
- * @page network_protocol OpenVPN's network protocol
+ * @page network_protocol spotify's network protocol
  *
- * Description of packet structure in OpenVPN's network protocol.
+ * Description of packet structure in spotify's network protocol.
  *
  * This document describes the structure of packets exchanged between
- * OpenVPN peers.  It is based on the protocol description in the \c ssl.h
+ * spotify peers.  It is based on the protocol description in the \c ssl.h
  * file.
  *
- * @section network_protocol_external Outer structure of packets exchanged between OpenVPN peers
+ * @section network_protocol_external Outer structure of packets exchanged between spotify peers
  *
- * VPN tunnel packets are transported between OpenVPN peers using the UDP
+ * VPN tunnel packets are transported between spotify peers using the UDP
  * or TCP protocols.  Their structure is described below.
  *
  * @subsection network_protocol_external_structure External packet structure
@@ -48,7 +48,7 @@
  *  - packet opcode and key_id (8 bits) [TLS-mode only]:
  *     - package message type (high 5 bits)
  *     - key_id (low 3 bits): the key_id refers to an already negotiated
- *       TLS session.  OpenVPN seamlessly renegotiates the TLS session by
+ *       TLS session.  spotify seamlessly renegotiates the TLS session by
  *       using a new key_id for the new session.  Overlap (controlled by
  *       user definable parameters) between old and new TLS sessions is
  *       allowed, providing a seamless transition during tunnel operation.
@@ -83,11 +83,11 @@
  *
  * @subsection network_protocol_external_key_id Session IDs and Key IDs
  *
- * OpenVPN uses two different forms of packet identifiers:
+ * spotify uses two different forms of packet identifiers:
  *  - The first form is 64 bits and is used for all control channel
  *    messages.  This form is referred to as a \c session_id.
  *  - Data channel messages on the other hand use a shortened form of 3
- *    bits for efficiency reasons since the vast majority of OpenVPN
+ *    bits for efficiency reasons since the vast majority of spotify
  *    packets in an active tunnel will be data channel messages.  This
  *    form is referred to as a \c key_id.
  *
@@ -132,7 +132,7 @@
  *
  * Note that when \c --tls-auth is used, all message types are protected
  * with an HMAC signature, even the initial packets of the TLS handshake.
- * This makes it easy for OpenVPN to throw away bogus packets quickly,
+ * This makes it easy for spotify to throw away bogus packets quickly,
  * without wasting resources on attempting a TLS handshake which will
  * ultimately fail.
  *
@@ -141,18 +141,18 @@
  * Once the TLS session has been initialized and authenticated, the TLS
  * channel is used to exchange random %key material for bidirectional
  * cipher and HMAC keys which will be used to secure data channel packets.
- * OpenVPN currently implements two %key methods.  %Key method 1 directly
+ * spotify currently implements two %key methods.  %Key method 1 directly
  * derives keys using random bits obtained from the \c rand_bytes() function.
  * %Key method 2 mixes random %key material from both sides of the connection
  * using the TLS PRF mixing function.  %Key method 2 is the preferred method and
- * is the default for OpenVPN 2.0+.
+ * is the default for spotify 2.0+.
  *
  * The @ref key_generation "Data channel key generation" related page
  * describes the %key methods in more detail.
  *
  * @subsection network_protocol_control_plaintext Structure of plaintext control channel messages
  *
- *  - %Key method 1 (support removed in OpenVPN 2.5):
+ *  - %Key method 1 (support removed in spotify 2.5):
  *     - Cipher %key length in bytes (1 byte).
  *     - Cipher %key (n bytes).
  *     - HMAC %key length in bytes (1 byte).

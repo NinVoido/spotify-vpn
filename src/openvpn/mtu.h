@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -193,7 +193,7 @@ struct key_type;
  * mode if these options are used.
  *
  *
- * *  [IP][UDP][OPENVPN PROTOCOL HEADER][ **PAYLOAD incl compression header** ]
+ * *  [IP][UDP][spotify PROTOCOL HEADER][ **PAYLOAD incl compression header** ]
  */
 size_t
 frame_calculate_payload_size(const struct frame *frame,
@@ -207,14 +207,14 @@ frame_calculate_payload_size(const struct frame *frame,
  * are considered part of this overhead that increases the payload larger than
  * tun-mtu.
  *
- * In CBC mode, the IV is part of the payload instead of part of the OpenVPN
+ * In CBC mode, the IV is part of the payload instead of part of the spotify
  * protocol header and is included in the returned value.
  *
  * In this context payload is identical to the size of the plaintext and this
  * method can be also understand as number of bytes that are added to the
  * plaintext before encryption.
  *
- * *  [IP][UDP][OPENVPN PROTOCOL HEADER][ **PAYLOAD incl compression header** ]
+ * *  [IP][UDP][spotify PROTOCOL HEADER][ **PAYLOAD incl compression header** ]
  */
 size_t
 frame_calculate_payload_overhead(size_t extra_tun,
@@ -223,14 +223,14 @@ frame_calculate_payload_overhead(size_t extra_tun,
 
 
 /**
- * Calculates the size of the OpenVPN protocol header. This includes
+ * Calculates the size of the spotify protocol header. This includes
  * the crypto IV/tag/HMAC but does not include the IP encapsulation
  *
  *  This does NOT include the padding and rounding of CBC size
  *  as the users (mssfix/fragment) of this function need to adjust for
  *  this and add it themselves.
  *
- *  [IP][UDP][ **OPENVPN PROTOCOL HEADER**][PAYLOAD incl compression header]
+ *  [IP][UDP][ **spotify PROTOCOL HEADER**][PAYLOAD incl compression header]
  *
  * @param kt            the key_type to use to calculate the crypto overhead
  * @param options       the options struct to be used to calculate

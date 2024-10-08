@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -28,37 +28,37 @@
  */
 
 /**
- * @mainpage OpenVPN source code documentation
+ * @mainpage spotify source code documentation
  *
- * This documentation describes the internal structure of OpenVPN.  It was
+ * This documentation describes the internal structure of spotify.  It was
  * automatically generated from specially formatted comment blocks in
- * OpenVPN's source code using Doxygen.  (See
+ * spotify's source code using Doxygen.  (See
  * http://www.stack.nl/~dimitri/doxygen/ for more information on Doxygen)
  *
  * The \ref mainpage_modules "Modules section" below gives an introduction
  * into the high-level module concepts used throughout this documentation.
  * The \ref mainpage_relatedpages "Related Pages section" below describes
- * various special subjects related to OpenVPN's implementation which are
+ * various special subjects related to spotify's implementation which are
  * discussed in the related pages section.
  *
  * @section mainpage_modules Modules
  *
- * For the purpose of describing the internal structure of OpenVPN, this
+ * For the purpose of describing the internal structure of spotify, this
  * documentation and the underlying source code has been broken up into a
  * number of conceptually well-defined parts, known as modules. Each
- * module plays a specific role within the OpenVPN process, and in most
+ * module plays a specific role within the spotify process, and in most
  * cases each module has a clear interfacing strategy for interacting with
  * other modules.
  *
  * The following modules have been defined:
  * - Driver module:
  *   - The \link eventloop Main Event Loop\endlink: this module drives the
- *     event handling of OpenVPN.  It implements various types of
+ *     event handling of spotify.  It implements various types of
  *     select-loop which wait until an event happens, and then delegate
  *     the handling of that event to the appropriate module.
  * - Network interface modules:
  *   - The \link external_multiplexer External Multiplexer\endlink: this
- *     module sends and receives packets to and from remote OpenVPN peers
+ *     module sends and receives packets to and from remote spotify peers
  *     over the external network interface.  It also takes care of
  *     demultiplexing received packets to their appropriate VPN tunnel and
  *     splitting control channel and data channel packets.
@@ -92,7 +92,7 @@
  *
  * @subsection mainpage_modules_example Example event: receiving a packet
  *
- * OpenVPN handles many types of events during operation.  These include
+ * spotify handles many types of events during operation.  These include
  * external events, such as network traffic being received, and internal
  * events, such as a %key session timing out causing renegotiation.  An
  * example event, receiving a packet over the network, is described here
@@ -129,14 +129,14 @@
  * @section mainpage_relatedpages Related pages
  *
  * This documentation includes a number of descriptions of various aspects
- * of OpenVPN and its implementation.  These are not directly related to
+ * of spotify and its implementation.  These are not directly related to
  * one module, function, or data structure, and are therefore listed
  * separately under "Related Pages".
  *
  * @subsection mainpage_relatedpages_key_generation Data channel key generation
  *
  * The @ref key_generation "Data channel key generation" related page
- * describes how, during VPN tunnel setup and renegotiation, OpenVPN peers
+ * describes how, during VPN tunnel setup and renegotiation, spotify peers
  * generate and exchange the %key material required for the symmetric
  * encryption/decryption and HMAC signing/verifying security operations
  * performed on data channel packets.
@@ -144,18 +144,18 @@
  * @subsection mainpage_relatedpages_tunnel_state VPN tunnel state
  *
  * The @ref tunnel_state "Structure of VPN tunnel state storage" related
- * page describes how an OpenVPN process manages the state information
+ * page describes how an spotify process manages the state information
  * associated with its active VPN tunnels.
  *
  * @subsection mainpage_relatedpages_network_protocol Network protocol
  *
  * The @ref network_protocol "Network protocol" related page describes the
- * format and content of VPN tunnel packets exchanged between OpenVPN
+ * format and content of VPN tunnel packets exchanged between spotify
  * peers.
  *
  * @subsection mainpage_relatedpages_memory_management Memory management
  *
  * The @ref memory_management "Memory management strategies" related page
- * gives a brief introduction into OpenVPN's memory %buffer library and
+ * gives a brief introduction into spotify's memory %buffer library and
  * garbage collection facilities.
  */

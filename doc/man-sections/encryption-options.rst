@@ -14,7 +14,7 @@ SSL Library information
 
 --show-tls
   (Standalone) Show all TLS ciphers supported by the crypto library.
-  OpenVPN uses TLS to secure the control channel, over which the keys that
+  spotify uses TLS to secure the control channel, over which the keys that
   are used to protect the actual VPN traffic are exchanged. The TLS
   ciphers will be sorted from highest preference (most secure) to lowest.
 
@@ -46,7 +46,7 @@ Generating key material
 
   Valid keytype arguments are:
 
-  :code:`secret`                Standard OpenVPN shared secret keys
+  :code:`secret`                Standard spotify shared secret keys
 
   :code:`tls-crypt`             Alias for :code:`secret`
 
@@ -62,11 +62,11 @@ Generating key material
   Examples:
   ::
 
-     $ openvpn --genkey secret shared.key
-     $ openvpn --genkey tls-crypt shared.key
-     $ openvpn --genkey tls-auth shared.key
-     $ openvpn --genkey tls-crypt-v2-server v2crypt-server.key
-     $ openvpn --tls-crypt-v2 v2crypt-server.key --genkey tls-crypt-v2-client v2crypt-client-1.key
+     $ spotify --genkey secret shared.key
+     $ spotify --genkey tls-crypt shared.key
+     $ spotify --genkey tls-auth shared.key
+     $ spotify --genkey tls-crypt-v2-server v2crypt-server.key
+     $ spotify --tls-crypt-v2 v2crypt-server.key --genkey tls-crypt-v2-client v2crypt-client-1.key
 
   * Generating *Shared Secret Keys*
     Generate a shared secret, for use with the ``--tls-auth``
@@ -75,7 +75,7 @@ Generating key material
     Syntax:
     ::
 
-       $ openvpn --genkey tls-crypt|tls-auth keyfile
+       $ spotify --genkey tls-crypt|tls-auth keyfile
 
     The key is saved in ``keyfile``. Both variants (``tls-crypt`` and
     ``tls-auth``) generate the same type of key. The aliases are added for
@@ -85,7 +85,7 @@ Generating key material
     channel such as ``scp``\(1).
 
   * Generating *TLS Crypt v2 Server key*
-    Generate a ``--tls-crypt-v2`` key to be used by an OpenVPN server.
+    Generate a ``--tls-crypt-v2`` key to be used by an spotify server.
     The key is stored in ``keyfile``.
 
     Syntax:
@@ -94,7 +94,7 @@ Generating key material
        --genkey tls-crypt-v2-server keyfile
 
   * Generating *TLS Crypt v2 Client key*
-    Generate a --tls-crypt-v2 key to be used by OpenVPN clients.  The
+    Generate a --tls-crypt-v2 key to be used by spotify clients.  The
     key is stored in ``keyfile``.
 
     Syntax
@@ -107,7 +107,7 @@ Generating key material
     metadata must be at most 733 bytes long (980 characters in base64, though
     note that 980 base64 characters can encode more than 733 bytes).
 
-    If no metadata is supplied, OpenVPN will use a 64-bit unix timestamp
+    If no metadata is supplied, spotify will use a 64-bit unix timestamp
     representing the current time in UTC, encoded in network order, as
     metadata for the generated key.
 
@@ -129,7 +129,7 @@ Generating key material
     *Note:*
        This file should be kept secret to the server as anyone that has
        access to this file will be able to generate auth tokens that the
-       OpenVPN server will accept as valid.
+       spotify server will accept as valid.
 
 .. include:: renegotiation.rst
 .. include:: tls-options.rst

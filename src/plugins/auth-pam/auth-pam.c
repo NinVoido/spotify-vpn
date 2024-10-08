@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *  Copyright (C) 2016-2024 Selva Nair <selva.nair@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -23,7 +23,7 @@
  */
 
 /*
- * OpenVPN plugin module to do PAM authentication using a split
+ * spotify plugin module to do PAM authentication using a split
  * privilege model.
  */
 #ifdef HAVE_CONFIG_H
@@ -50,7 +50,7 @@
 #include <limits.h>
 #include "utils.h"
 #include <arpa/inet.h>
-#include <openvpn-plugin.h>
+#include <spotify-plugin.h>
 
 #define DEBUG(verb) ((verb) >= 4)
 
@@ -65,7 +65,7 @@
 #define RESPONSE_VERIFY_FAILED    13
 #define RESPONSE_DEFER            14
 
-/* Pointers to functions exported from openvpn */
+/* Pointers to functions exported from spotify */
 static plugin_log_t plugin_log = NULL;
 static plugin_secure_memzero_t plugin_secure_memzero = NULL;
 static plugin_base64_decode_t plugin_base64_decode = NULL;
@@ -84,7 +84,7 @@ struct auth_pam_context
     /* Process ID of background process */
     pid_t background_pid;
 
-    /* Verbosity level of OpenVPN */
+    /* Verbosity level of spotify */
     int verb;
 };
 
@@ -354,10 +354,10 @@ out:
     }
 }
 
-OPENVPN_EXPORT int
-openvpn_plugin_open_v3(const int v3structver,
-                       struct openvpn_plugin_args_open_in const *args,
-                       struct openvpn_plugin_args_open_return *ret)
+spotify_EXPORT int
+spotify_plugin_open_v3(const int v3structver,
+                       struct spotify_plugin_args_open_in const *args,
+                       struct spotify_plugin_args_open_return *ret)
 {
     pid_t pid;
     int fd[2];
@@ -373,8 +373,8 @@ openvpn_plugin_open_v3(const int v3structver,
     /* Check API compatibility -- struct version 5 or higher needed */
     if (v3structver < 5)
     {
-        fprintf(stderr, "AUTH-PAM: This plugin is incompatible with the running version of OpenVPN\n");
-        return OPENVPN_PLUGIN_FUNC_ERROR;
+        fprintf(stderr, "AUTH-PAM: This plugin is incompatible with the running version of spotify\n");
+        return spotify_PLUGIN_FUNC_ERROR;
     }
 
     /*
@@ -390,9 +390,9 @@ openvpn_plugin_open_v3(const int v3structver,
     /*
      * Intercept the --auth-user-pass-verify callback.
      */
-    ret->type_mask = OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY);
+    ret->type_mask = spotify_PLUGIN_MASK(spotify_PLUGIN_AUTH_USER_PASS_VERIFY);
 
-    /* Save global pointers to functions exported from openvpn */
+    /* Save global pointers to functions exported from spotify */
     plugin_log = args->callbacks->plugin_log;
     plugin_secure_memzero = args->callbacks->plugin_secure_memzero;
     plugin_base64_decode = args->callbacks->plugin_base64_decode;
@@ -483,9 +483,9 @@ openvpn_plugin_open_v3(const int v3structver,
         if (status == RESPONSE_INIT_SUCCEEDED)
         {
             context->foreground_fd = fd[0];
-            ret->handle = (openvpn_plugin_handle_t *) context;
+            ret->handle = (spotify_plugin_handle_t *) context;
             plugin_log( PLOG_NOTE, MODULE, "initialization succeeded (fg)" );
-            return OPENVPN_PLUGIN_FUNC_SUCCESS;
+            return spotify_PLUGIN_FUNC_SUCCESS;
         }
     }
     else
@@ -516,15 +516,15 @@ openvpn_plugin_open_v3(const int v3structver,
 
 error:
     free(context);
-    return OPENVPN_PLUGIN_FUNC_ERROR;
+    return spotify_PLUGIN_FUNC_ERROR;
 }
 
-OPENVPN_EXPORT int
-openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const char *argv[], const char *envp[])
+spotify_EXPORT int
+spotify_plugin_func_v1(spotify_plugin_handle_t handle, const int type, const char *argv[], const char *envp[])
 {
     struct auth_pam_context *context = (struct auth_pam_context *) handle;
 
-    if (type == OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY && context->foreground_fd >= 0)
+    if (type == spotify_PLUGIN_AUTH_USER_PASS_VERIFY && context->foreground_fd >= 0)
     {
         /* get username/password from envp string array */
         const char *username = get_env("username", envp);
@@ -576,7 +576,7 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
                 const int status = recv_control(context->foreground_fd);
                 if (status == RESPONSE_VERIFY_SUCCEEDED)
                 {
-                    return OPENVPN_PLUGIN_FUNC_SUCCESS;
+                    return spotify_PLUGIN_FUNC_SUCCESS;
                 }
                 if (status == RESPONSE_DEFER)
                 {
@@ -584,7 +584,7 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
                     {
                         plugin_log(PLOG_NOTE, MODULE, "deferred authentication");
                     }
-                    return OPENVPN_PLUGIN_FUNC_DEFERRED;
+                    return spotify_PLUGIN_FUNC_DEFERRED;
                 }
                 if (status == -1)
                 {
@@ -593,11 +593,11 @@ openvpn_plugin_func_v1(openvpn_plugin_handle_t handle, const int type, const cha
             }
         }
     }
-    return OPENVPN_PLUGIN_FUNC_ERROR;
+    return spotify_PLUGIN_FUNC_ERROR;
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_close_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void
+spotify_plugin_close_v1(spotify_plugin_handle_t handle)
 {
     struct auth_pam_context *context = (struct auth_pam_context *) handle;
 
@@ -627,8 +627,8 @@ openvpn_plugin_close_v1(openvpn_plugin_handle_t handle)
     free(context);
 }
 
-OPENVPN_EXPORT void
-openvpn_plugin_abort_v1(openvpn_plugin_handle_t handle)
+spotify_EXPORT void
+spotify_plugin_abort_v1(spotify_plugin_handle_t handle)
 {
     struct auth_pam_context *context = (struct auth_pam_context *) handle;
 
@@ -840,7 +840,7 @@ pam_auth(const char *service, const struct user_pass *up)
  * deferred auth handler
  *   - fork() (twice, to avoid the need for async wait / SIGCHLD handling)
  *   - query PAM stack via pam_auth()
- *   - send response back to OpenVPN via "ac_file_name"
+ *   - send response back to spotify via "ac_file_name"
  *
  * parent process returns "0" for "fork() and wait() succeeded",
  *                        "-1" for "something went wrong, abort program"

@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -42,7 +42,7 @@ typedef enum { SUCCESS = 0, FAILURE = 1 } result_t;
  */
 
 /*
- * Verify certificate for the given session. Performs OpenVPN-specific
+ * Verify certificate for the given session. Performs spotify-specific
  * verification.
  *
  * This function must be called for every certificate in the certificate
@@ -54,7 +54,7 @@ typedef enum { SUCCESS = 0, FAILURE = 1 } result_t;
  *
  * @return              \c SUCCESS if verification was successful, \c FAILURE on failure.
  */
-result_t verify_cert(struct tls_session *session, openvpn_x509_cert_t *cert, int cert_depth);
+result_t verify_cert(struct tls_session *session, spotify_x509_cert_t *cert, int cert_depth);
 
 /*
  * Remember the given certificate hash, allowing the certificate chain to be
@@ -84,7 +84,7 @@ void cert_hash_remember(struct tls_session *session, const int cert_depth,
  *
  * @return              a string containing the subject
  */
-char *x509_get_subject(openvpn_x509_cert_t *cert, struct gc_arena *gc);
+char *x509_get_subject(spotify_x509_cert_t *cert, struct gc_arena *gc);
 
 /**
  * Retrieve the certificate's SHA1 fingerprint.
@@ -94,7 +94,7 @@ char *x509_get_subject(openvpn_x509_cert_t *cert, struct gc_arena *gc);
  *
  * @return              a string containing the certificate fingerprint
  */
-struct buffer x509_get_sha1_fingerprint(openvpn_x509_cert_t *cert,
+struct buffer x509_get_sha1_fingerprint(spotify_x509_cert_t *cert,
                                         struct gc_arena *gc);
 
 /**
@@ -105,7 +105,7 @@ struct buffer x509_get_sha1_fingerprint(openvpn_x509_cert_t *cert,
  *
  * @return              a string containing the certificate fingerprint
  */
-struct buffer x509_get_sha256_fingerprint(openvpn_x509_cert_t *cert,
+struct buffer x509_get_sha256_fingerprint(spotify_x509_cert_t *cert,
                                           struct gc_arena *gc);
 
 /*
@@ -122,7 +122,7 @@ struct buffer x509_get_sha256_fingerprint(openvpn_x509_cert_t *cert,
  * @return              \c FAILURE, \c or SUCCESS
  */
 result_t backend_x509_get_username(char *common_name, int cn_len,
-                                   char *x509_username_field, openvpn_x509_cert_t *peer_cert);
+                                   char *x509_username_field, spotify_x509_cert_t *peer_cert);
 
 #ifdef ENABLE_X509ALTUSERNAME
 /**
@@ -144,7 +144,7 @@ bool x509_username_field_ext_supported(const char *extname);
  * @return              String representation of the certificate's serial number
  *                      in decimal notation, or NULL on error.
  */
-char *backend_x509_get_serial(openvpn_x509_cert_t *cert, struct gc_arena *gc);
+char *backend_x509_get_serial(spotify_x509_cert_t *cert, struct gc_arena *gc);
 
 /*
  * Return the certificate's serial number in hex string representation.
@@ -157,7 +157,7 @@ char *backend_x509_get_serial(openvpn_x509_cert_t *cert, struct gc_arena *gc);
  * @return              String representation of the certificate's serial number
  *                      in hex notation, or NULL on error.
  */
-char *backend_x509_get_serial_hex(openvpn_x509_cert_t *cert,
+char *backend_x509_get_serial_hex(spotify_x509_cert_t *cert,
                                   struct gc_arena *gc);
 
 /*
@@ -168,7 +168,7 @@ char *backend_x509_get_serial_hex(openvpn_x509_cert_t *cert,
  *
  * @return              \c FAILURE, \c or SUCCESS
  */
-result_t backend_x509_write_pem(openvpn_x509_cert_t *cert,
+result_t backend_x509_write_pem(spotify_x509_cert_t *cert,
                                 const char *filename);
 
 /*
@@ -180,7 +180,7 @@ result_t backend_x509_write_pem(openvpn_x509_cert_t *cert,
  * @param cert_depth    Depth of the certificate
  * @param cert          Certificate to set the environment for
  */
-void x509_setenv(struct env_set *es, int cert_depth, openvpn_x509_cert_t *cert);
+void x509_setenv(struct env_set *es, int cert_depth, spotify_x509_cert_t *cert);
 
 /*
  * Start tracking the given attribute.
@@ -217,7 +217,7 @@ void x509_track_add(const struct x509_track **ll_head, const char *name,
  * @param cert          Certificate to set the environment for
  */
 void x509_setenv_track(const struct x509_track *xt, struct env_set *es,
-                       const int depth, openvpn_x509_cert_t *x509);
+                       const int depth, spotify_x509_cert_t *x509);
 
 /*
  * Check X.509 Netscape certificate type field, if available.
@@ -230,7 +230,7 @@ void x509_setenv_track(const struct x509_track *xt, struct env_set *es,
  *                      the expected bit set. \c FAILURE if the certificate does
  *                      not have NS cert type verification or the wrong bit set.
  */
-result_t x509_verify_ns_cert_type(openvpn_x509_cert_t *cert, const int usage);
+result_t x509_verify_ns_cert_type(spotify_x509_cert_t *cert, const int usage);
 
 /*
  * Verify X.509 key usage extension field.
@@ -242,7 +242,7 @@ result_t x509_verify_ns_cert_type(openvpn_x509_cert_t *cert, const int usage);
  * @return              \c SUCCESS if one of the key usage values matches, \c FAILURE
  *                      if key usage is not enabled, or the values do not match.
  */
-result_t x509_verify_cert_ku(openvpn_x509_cert_t *x509, const unsigned *const expected_ku,
+result_t x509_verify_cert_ku(spotify_x509_cert_t *x509, const unsigned *const expected_ku,
                              int expected_len);
 
 /*
@@ -258,7 +258,7 @@ result_t x509_verify_cert_ku(openvpn_x509_cert_t *x509, const unsigned *const ex
  *                      extended key usage fields, \c FAILURE if extended key
  *                      usage is not enabled, or the values do not match.
  */
-result_t x509_verify_cert_eku(openvpn_x509_cert_t *x509, const char *const expected_oid);
+result_t x509_verify_cert_eku(spotify_x509_cert_t *x509, const char *const expected_oid);
 
 /**
  * Return true iff a CRL is configured, but is not loaded.  This can be caused

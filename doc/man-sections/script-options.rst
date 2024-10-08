@@ -1,8 +1,8 @@
 SCRIPTING INTEGRATION
 =====================
 
-OpenVPN can execute external scripts in various phases of the lifetime of
-the OpenVPN process.
+spotify can execute external scripts in various phases of the lifetime of
+the spotify process.
 
 
 Script Order of Execution
@@ -45,7 +45,7 @@ Script Order of Execution
 #. ``--learn-address``
 
    Executed in ``--mode server`` mode whenever an IPv4 address/route or MAC
-   address is added to OpenVPN's internal routing table.
+   address is added to spotify's internal routing table.
 
 #. ``--auth-user-pass-verify``
 
@@ -69,7 +69,7 @@ SCRIPT HOOKS
 
      auth-user-pass-verify cmd method
 
-  OpenVPN will run command ``cmd`` to validate the username/password
+  spotify will run command ``cmd`` to validate the username/password
   provided by the client.
 
   ``cmd`` consists of a path to a script (or executable program), optionally
@@ -77,16 +77,16 @@ SCRIPT HOOKS
   double-quoted and/or escaped using a backslash, and should be separated
   by one or more spaces.
 
-  If ``method`` is set to :code:`via-env`, OpenVPN will call ``cmd``
+  If ``method`` is set to :code:`via-env`, spotify will call ``cmd``
   with the environmental variables :code:`username` and :code:`password`
   set to the username/password strings provided by the client. *Beware*
   that this method is insecure on some platforms which make the environment
   of a process publicly visible to other unprivileged processes.
 
-  If ``method`` is set to :code:`via-file`, OpenVPN will write the username
+  If ``method`` is set to :code:`via-file`, spotify will write the username
   and password to the first two lines of a temporary file. The filename
   will be passed as an argument to ``cmd``, and the file will be
-  automatically deleted by OpenVPN after the script returns. The location
+  automatically deleted by spotify after the script returns. The location
   of the temporary file is controlled by the ``--tmp-dir`` option, and
   will default to the current directory if unspecified. For security,
   consider setting ``--tmp-dir`` to a volatile storage medium such as
@@ -146,7 +146,7 @@ SCRIPT HOOKS
   ``client-pending-auth`` section of `doc/management.txt`.
 
   This directive is designed to enable a plugin-style interface for
-  extending OpenVPN's authentication capabilities.
+  extending spotify's authentication capabilities.
 
   To protect against a client passing a maliciously formed username or
   password string, the username string must consist only of these
@@ -162,7 +162,7 @@ SCRIPT HOOKS
   by a shell interpreter.
 
   For a sample script that performs PAM authentication, see
-  :code:`sample-scripts/auth-pam.pl` in the OpenVPN source distribution.
+  :code:`sample-scripts/auth-pam.pl` in the spotify source distribution.
 
 --client-crresponse
     Executed when the client sends a text based challenge response.
@@ -172,9 +172,9 @@ SCRIPT HOOKS
 
         client-crresponse cmd
 
-  OpenVPN will write the response of the client into a temporary file.
+  spotify will write the response of the client into a temporary file.
   The filename will be passed as an argument to ``cmd``, and the file will be
-  automatically deleted by OpenVPN after the script returns.
+  automatically deleted by spotify after the script returns.
 
   The response is passed as is from the client. The script needs to check
   itself if the input is valid, e.g. if the input is valid base64 encoding.
@@ -199,7 +199,7 @@ SCRIPT HOOKS
   variable section below). The command is also passed the pathname of a
   freshly created temporary file as the last argument (after any arguments
   specified in ``cmd`` ), to be used by the command to pass dynamically
-  generated config file directives back to OpenVPN.
+  generated config file directives back to spotify.
 
   If the script wants to generate a dynamic config file to be applied on
   the server when the client connects, it should write it to the file
@@ -280,7 +280,7 @@ SCRIPT HOOKS
 
   Similarly if *our* IP address changes due to DHCP, we should configure
   our IP address change script (see man page for ``dhcpcd``\(8)) to
-  deliver a ``SIGHUP`` or ``SIGUSR1`` signal to OpenVPN. OpenVPN will
+  deliver a ``SIGHUP`` or ``SIGUSR1`` signal to spotify. spotify will
   then re-establish a connection with its most recently authenticated
   peer on its new IP address.
 
@@ -297,7 +297,7 @@ SCRIPT HOOKS
   :code:`$1` - [operation]
       :code:`"add"`, :code:`"update"`, or :code:`"delete"` based on whether
       or not the address is being added to, modified, or deleted from
-      OpenVPN's internal routing table.
+      spotify's internal routing table.
 
   :code:`$2` - [address]
       The address being learned or unlearned. This can be an IPv4 address
@@ -311,12 +311,12 @@ SCRIPT HOOKS
       operations, not :code:`"delete"`.
 
   On :code:`"add"` or :code:`"update"` methods, if the script returns
-  a failure code (non-zero), OpenVPN will reject the address and will not
+  a failure code (non-zero), spotify will reject the address and will not
   modify its internal routing table.
 
   Normally, the ``cmd`` script will use the information provided above to
   set appropriate firewall entries on the VPN TUN/TAP interface. Since
-  OpenVPN provides the association between virtual IP or MAC address and
+  spotify provides the association between virtual IP or MAC address and
   the client's authenticated common name, it allows a user-defined script
   to configure firewall access policies with regard to the client's
   high-level common name, rather than the low level client virtual
@@ -357,10 +357,10 @@ SCRIPT HOOKS
   By setting :code:`FORWARD_COMPATIBLE` to :code:`1`, the config file
   syntax checking is relaxed so that unknown directives will trigger a
   warning but not a fatal error, on the assumption that a given unknown
-  directive might be valid in future OpenVPN versions.
+  directive might be valid in future spotify versions.
 
   This option should be used with caution, as there are good security
-  reasons for having OpenVPN fail if it detects problems in a config file.
+  reasons for having spotify fail if it detects problems in a config file.
   Having said that, there are valid reasons for wanting new software
   features to gracefully degrade when encountered by older software
   versions.
@@ -369,13 +369,13 @@ SCRIPT HOOKS
   fatal error if the directive isn't recognized. To do this, prepend the
   following before the directive: ``setenv opt``
 
-  Versions prior to OpenVPN 2.3.3 will always ignore options set with the
+  Versions prior to spotify 2.3.3 will always ignore options set with the
   ``setenv opt`` directive.
 
   See also ``--ignore-unknown-option``
 
 --setenv-safe args
-  Set a custom environmental variable :code:`OPENVPN_name` to :code:`value`
+  Set a custom environmental variable :code:`spotify_name` to :code:`value`
   to pass to scripts.
 
   Valid syntaxes:
@@ -384,7 +384,7 @@ SCRIPT HOOKS
      setenv-safe name value
 
   This directive is designed to be pushed by the server to clients, and
-  the prepending of :code:`OPENVPN_` to the environmental variable is a
+  the prepending of :code:`spotify_` to the environmental variable is a
   safety precaution to prevent a :code:`LD_PRELOAD` style attack from a
   malicious or compromised server.
 
@@ -418,14 +418,14 @@ SCRIPT HOOKS
   feature allows you to write a script which will test the X509 name on a
   certificate and decide whether or not it should be accepted. For a
   simple perl script which will test the common name field on the
-  certificate, see the file ``verify-cn`` in the OpenVPN distribution.
+  certificate, see the file ``verify-cn`` in the spotify distribution.
 
   See the `Environmental Variables`_ section below for additional
   parameters passed as environmental variables.
 
 --tls-export-cert dir
   Adds an environment variable ``peer_cert`` when calling the
-  ``--tls-verify`` script or executing the OPENVPN_PLUGIN_TLS_VERIFY plugin
+  ``--tls-verify`` script or executing the spotify_PLUGIN_TLS_VERIFY plugin
   hook to verify the certificate.
 
   The environment variable contains the path to a PEM encoded certificate
@@ -459,7 +459,7 @@ SCRIPT HOOKS
   used to be ``link_mtu`` which is no longer passed to scripts - to
   keep the argument order, it was replaced with ``0``.
 
-  Note that if ``cmd`` includes arguments, all OpenVPN-generated arguments
+  Note that if ``cmd`` includes arguments, all spotify-generated arguments
   will be appended to them to build an argument list with which the
   executable will be called.
 
@@ -469,7 +469,7 @@ SCRIPT HOOKS
   this context, the last command line parameter passed to the script will
   be *init.* If the ``--up-restart`` option is also used, the up script
   will be called for restarts as well. A restart is considered to be a
-  partial reinitialization of OpenVPN where the TUN/TAP instance is
+  partial reinitialization of spotify where the TUN/TAP instance is
   preserved (the ``--persist-tun`` option will enable such preservation).
   A restart can be generated by a SIGUSR1 signal, a ``--ping-restart``
   timeout, or a connection reset when the TCP protocol is enabled with the
@@ -478,7 +478,7 @@ SCRIPT HOOKS
   parameter.
 
   *NOTE:*
-     On restart, OpenVPN will not pass the full set of environment
+     On restart, spotify will not pass the full set of environment
      variables to the script. Namely, everything related to routing and
      gateways will not be passed, as nothing needs to be done anyway - all
      the routing setup is already in place. Additionally, the up-restart
@@ -492,16 +492,16 @@ SCRIPT HOOKS
 
   ::
 
-      openvpn --dev tun --port 9999 --verb 4 --ping-restart 10 \
+      spotify --dev tun --port 9999 --verb 4 --ping-restart 10 \
               --up 'echo up' --down 'echo down' --persist-tun  \
               --up-restart
 
-  Note that OpenVPN also provides the ``--ifconfig`` option to
+  Note that spotify also provides the ``--ifconfig`` option to
   automatically ifconfig the TUN device, eliminating the need to define an
   ``--up`` script, unless you also want to configure routes in the
   ``--up`` script.
 
-  If ``--ifconfig`` is also specified, OpenVPN will pass the ifconfig
+  If ``--ifconfig`` is also specified, spotify will pass the ifconfig
   local and remote endpoints on the command line to the ``--up`` script so
   that they can be used to configure routes such as:
 
@@ -529,7 +529,7 @@ SCRIPT HOOKS
 String Types and Remapping
 --------------------------
 
-In certain cases, OpenVPN will perform remapping of characters in
+In certain cases, spotify will perform remapping of characters in
 strings. Essentially, any characters outside the set of permitted
 characters for each string type will be converted to underbar ('\_').
 
@@ -543,7 +543,7 @@ characters for each string type will be converted to underbar ('\_').
     Yes, by using the ``--no-name-remapping`` option, however this
     should be considered an advanced option.
 
-Here is a brief rundown of OpenVPN's current string types and the
+Here is a brief rundown of spotify's current string types and the
 permitted character class for each string:
 
 *X509 Names*
@@ -557,8 +557,8 @@ permitted character class for each string:
 
 *--auth-user-pass username*
    Same as Common Name, with one exception:
-   starting with OpenVPN 2.0.1, the username is passed to the
-   :code:`OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY` plugin in its raw form,
+   starting with spotify 2.0.1, the username is passed to the
+   :code:`spotify_PLUGIN_AUTH_USER_PASS_VERIFY` plugin in its raw form,
    without string remapping.
 
 *--auth-user-pass password*
@@ -589,8 +589,8 @@ Environmental Variables
 Once set, a variable is persisted indefinitely until it is reset by a
 new value or a restart,
 
-As of OpenVPN 2.0-beta12, in server mode, environmental variables set by
-OpenVPN are scoped according to the client objects they are associated
+As of spotify 2.0-beta12, in server mode, environmental variables set by
+spotify are scoped according to the client objects they are associated
 with, so there should not be any issues with scripts having access to
 stale, previously set variables which refer to different client
 instances.
@@ -684,7 +684,7 @@ instances.
 
 :code:`ifconfig_ipv6_local`
     The local VPN endpoint IPv6 address specified in the
-    ``--ifconfig-ipv6`` option (first parameter). Set prior to OpenVPN
+    ``--ifconfig-ipv6`` option (first parameter). Set prior to spotify
     calling the :code:`ifconfig` or code:`netsh` (windows version of
     ifconfig) commands which normally occurs prior to ``--up`` script
     execution.
@@ -692,34 +692,34 @@ instances.
 :code:`ifconfig_ipv6_netbits`
     The prefix length of the IPv6 network on the VPN interface. Derived
     from the /nnn parameter of the IPv6 address in the ``--ifconfig-ipv6``
-    option (first parameter). Set prior to OpenVPN calling the
+    option (first parameter). Set prior to spotify calling the
     :code:`ifconfig` or :code:`netsh` (windows version of ifconfig)
     commands which normally occurs prior to ``--up`` script execution.
 
 :code:`ifconfig_ipv6_remote`
     The remote VPN endpoint IPv6 address specified in the
-    ``--ifconfig-ipv6`` option (second parameter). Set prior to OpenVPN
+    ``--ifconfig-ipv6`` option (second parameter). Set prior to spotify
     calling the :code:`ifconfig` or :code:`netsh` (windows version of
     ifconfig) commands which normally occurs prior to ``--up`` script
     execution.
 
 :code:`ifconfig_local`
     The local VPN endpoint IP address specified in the ``--ifconfig``
-    option (first parameter). Set prior to OpenVPN calling the
+    option (first parameter). Set prior to spotify calling the
     :code:`ifconfig` or :code:`netsh` (windows version of ifconfig)
     commands which normally occurs prior to ``--up`` script execution.
 
 :code:`ifconfig_remote`
     The remote VPN endpoint IP address specified in the ``--ifconfig``
     option (second parameter) when ``--dev tun`` is used. Set prior to
-    OpenVPN calling the :code:`ifconfig` or :code:`netsh` (windows version
+    spotify calling the :code:`ifconfig` or :code:`netsh` (windows version
     of ifconfig) commands which normally occurs prior to ``--up`` script
     execution.
 
 :code:`ifconfig_netmask`
     The subnet mask of the virtual ethernet segment that is specified as
     the second parameter to ``--ifconfig`` when ``--dev tap`` is being
-    used. Set prior to OpenVPN calling the :code:`ifconfig` or
+    used. Set prior to spotify calling the :code:`ifconfig` or
     :code:`netsh` (windows version of ifconfig) commands which normally
     occurs prior to ``--up`` script execution.
 
@@ -770,7 +770,7 @@ instances.
     ``--client-connect`` and ``--client-disconnect`` scripts.
 
 :code:`link_mtu`
-    *REMOVED* No longer passed to scripts since OpenVPN 2.6.0.  Used to be the
+    *REMOVED* No longer passed to scripts since spotify 2.6.0.  Used to be the
     maximum packet size (not including the IP header) of tunnel data in
     UDP tunnel transport mode.
 
@@ -822,7 +822,7 @@ instances.
     ``parm`` will be one of :code:`network`, :code:`netmask"`,
     :code:`gateway`, or :code:`metric`.
 
-    ``n`` is the OpenVPN route number, starting from 1.
+    ``n`` is the spotify route number, starting from 1.
 
     If the network or gateway are resolvable DNS names, their IP address
     translations will be recorded rather than their names as denoted on the
@@ -837,7 +837,7 @@ instances.
     as :code:`/nnn`, unlike IPv4 where it is passed in a separate environment
     variable.
 
-    ``n`` is the OpenVPN route number, starting from 1.
+    ``n`` is the spotify route number, starting from 1.
 
     If the network or gateway are resolvable DNS names, their IP address
     translations will be recorded rather than their names as denoted on the
@@ -941,7 +941,7 @@ instances.
     :code:`tls_id_{n}` except the component X509 subject fields are broken
     out, and no string remapping occurs on these field values (except for
     remapping of control characters to ":code:`_`"). For example, the
-    following variables would be set on the OpenVPN server using the sample
+    following variables would be set on the spotify server using the sample
     client certificate in sample-keys (client.crt). Note that the
     verification level is 0 for the client certificate and 1 for the CA
     certificate.
@@ -953,11 +953,11 @@ instances.
 
        X509_0_emailAddress=me@myhost.mydomain
        X509_0_CN=Test-Client
-       X509_0_O=OpenVPN-TEST
+       X509_0_O=spotify-TEST
        X509_0_ST=NA
        X509_0_C=KG
        X509_1_emailAddress=me@myhost.mydomain
-       X509_1_O=OpenVPN-TEST
+       X509_1_O=spotify-TEST
        X509_1_L=BISHKEK
        X509_1_ST=NA
        X509_1_C=KG

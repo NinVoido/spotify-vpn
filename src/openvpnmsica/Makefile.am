@@ -1,7 +1,7 @@
 #
-#  openvpnmsica -- Custom Action DLL to provide OpenVPN-specific support to MSI packages
+#  spotifymsica -- Custom Action DLL to provide spotify-specific support to MSI packages
 #
-#  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+#  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
 #  Copyright (C) 2018-2024 Simon Rozman <simon@rozman.si>
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -32,21 +32,21 @@ EXTRA_DIST = \
 	CMakeLists.txt
 
 if WIN32
-lib_LTLIBRARIES = libopenvpnmsica.la
-libopenvpnmsica_la_CFLAGS = \
+lib_LTLIBRARIES = libspotifymsica.la
+libspotifymsica_la_CFLAGS = \
 	-municode -D_UNICODE \
 	-UNTDDI_VERSION -U_WIN32_WINNT \
 	-D_WIN32_WINNT=_WIN32_WINNT_VISTA \
 	-Wl,--kill-at
-libopenvpnmsica_la_LDFLAGS = -ladvapi32 -lole32 -lmsi -lsetupapi -liphlpapi -lshell32 -lshlwapi -lversion -lnewdev -no-undefined -avoid-version
+libspotifymsica_la_LDFLAGS = -ladvapi32 -lole32 -lmsi -lsetupapi -liphlpapi -lshell32 -lshlwapi -lversion -lnewdev -no-undefined -avoid-version
 endif
 
-libopenvpnmsica_la_SOURCES = \
+libspotifymsica_la_SOURCES = \
 	dllmain.c \
 	msiex.c msiex.h \
 	msica_arg.c msica_arg.h \
-	openvpnmsica.c openvpnmsica.h \
+	spotifymsica.c spotifymsica.h \
 	$(top_srcdir)/src/tapctl/basic.h \
 	$(top_srcdir)/src/tapctl/error.c $(top_srcdir)/src/tapctl/error.h \
 	$(top_srcdir)/src/tapctl/tap.c $(top_srcdir)/src/tapctl/tap.h \
-	openvpnmsica_resources.rc
+	spotifymsica_resources.rc

@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -71,27 +71,27 @@ typedef EVP_MD evp_md_type;
 #endif
 
 /** Maximum length of an IV */
-#define OPENVPN_MAX_IV_LENGTH   EVP_MAX_IV_LENGTH
+#define spotify_MAX_IV_LENGTH   EVP_MAX_IV_LENGTH
 
 /** Cipher is in CBC mode */
-#define OPENVPN_MODE_CBC        EVP_CIPH_CBC_MODE
+#define spotify_MODE_CBC        EVP_CIPH_CBC_MODE
 
 /** Cipher is in OFB mode */
-#define OPENVPN_MODE_OFB        EVP_CIPH_OFB_MODE
+#define spotify_MODE_OFB        EVP_CIPH_OFB_MODE
 
 /** Cipher is in CFB mode */
-#define OPENVPN_MODE_CFB        EVP_CIPH_CFB_MODE
+#define spotify_MODE_CFB        EVP_CIPH_CFB_MODE
 
 /** Cipher is in GCM mode */
-#define OPENVPN_MODE_GCM        EVP_CIPH_GCM_MODE
+#define spotify_MODE_GCM        EVP_CIPH_GCM_MODE
 
 typedef int crypto_operation_t;
 
 /** Cipher should encrypt */
-#define OPENVPN_OP_ENCRYPT      1
+#define spotify_OP_ENCRYPT      1
 
 /** Cipher should decrypt */
-#define OPENVPN_OP_DECRYPT      0
+#define spotify_OP_DECRYPT      0
 
 #define DES_KEY_LENGTH 8
 #define MD4_DIGEST_LENGTH       16

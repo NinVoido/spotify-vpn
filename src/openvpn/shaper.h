@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -107,7 +107,7 @@ shaper_delay(struct shaper *s)
 
     if (tv_defined(&s->wakeup))
     {
-        ASSERT(!openvpn_gettimeofday(&tv, NULL));
+        ASSERT(!spotify_gettimeofday(&tv, NULL));
         delay = tv_subtract(&s->wakeup, &tv, SHAPER_MAX_TIMEOUT);
 #ifdef SHAPER_DEBUG
         dmsg(D_SHAPER_DEBUG, "SHAPER shaper_delay delay=%d", delay);
@@ -141,7 +141,7 @@ shaper_wrote_bytes(struct shaper *s, int nbytes)
 
     if (tv.tv_usec)
     {
-        ASSERT(!openvpn_gettimeofday(&s->wakeup, NULL));
+        ASSERT(!spotify_gettimeofday(&s->wakeup, NULL));
         tv_add(&s->wakeup, &tv);
 
 #ifdef SHAPER_DEBUG

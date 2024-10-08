@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -38,14 +38,14 @@
 #include "basic.h"
 #include "buffer.h"
 
-/* TLS uses a tag of 128 bytes, let's do the same for OpenVPN */
-#define OPENVPN_AEAD_TAG_LENGTH 16
+/* TLS uses a tag of 128 bytes, let's do the same for spotify */
+#define spotify_AEAD_TAG_LENGTH 16
 
 /* Maximum cipher block size (bytes) */
-#define OPENVPN_MAX_CIPHER_BLOCK_SIZE 32
+#define spotify_MAX_CIPHER_BLOCK_SIZE 32
 
 /* Maximum HMAC digest size (bytes) */
-#define OPENVPN_MAX_HMAC_SIZE   64
+#define spotify_MAX_HMAC_SIZE   64
 
 /** Types referencing specific message digest hashing algorithms */
 typedef enum {
@@ -55,7 +55,7 @@ typedef enum {
 
 /** Struct used in cipher name translation table */
 typedef struct {
-    const char *openvpn_name;   /**< Cipher name used by OpenVPN */
+    const char *spotify_name;   /**< Cipher name used by spotify */
     const char *lib_name;       /**< Cipher name used by crypto library */
 } cipher_name_pair;
 
@@ -65,7 +65,7 @@ extern const size_t cipher_name_translation_table_count;
 
 /*
  * This routine should have additional OpenSSL crypto library initialisations
- * used by both crypto and ssl components of OpenVPN.
+ * used by both crypto and ssl components of spotify.
  */
 void crypto_init_lib(void);
 
@@ -182,7 +182,7 @@ int rand_bytes(uint8_t *output, int len);
  *
  * @param ciphername    Name of the cipher to check for validity (e.g.
  *                      \c AES-128-CBC). Will be translated to the library name
- *                      from the openvpn config name if needed.
+ *                      from the spotify config name if needed.
  * @param reason        Pointer where a static string indicating the reason
  *                      for rejecting the cipher should be stored. It is set to
  *                      NULL if the cipher is valid.
@@ -196,7 +196,7 @@ bool cipher_valid_reason(const char *ciphername, const char **reason);
  *
  * @param ciphername    Name of the cipher to check for validity (e.g.
  *                      \c AES-128-CBC). Will be translated to the library name
- *                      from the openvpn config name if needed.
+ *                      from the spotify config name if needed.
  *
  * @return              if the cipher is valid
  */
@@ -223,7 +223,7 @@ cipher_defined(const char *ciphername)
 
 /**
  * Retrieve a normalised string describing the cipher (e.g. \c AES-128-CBC).
- * The returned name is normalised to the OpenVPN config name in case the
+ * The returned name is normalised to the spotify config name in case the
  * name differs from the name used by the crypto library.
  *
  * Returns [null-cipher] in case the ciphername is none. NULL if the cipher
@@ -336,7 +336,7 @@ void cipher_ctx_free(cipher_ctx_t *ctx);
  * @param key           Buffer containing the key to use
  * @param ciphername    Ciphername of the cipher to use
  * @param enc           Whether to encrypt or decrypt (either
- *                      \c OPENVPN_OP_ENCRYPT or \c OPENVPN_OP_DECRYPT).
+ *                      \c spotify_OP_ENCRYPT or \c spotify_OP_DECRYPT).
  */
 void cipher_ctx_init(cipher_ctx_t *ctx, const uint8_t *key,
                      const char *cipername, crypto_operation_t enc);
@@ -375,8 +375,8 @@ int cipher_ctx_block_size(const cipher_ctx_t *ctx);
  *
  * @param ctx           Cipher's context. May not be NULL.
  *
- * @return              Cipher mode, either \c OPENVPN_MODE_CBC, \c
- *                      OPENVPN_MODE_OFB or \c OPENVPN_MODE_CFB
+ * @return              Cipher mode, either \c spotify_MODE_CBC, \c
+ *                      spotify_MODE_OFB or \c spotify_MODE_CFB
  */
 int cipher_ctx_mode(const cipher_ctx_t *ctx);
 
@@ -683,24 +683,24 @@ void hmac_ctx_update(hmac_ctx_t *ctx, const uint8_t *src, int src_len);
 void hmac_ctx_final(hmac_ctx_t *ctx, uint8_t *dst);
 
 /**
- * Translate an OpenVPN cipher name to a crypto library cipher name.
+ * Translate an spotify cipher name to a crypto library cipher name.
  *
- * @param cipher_name   An OpenVPN cipher name
+ * @param cipher_name   An spotify cipher name
  *
  * @return              The corresponding crypto library cipher name, or NULL
  *                      if no matching cipher name was found.
  */
-const char *translate_cipher_name_from_openvpn(const char *cipher_name);
+const char *translate_cipher_name_from_spotify(const char *cipher_name);
 
 /**
- * Translate a crypto library cipher name to an OpenVPN cipher name.
+ * Translate a crypto library cipher name to an spotify cipher name.
  *
  * @param cipher_name   A crypto library cipher name
  *
- * @return              The corresponding OpenVPN cipher name, or NULL if no
+ * @return              The corresponding spotify cipher name, or NULL if no
  *                      matching cipher name was found.
  */
-const char *translate_cipher_name_to_openvpn(const char *cipher_name);
+const char *translate_cipher_name_to_spotify(const char *cipher_name);
 
 
 /**

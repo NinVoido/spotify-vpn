@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -32,21 +32,21 @@
 
 #include <openssl/x509.h>
 
-#ifndef __OPENVPN_X509_CERT_T_DECLARED
-#define __OPENVPN_X509_CERT_T_DECLARED
-typedef X509 openvpn_x509_cert_t;
+#ifndef __spotify_X509_CERT_T_DECLARED
+#define __spotify_X509_CERT_T_DECLARED
+typedef X509 spotify_x509_cert_t;
 #endif
 
-/** @name Function for authenticating a new connection from a remote OpenVPN peer
+/** @name Function for authenticating a new connection from a remote spotify peer
  *  @{ */
 
 /**
- * Verify that the remote OpenVPN peer's certificate allows setting up a
+ * Verify that the remote spotify peer's certificate allows setting up a
  * VPN tunnel.
  * @ingroup control_tls
  *
  * This callback function is called every time a new TLS session is being
- * setup to determine whether the remote OpenVPN peer's certificate is
+ * setup to determine whether the remote spotify peer's certificate is
  * allowed to connect. It is called for once for every certificate in the chain.
  * The callback functionality is configured in the \c init_ssl() function, which
  * calls the OpenSSL library's \c SSL_CTX_set_verify() function with \c
@@ -54,9 +54,9 @@ typedef X509 openvpn_x509_cert_t;
  *
  * It checks preverify_ok, and registers the certificate hash. If these steps
  * succeed, it calls the \c verify_cert() function, which performs
- * OpenVPN-specific verification.
+ * spotify-specific verification.
  *
- * @param preverify_ok - Whether the remote OpenVPN peer's certificate
+ * @param preverify_ok - Whether the remote spotify peer's certificate
  *                       past verification.  A value of 1 means it
  *                       verified successfully, 0 means it failed.
  * @param ctx          - The complete context used by the OpenSSL library
@@ -70,6 +70,6 @@ typedef X509 openvpn_x509_cert_t;
  */
 int verify_callback(int preverify_ok, X509_STORE_CTX *ctx);
 
-/** @} name Function for authenticating a new connection from a remote OpenVPN peer */
+/** @} name Function for authenticating a new connection from a remote spotify peer */
 
 #endif /* SSL_VERIFY_OPENSSL_H_ */

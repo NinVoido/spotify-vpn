@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -21,22 +21,22 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef OPENVPN_PLUGIN_H_
-#define OPENVPN_PLUGIN_H_
+#ifndef spotify_PLUGIN_H_
+#define spotify_PLUGIN_H_
 
-#define OPENVPN_PLUGIN_VERSION 3
+#define spotify_PLUGIN_VERSION 3
 
 #ifdef ENABLE_CRYPTO_MBEDTLS
 #include <mbedtls/x509_crt.h>
-#ifndef __OPENVPN_X509_CERT_T_DECLARED
-#define __OPENVPN_X509_CERT_T_DECLARED
-typedef mbedtls_x509_crt openvpn_x509_cert_t;
+#ifndef __spotify_X509_CERT_T_DECLARED
+#define __spotify_X509_CERT_T_DECLARED
+typedef mbedtls_x509_crt spotify_x509_cert_t;
 #endif
 #else  /* ifdef ENABLE_CRYPTO_MBEDTLS */
 #include <openssl/x509.h>
-#ifndef __OPENVPN_X509_CERT_T_DECLARED
-#define __OPENVPN_X509_CERT_T_DECLARED
-typedef X509 openvpn_x509_cert_t;
+#ifndef __spotify_X509_CERT_T_DECLARED
+#define __spotify_X509_CERT_T_DECLARED
+typedef X509 spotify_x509_cert_t;
 #endif
 #endif
 
@@ -47,159 +47,159 @@ typedef X509 openvpn_x509_cert_t;
 extern "C" {
 #endif
 
-/* Provide some basic version information to plug-ins at OpenVPN compile time
+/* Provide some basic version information to plug-ins at spotify compile time
  * This is will not be the complete version
  */
-#define OPENVPN_VERSION_MAJOR @OPENVPN_VERSION_MAJOR@
-#define OPENVPN_VERSION_MINOR @OPENVPN_VERSION_MINOR@
-#define OPENVPN_VERSION_PATCH "@OPENVPN_VERSION_PATCH@"
+#define spotify_VERSION_MAJOR @spotify_VERSION_MAJOR@
+#define spotify_VERSION_MINOR @spotify_VERSION_MINOR@
+#define spotify_VERSION_PATCH "@spotify_VERSION_PATCH@"
 
 /*
  * Plug-in types.  These types correspond to the set of script callbacks
- * supported by OpenVPN.
+ * supported by spotify.
  *
  * This is the general call sequence to expect when running in server mode:
  *
  * Initial Server Startup:
  *
- * FUNC: openvpn_plugin_open_v1
- * FUNC: openvpn_plugin_client_constructor_v1 (this is the top-level "generic"
+ * FUNC: spotify_plugin_open_v1
+ * FUNC: spotify_plugin_client_constructor_v1 (this is the top-level "generic"
  *                                             client template)
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_UP
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_ROUTE_UP
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_UP
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_ROUTE_UP
  *
  * New Client Connection:
  *
- * FUNC: openvpn_plugin_client_constructor_v1
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_TLS_VERIFY (called once for every cert
+ * FUNC: spotify_plugin_client_constructor_v1
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_TLS_VERIFY (called once for every cert
  *                                                     in the server chain)
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_TLS_FINAL
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_IPCHANGE
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_AUTH_USER_PASS_VERIFY
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_TLS_FINAL
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_IPCHANGE
  *
- * [If OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY returned OPENVPN_PLUGIN_FUNC_DEFERRED,
+ * [If spotify_PLUGIN_AUTH_USER_PASS_VERIFY returned spotify_PLUGIN_FUNC_DEFERRED,
  * we don't proceed until authentication is verified via auth_control_file]
  *
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_CLIENT_CONNECT_V2
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_LEARN_ADDRESS
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_CLIENT_CONNECT_V2
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_LEARN_ADDRESS
  *
- * The OPENVPN_PLUGIN_CLIENT_CRRESPONSE function is called when the client sends
- * the CR_RESPONSE message, this is *typically* after OPENVPN_PLUGIN_TLS_FINAL
+ * The spotify_PLUGIN_CLIENT_CRRESPONSE function is called when the client sends
+ * the CR_RESPONSE message, this is *typically* after spotify_PLUGIN_TLS_FINAL
  * but may also occur much later.
  *
  * [Client session ensues]
  *
  * For each "TLS soft reset", according to reneg-sec option (or similar):
  *
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_TLS_VERIFY (called once for every cert
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_TLS_VERIFY (called once for every cert
  *                                                     in the server chain)
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_TLS_FINAL
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_AUTH_USER_PASS_VERIFY
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_TLS_FINAL
  *
- * [If OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY returned OPENVPN_PLUGIN_FUNC_DEFERRED,
+ * [If spotify_PLUGIN_AUTH_USER_PASS_VERIFY returned spotify_PLUGIN_FUNC_DEFERRED,
  * we expect that authentication is verified via auth_control_file within
  * the number of seconds defined by the "hand-window" option.  Data channel traffic
  * will continue to flow uninterrupted during this period.]
  *
  * [Client session continues]
  *
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_CLIENT_DISCONNECT
- * FUNC: openvpn_plugin_client_destructor_v1
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_CLIENT_DISCONNECT
+ * FUNC: spotify_plugin_client_destructor_v1
  *
  * [ some time may pass ]
  *
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_LEARN_ADDRESS (this coincides with a
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_LEARN_ADDRESS (this coincides with a
  *                                                            lazy free of initial
  *                                                            learned addr object)
  * Server Shutdown:
  *
- * FUNC: openvpn_plugin_func_v1 OPENVPN_PLUGIN_DOWN
- * FUNC: openvpn_plugin_client_destructor_v1 (top-level "generic" client)
- * FUNC: openvpn_plugin_close_v1
+ * FUNC: spotify_plugin_func_v1 spotify_PLUGIN_DOWN
+ * FUNC: spotify_plugin_client_destructor_v1 (top-level "generic" client)
+ * FUNC: spotify_plugin_close_v1
  */
-#define OPENVPN_PLUGIN_UP                        0
-#define OPENVPN_PLUGIN_DOWN                      1
-#define OPENVPN_PLUGIN_ROUTE_UP                  2
-#define OPENVPN_PLUGIN_IPCHANGE                  3
-#define OPENVPN_PLUGIN_TLS_VERIFY                4
-#define OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY     5
-#define OPENVPN_PLUGIN_CLIENT_CONNECT            6
-#define OPENVPN_PLUGIN_CLIENT_DISCONNECT         7
-#define OPENVPN_PLUGIN_LEARN_ADDRESS             8
-#define OPENVPN_PLUGIN_CLIENT_CONNECT_V2         9
-#define OPENVPN_PLUGIN_TLS_FINAL                10
-/*#define OPENVPN_PLUGIN_ENABLE_PF                11 *REMOVED FEATURE* */
-#define OPENVPN_PLUGIN_ROUTE_PREDOWN            12
-#define OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER     13
-#define OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2  14
-#define OPENVPN_PLUGIN_CLIENT_CRRESPONSE        15
-#define OPENVPN_PLUGIN_N                        16
+#define spotify_PLUGIN_UP                        0
+#define spotify_PLUGIN_DOWN                      1
+#define spotify_PLUGIN_ROUTE_UP                  2
+#define spotify_PLUGIN_IPCHANGE                  3
+#define spotify_PLUGIN_TLS_VERIFY                4
+#define spotify_PLUGIN_AUTH_USER_PASS_VERIFY     5
+#define spotify_PLUGIN_CLIENT_CONNECT            6
+#define spotify_PLUGIN_CLIENT_DISCONNECT         7
+#define spotify_PLUGIN_LEARN_ADDRESS             8
+#define spotify_PLUGIN_CLIENT_CONNECT_V2         9
+#define spotify_PLUGIN_TLS_FINAL                10
+/*#define spotify_PLUGIN_ENABLE_PF                11 *REMOVED FEATURE* */
+#define spotify_PLUGIN_ROUTE_PREDOWN            12
+#define spotify_PLUGIN_CLIENT_CONNECT_DEFER     13
+#define spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2  14
+#define spotify_PLUGIN_CLIENT_CRRESPONSE        15
+#define spotify_PLUGIN_N                        16
 
 /*
  * Build a mask out of a set of plug-in types.
  */
-#define OPENVPN_PLUGIN_MASK(x) (1<<(x))
+#define spotify_PLUGIN_MASK(x) (1<<(x))
 
 /*
  * A pointer to a plugin-defined object which contains
  * the object state.
  */
-typedef void *openvpn_plugin_handle_t;
+typedef void *spotify_plugin_handle_t;
 
 /*
- * Return value for openvpn_plugin_func_v1 function
+ * Return value for spotify_plugin_func_v1 function
  */
-#define OPENVPN_PLUGIN_FUNC_SUCCESS  0
-#define OPENVPN_PLUGIN_FUNC_ERROR    1
-#define OPENVPN_PLUGIN_FUNC_DEFERRED 2
+#define spotify_PLUGIN_FUNC_SUCCESS  0
+#define spotify_PLUGIN_FUNC_ERROR    1
+#define spotify_PLUGIN_FUNC_DEFERRED 2
 
 /*
  * For Windows (needs to be modified for MSVC)
  */
-#if defined(_WIN32) && !defined(OPENVPN_PLUGIN_H)
-#define OPENVPN_EXPORT __declspec(dllexport)
+#if defined(_WIN32) && !defined(spotify_PLUGIN_H)
+#define spotify_EXPORT __declspec(dllexport)
 #else
-#define OPENVPN_EXPORT
+#define spotify_EXPORT
 #endif
 
 /*
- * If OPENVPN_PLUGIN_H is defined, we know that we are being
- * included in an OpenVPN compile, rather than a plugin compile.
+ * If spotify_PLUGIN_H is defined, we know that we are being
+ * included in an spotify compile, rather than a plugin compile.
  */
-#ifdef OPENVPN_PLUGIN_H
+#ifdef spotify_PLUGIN_H
 
 /*
- * We are compiling OpenVPN.
+ * We are compiling spotify.
  */
-#define OPENVPN_PLUGIN_DEF        typedef
-#define OPENVPN_PLUGIN_FUNC(name) (*name)
+#define spotify_PLUGIN_DEF        typedef
+#define spotify_PLUGIN_FUNC(name) (*name)
 
-#else  /* ifdef OPENVPN_PLUGIN_H */
+#else  /* ifdef spotify_PLUGIN_H */
 
 /*
  * We are compiling plugin.
  */
-#define OPENVPN_PLUGIN_DEF        OPENVPN_EXPORT
-#define OPENVPN_PLUGIN_FUNC(name) name
+#define spotify_PLUGIN_DEF        spotify_EXPORT
+#define spotify_PLUGIN_FUNC(name) name
 
 #endif
 
 /*
- * Used by openvpn_plugin_func to return structured
+ * Used by spotify_plugin_func to return structured
  * data.  The plugin should allocate all structure
  * instances, name strings, and value strings with
- * malloc, since OpenVPN will assume that it
+ * malloc, since spotify will assume that it
  * can free the list by calling free() over the same.
  */
-struct openvpn_plugin_string_list
+struct spotify_plugin_string_list
 {
-    struct openvpn_plugin_string_list *next;
+    struct spotify_plugin_string_list *next;
     char *name;
     char *value;
 };
 
 
-/* openvpn_plugin_{open,func}_v3() related structs */
+/* spotify_plugin_{open,func}_v3() related structs */
 
 /**
  * Defines version of the v3 plugin argument structs
@@ -214,20 +214,20 @@ struct openvpn_plugin_string_list
  *           the v2 plugin interface, X509 certificate information +
  *           a logging API for plug-ins.
  *
- *    2      Added ssl_api member in struct openvpn_plugin_args_open_in
- *           which identifies the SSL implementation OpenVPN is compiled
+ *    2      Added ssl_api member in struct spotify_plugin_args_open_in
+ *           which identifies the SSL implementation spotify is compiled
  *           against.
  *
  *    3      Added ovpn_version, ovpn_version_major, ovpn_version_minor
  *           and ovpn_version_patch to provide the runtime version of
- *           OpenVPN to plug-ins.
+ *           spotify to plug-ins.
  *
  *    4      Exported secure_memzero() as plugin_secure_memzero()
  *
- *    5      Exported openvpn_base64_encode() as plugin_base64_encode()
- *           Exported openvpn_base64_decode() as plugin_base64_decode()
+ *    5      Exported spotify_base64_encode() as plugin_base64_encode()
+ *           Exported spotify_base64_decode() as plugin_base64_decode()
  */
-#define OPENVPN_PLUGINv3_STRUCTVER 5
+#define spotify_PLUGINv3_STRUCTVER 5
 
 /**
  * Definitions needed for the plug-in callback functions.
@@ -242,7 +242,7 @@ typedef enum
     PLOG_ERRNO  = (1 << 8),/* Add error description to message */
     PLOG_NOMUTE = (1 << 9), /* Mute setting does not apply for message */
 
-} openvpn_plugin_log_flags_t;
+} spotify_plugin_log_flags_t;
 
 
 #ifdef __GNUC__
@@ -255,11 +255,11 @@ typedef enum
 #define _ovpn_chk_fmt(a, b)
 #endif
 
-typedef void (*plugin_log_t)(openvpn_plugin_log_flags_t flags,
+typedef void (*plugin_log_t)(spotify_plugin_log_flags_t flags,
                              const char *plugin_name,
                              const char *format, ...) _ovpn_chk_fmt (3, 4);
 
-typedef void (*plugin_vlog_t)(openvpn_plugin_log_flags_t flags,
+typedef void (*plugin_vlog_t)(spotify_plugin_log_flags_t flags,
                               const char *plugin_name,
                               const char *format,
                               va_list arglist) _ovpn_chk_fmt (3, 0);
@@ -275,12 +275,12 @@ typedef void (*plugin_vlog_t)(openvpn_plugin_log_flags_t flags,
 typedef void (*plugin_secure_memzero_t)(void *data, size_t len);
 
 /**
- *  Export of openvpn_base64_encode() to be used inside plug-ins
+ *  Export of spotify_base64_encode() to be used inside plug-ins
  *
  *  @param data   Pointer to data to BASE64 encode
  *  @param size   Length of data, in bytes
  *  @param *str   Pointer to the return buffer.  This needed memory is
- *                allocated by openvpn_base64_encode() and needs to be free()d
+ *                allocated by spotify_base64_encode() and needs to be free()d
  *                after use.
  *
  *  @return int   Returns the length of the buffer created, or -1 on error.
@@ -289,7 +289,7 @@ typedef void (*plugin_secure_memzero_t)(void *data, size_t len);
 typedef int (*plugin_base64_encode_t)(const void *data, int size, char **str);
 
 /**
- *  Export of openvpn_base64_decode() to be used inside plug-ins
+ *  Export of spotify_base64_decode() to be used inside plug-ins
  *
  *  @param str    Pointer to the BASE64 encoded data
  *  @param data   Pointer to the buffer where save the decoded data
@@ -303,11 +303,11 @@ typedef int (*plugin_base64_decode_t)(const char *str, void *data, int size);
 
 
 /**
- * Used by the openvpn_plugin_open_v3() function to pass callback
+ * Used by the spotify_plugin_open_v3() function to pass callback
  * function pointers to the plug-in.
  *
  * plugin_log
- * plugin_vlog : Use these functions to add information to the OpenVPN log file.
+ * plugin_vlog : Use these functions to add information to the spotify log file.
  *               Messages will only be displayed if the plugin_name parameter
  *               is set. PLOG_DEBUG messages will only be displayed with plug-in
  *               debug log verbosity (at the time of writing that's verb >= 7).
@@ -318,7 +318,7 @@ typedef int (*plugin_base64_decode_t)(const char *str, void *data, int size);
  *               will not remove these function calls during the compiler
  *               optimization phase.
  */
-struct openvpn_plugin_callbacks
+struct spotify_plugin_callbacks
 {
     plugin_log_t plugin_log;
     plugin_vlog_t plugin_vlog;
@@ -328,9 +328,9 @@ struct openvpn_plugin_callbacks
 };
 
 /**
- * Used by the openvpn_plugin_open_v3() function to indicate to the
- * plug-in what kind of SSL implementation OpenVPN uses.  This is
- * to avoid SEGV issues when OpenVPN is complied against mbed TLS
+ * Used by the spotify_plugin_open_v3() function to indicate to the
+ * plug-in what kind of SSL implementation spotify uses.  This is
+ * to avoid SEGV issues when spotify is complied against mbed TLS
  * and the plug-in against OpenSSL.
  */
 typedef enum {
@@ -341,18 +341,18 @@ typedef enum {
 
 /**
  * Arguments used to transport variables to the plug-in.
- * The struct openvpn_plugin_args_open_in is only used
- * by the openvpn_plugin_open_v3() function.
+ * The struct spotify_plugin_args_open_in is only used
+ * by the spotify_plugin_open_v3() function.
  *
  * STRUCT MEMBERS
  *
- * type_mask : Set by OpenVPN to the logical OR of all script
- *             types which this version of OpenVPN supports.
+ * type_mask : Set by spotify to the logical OR of all script
+ *             types which this version of spotify supports.
  *
- * argv : a NULL-terminated array of options provided to the OpenVPN
+ * argv : a NULL-terminated array of options provided to the spotify
  *        "plug-in" directive.  argv[0] is the dynamic library pathname.
  *
- * envp : a NULL-terminated array of OpenVPN-set environmental
+ * envp : a NULL-terminated array of spotify-set environmental
  *        variables in "name=value" format.  Note that for security reasons,
  *        these variables are not actually written to the "official"
  *        environmental variable store of the process.
@@ -360,12 +360,12 @@ typedef enum {
  * callbacks : a pointer to the plug-in callback function struct.
  *
  */
-struct openvpn_plugin_args_open_in
+struct spotify_plugin_args_open_in
 {
     const int type_mask;
     const char **const argv;
     const char **const envp;
-    struct openvpn_plugin_callbacks *callbacks;
+    struct spotify_plugin_callbacks *callbacks;
     const ovpnSSLAPI ssl_api;
     const char *ovpn_version;
     const unsigned int ovpn_version_major;
@@ -376,8 +376,8 @@ struct openvpn_plugin_args_open_in
 
 /**
  * Arguments used to transport variables from the plug-in back
- * to the OpenVPN process.  The struct openvpn_plugin_args_open_return
- * is only used by the openvpn_plugin_open_v3() function.
+ * to the spotify process.  The struct spotify_plugin_args_open_return
+ * is only used by the spotify_plugin_open_v3() function.
  *
  * STRUCT MEMBERS
  *
@@ -386,26 +386,26 @@ struct openvpn_plugin_args_open_in
  *              script wants to intercept the client-connect and client-disconnect
  *              script types:
  *
- *              type_mask = OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_CLIENT_CONNECT)
- *                         | OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_CLIENT_DISCONNECT)
+ *              type_mask = spotify_PLUGIN_MASK(spotify_PLUGIN_CLIENT_CONNECT)
+ *                         | spotify_PLUGIN_MASK(spotify_PLUGIN_CLIENT_DISCONNECT)
  *
  * handle :     Pointer to a global plug-in context, created by the plug-in.  This pointer
  *              is passed on to the other plug-in calls.
  *
- * return_list : used to return data back to OpenVPN.
+ * return_list : used to return data back to spotify.
  *
  */
-struct openvpn_plugin_args_open_return
+struct spotify_plugin_args_open_return
 {
     int type_mask;
-    openvpn_plugin_handle_t handle;
-    struct openvpn_plugin_string_list **return_list;
+    spotify_plugin_handle_t handle;
+    struct spotify_plugin_string_list **return_list;
 };
 
 /**
  * Arguments used to transport variables to and from the
- * plug-in.  The struct openvpn_plugin_args_func is only used
- * by the openvpn_plugin_func_v3() function.
+ * plug-in.  The struct spotify_plugin_args_func is only used
+ * by the spotify_plugin_func_v3() function.
  *
  * STRUCT MEMBERS:
  *
@@ -415,47 +415,47 @@ struct openvpn_plugin_args_open_return
  *        would normally be passed to the script.  argv[0] is the dynamic
  *        library pathname.
  *
- * envp : a NULL-terminated array of OpenVPN-set environmental
+ * envp : a NULL-terminated array of spotify-set environmental
  *        variables in "name=value" format.  Note that for security reasons,
  *        these variables are not actually written to the "official"
  *        environmental variable store of the process.
  *
- * handle : Pointer to a global plug-in context, created by the plug-in's openvpn_plugin_open_v3().
+ * handle : Pointer to a global plug-in context, created by the plug-in's spotify_plugin_open_v3().
  *
  * per_client_context : the per-client context pointer which was returned by
- *        openvpn_plugin_client_constructor_v1, if defined.
+ *        spotify_plugin_client_constructor_v1, if defined.
  *
  * current_cert_depth : Certificate depth of the certificate being passed over
  *
  * *current_cert : X509 Certificate object received from the client
  *
  */
-struct openvpn_plugin_args_func_in
+struct spotify_plugin_args_func_in
 {
     const int type;
     const char **const argv;
     const char **const envp;
-    openvpn_plugin_handle_t handle;
+    spotify_plugin_handle_t handle;
     void *per_client_context;
     int current_cert_depth;
-    openvpn_x509_cert_t *current_cert;
+    spotify_x509_cert_t *current_cert;
 };
 
 
 /**
  * Arguments used to transport variables to and from the
- * plug-in.  The struct openvpn_plugin_args_func is only used
- * by the openvpn_plugin_func_v3() function.
+ * plug-in.  The struct spotify_plugin_args_func is only used
+ * by the spotify_plugin_func_v3() function.
  *
  * STRUCT MEMBERS:
  *
- * return_list : used to return data back to OpenVPN for further processing/usage by
- *               the OpenVPN executable.
+ * return_list : used to return data back to spotify for further processing/usage by
+ *               the spotify executable.
  *
  */
-struct openvpn_plugin_args_func_return
+struct spotify_plugin_args_func_return
 {
-    struct openvpn_plugin_string_list **return_list;
+    struct spotify_plugin_string_list **return_list;
 };
 
 /*
@@ -472,7 +472,7 @@ struct openvpn_plugin_args_func_return
  * Notes:
  *
  * Plugins which use a privilege-separation model (by forking in
- * their initialization function before the main OpenVPN process
+ * their initialization function before the main spotify process
  * downgrades root privileges and/or executes a chroot) must
  * daemonize after a fork if the "daemon" environmental variable is
  * set.  In addition, if the "daemon_log_redirect" variable is set,
@@ -482,52 +482,52 @@ struct openvpn_plugin_args_func_return
  */
 
 /*
- * Prototypes for functions which OpenVPN plug-ins must define.
+ * Prototypes for functions which spotify plug-ins must define.
  */
 
 /*
- * FUNCTION: openvpn_plugin_open_v2
+ * FUNCTION: spotify_plugin_open_v2
  *
  * REQUIRED: YES
  *
- * Called on initial plug-in load.  OpenVPN will preserve plug-in state
+ * Called on initial plug-in load.  spotify will preserve plug-in state
  * across SIGUSR1 restarts but not across SIGHUP restarts.  A SIGHUP reset
  * will cause the plugin to be closed and reopened.
  *
  * ARGUMENTS
  *
- * *type_mask : Set by OpenVPN to the logical OR of all script
- *              types which this version of OpenVPN supports.  The plug-in
+ * *type_mask : Set by spotify to the logical OR of all script
+ *              types which this version of spotify supports.  The plug-in
  *              should set this value to the logical OR of all script types
  *              which the plug-in wants to intercept.  For example, if the
  *              script wants to intercept the client-connect and
  *              client-disconnect script types:
  *
- *              *type_mask = OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_CLIENT_CONNECT)
- *                         | OPENVPN_PLUGIN_MASK(OPENVPN_PLUGIN_CLIENT_DISCONNECT)
+ *              *type_mask = spotify_PLUGIN_MASK(spotify_PLUGIN_CLIENT_CONNECT)
+ *                         | spotify_PLUGIN_MASK(spotify_PLUGIN_CLIENT_DISCONNECT)
  *
- * argv : a NULL-terminated array of options provided to the OpenVPN
+ * argv : a NULL-terminated array of options provided to the spotify
  *        "plug-in" directive.  argv[0] is the dynamic library pathname.
  *
- * envp : a NULL-terminated array of OpenVPN-set environmental
+ * envp : a NULL-terminated array of spotify-set environmental
  *        variables in "name=value" format.  Note that for security reasons,
  *        these variables are not actually written to the "official"
  *        environmental variable store of the process.
  *
- * return_list : used to return data back to OpenVPN.
+ * return_list : used to return data back to spotify.
  *
  * RETURN VALUE
  *
- * An openvpn_plugin_handle_t value on success, NULL on failure
+ * An spotify_plugin_handle_t value on success, NULL on failure
  */
-OPENVPN_PLUGIN_DEF openvpn_plugin_handle_t OPENVPN_PLUGIN_FUNC(openvpn_plugin_open_v2)
+spotify_PLUGIN_DEF spotify_plugin_handle_t spotify_PLUGIN_FUNC(spotify_plugin_open_v2)
     (unsigned int *type_mask,
     const char *argv[],
     const char *envp[],
-    struct openvpn_plugin_string_list **return_list);
+    struct spotify_plugin_string_list **return_list);
 
 /*
- * FUNCTION: openvpn_plugin_func_v2
+ * FUNCTION: spotify_plugin_func_v2
  *
  * Called to perform the work of a given script type.
  *
@@ -535,8 +535,8 @@ OPENVPN_PLUGIN_DEF openvpn_plugin_handle_t OPENVPN_PLUGIN_FUNC(openvpn_plugin_op
  *
  * ARGUMENTS
  *
- * handle : the openvpn_plugin_handle_t value which was returned by
- *          openvpn_plugin_open.
+ * handle : the spotify_plugin_handle_t value which was returned by
+ *          spotify_plugin_open.
  *
  * type : one of the PLUGIN_x types
  *
@@ -544,32 +544,32 @@ OPENVPN_PLUGIN_DEF openvpn_plugin_handle_t OPENVPN_PLUGIN_FUNC(openvpn_plugin_op
  *        would normally be passed to the script.  argv[0] is the dynamic
  *        library pathname.
  *
- * envp : a NULL-terminated array of OpenVPN-set environmental
+ * envp : a NULL-terminated array of spotify-set environmental
  *        variables in "name=value" format.  Note that for security reasons,
  *        these variables are not actually written to the "official"
  *        environmental variable store of the process.
  *
  * per_client_context : the per-client context pointer which was returned by
- *        openvpn_plugin_client_constructor_v1, if defined.
+ *        spotify_plugin_client_constructor_v1, if defined.
  *
- * return_list : used to return data back to OpenVPN.
+ * return_list : used to return data back to spotify.
  *
  * RETURN VALUE
  *
- * OPENVPN_PLUGIN_FUNC_SUCCESS on success, OPENVPN_PLUGIN_FUNC_ERROR on failure
+ * spotify_PLUGIN_FUNC_SUCCESS on success, spotify_PLUGIN_FUNC_ERROR on failure
  *
- * In addition, OPENVPN_PLUGIN_FUNC_DEFERRED may be returned by
- * OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY, OPENVPN_PLUGIN_CLIENT_CONNECT and
- * OPENVPN_PLUGIN_CLIENT_CONNECT_V2. This enables asynchronous
+ * In addition, spotify_PLUGIN_FUNC_DEFERRED may be returned by
+ * spotify_PLUGIN_AUTH_USER_PASS_VERIFY, spotify_PLUGIN_CLIENT_CONNECT and
+ * spotify_PLUGIN_CLIENT_CONNECT_V2. This enables asynchronous
  * authentication or client connect  where the plugin (or one of its agents)
  * may indicate authentication success/failure or client configuration some
  * number of seconds after the return of the function handler.
- * For OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY and OPENVPN_PLUGIN_CLIENT_CONNECT
+ * For spotify_PLUGIN_AUTH_USER_PASS_VERIFY and spotify_PLUGIN_CLIENT_CONNECT
  * this is done by writing a single char to the file named by
  * auth_control_file/client_connect_deferred_file
  * in the environmental variable list (envp).
  *
- * Additionally the auth_pending_file can be written, which causes the openvpn
+ * Additionally the auth_pending_file can be written, which causes the spotify
  * server to send a pending auth request to the client. See doc/management.txt
  * for more details on this authentication mechanism. The format of the
  * auth_pending_file is
@@ -577,8 +577,8 @@ OPENVPN_PLUGIN_DEF openvpn_plugin_handle_t OPENVPN_PLUGIN_FUNC(openvpn_plugin_op
  * line 2: Pending auth method the client needs to support (e.g. openurl)
  * line 3: EXTRA (e.g. WEBAUTH::http://www.example.com)
  *
- * In addition the OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER and
- * OPENVPN_PLUGIN_CLIENT_CONNECT_DEFER_V2 are called when OpenVPN tries to
+ * In addition the spotify_PLUGIN_CLIENT_CONNECT_DEFER and
+ * spotify_PLUGIN_CLIENT_CONNECT_DEFER_V2 are called when spotify tries to
  * get the deferred result. For a V2 call implementing this function is
  * required as information is not passed by files. For the normal version
  * the call is optional.
@@ -587,50 +587,50 @@ OPENVPN_PLUGIN_DEF openvpn_plugin_handle_t OPENVPN_PLUGIN_FUNC(openvpn_plugin_op
  * '0' -- indicates auth failure
  * '1' -- indicates auth success
  *
- * OpenVPN will delete the auth_control_file after it goes out of scope.
+ * spotify will delete the auth_control_file after it goes out of scope.
  *
  * See sample/sample-plugins/defer/multi-auth.c for an example on using
  * asynchronous authentication.
  */
-OPENVPN_PLUGIN_DEF int OPENVPN_PLUGIN_FUNC(openvpn_plugin_func_v2)
-    (openvpn_plugin_handle_t handle,
+spotify_PLUGIN_DEF int spotify_PLUGIN_FUNC(spotify_plugin_func_v2)
+    (spotify_plugin_handle_t handle,
     const int type,
     const char *argv[],
     const char *envp[],
     void *per_client_context,
-    struct openvpn_plugin_string_list **return_list);
+    struct spotify_plugin_string_list **return_list);
 
 
 /*
- * FUNCTION: openvpn_plugin_open_v3
+ * FUNCTION: spotify_plugin_open_v3
  *
  * REQUIRED: YES
  *
- * Called on initial plug-in load.  OpenVPN will preserve plug-in state
+ * Called on initial plug-in load.  spotify will preserve plug-in state
  * across SIGUSR1 restarts but not across SIGHUP restarts.  A SIGHUP reset
  * will cause the plugin to be closed and reopened.
  *
  * ARGUMENTS
  *
- * version : fixed value, defines the API version of the OpenVPN plug-in API.  The plug-in
- *           should validate that this value is matching the OPENVPN_PLUGINv3_STRUCTVER
+ * version : fixed value, defines the API version of the spotify plug-in API.  The plug-in
+ *           should validate that this value is matching the spotify_PLUGINv3_STRUCTVER
  *           value.
  *
  * arguments : Structure with all arguments available to the plug-in.
  *
- * retptr :    used to return data back to OpenVPN.
+ * retptr :    used to return data back to spotify.
  *
  * RETURN VALUE
  *
- * OPENVPN_PLUGIN_FUNC_SUCCESS on success, OPENVPN_PLUGIN_FUNC_ERROR on failure
+ * spotify_PLUGIN_FUNC_SUCCESS on success, spotify_PLUGIN_FUNC_ERROR on failure
  */
-OPENVPN_PLUGIN_DEF int OPENVPN_PLUGIN_FUNC(openvpn_plugin_open_v3)
+spotify_PLUGIN_DEF int spotify_PLUGIN_FUNC(spotify_plugin_open_v3)
     (const int version,
-    struct openvpn_plugin_args_open_in const *arguments,
-    struct openvpn_plugin_args_open_return *retptr);
+    struct spotify_plugin_args_open_in const *arguments,
+    struct spotify_plugin_args_open_return *retptr);
 
 /*
- * FUNCTION: openvpn_plugin_func_v3
+ * FUNCTION: spotify_plugin_func_v3
  *
  * Called to perform the work of a given script type.
  *
@@ -638,23 +638,23 @@ OPENVPN_PLUGIN_DEF int OPENVPN_PLUGIN_FUNC(openvpn_plugin_open_v3)
  *
  * ARGUMENTS
  *
- * version : fixed value, defines the API version of the OpenVPN plug-in API.  The plug-in
- *           should validate that this value is matching the OPENVPN_PLUGINv3_STRUCTVER
+ * version : fixed value, defines the API version of the spotify plug-in API.  The plug-in
+ *           should validate that this value is matching the spotify_PLUGINv3_STRUCTVER
  *           value.
  *
  * arguments : Structure with all arguments available to the plug-in.
  *
- * retptr :    used to return data back to OpenVPN.
+ * retptr :    used to return data back to spotify.
  *
  * RETURN VALUE
  *
- * OPENVPN_PLUGIN_FUNC_SUCCESS on success, OPENVPN_PLUGIN_FUNC_ERROR on failure
+ * spotify_PLUGIN_FUNC_SUCCESS on success, spotify_PLUGIN_FUNC_ERROR on failure
  *
- * In addition, OPENVPN_PLUGIN_FUNC_DEFERRED may be returned by
- * OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY.  This enables asynchronous
+ * In addition, spotify_PLUGIN_FUNC_DEFERRED may be returned by
+ * spotify_PLUGIN_AUTH_USER_PASS_VERIFY.  This enables asynchronous
  * authentication where the plugin (or one of its agents) may indicate
  * authentication success/failure some number of seconds after the return
- * of the OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY handler by writing a single
+ * of the spotify_PLUGIN_AUTH_USER_PASS_VERIFY handler by writing a single
  * char to the file named by auth_control_file in the environmental variable
  * list (envp).
  *
@@ -662,79 +662,79 @@ OPENVPN_PLUGIN_DEF int OPENVPN_PLUGIN_FUNC(openvpn_plugin_open_v3)
  * '0' -- indicates auth failure
  * '1' -- indicates auth success
  *
- * OpenVPN will delete the auth_control_file after it goes out of scope.
+ * spotify will delete the auth_control_file after it goes out of scope.
  *
  * See sample/sample-plugins/defer/simple.c for an example on using
  * asynchronous authentication.
  */
-OPENVPN_PLUGIN_DEF int OPENVPN_PLUGIN_FUNC(openvpn_plugin_func_v3)
+spotify_PLUGIN_DEF int spotify_PLUGIN_FUNC(spotify_plugin_func_v3)
     (const int version,
-    struct openvpn_plugin_args_func_in const *arguments,
-    struct openvpn_plugin_args_func_return *retptr);
+    struct spotify_plugin_args_func_in const *arguments,
+    struct spotify_plugin_args_func_return *retptr);
 
 /*
- * FUNCTION: openvpn_plugin_close_v1
+ * FUNCTION: spotify_plugin_close_v1
  *
  * REQUIRED: YES
  *
  * ARGUMENTS
  *
- * handle : the openvpn_plugin_handle_t value which was returned by
- *          openvpn_plugin_open.
+ * handle : the spotify_plugin_handle_t value which was returned by
+ *          spotify_plugin_open.
  *
  * Called immediately prior to plug-in unload.
  */
-OPENVPN_PLUGIN_DEF void OPENVPN_PLUGIN_FUNC(openvpn_plugin_close_v1)
-    (openvpn_plugin_handle_t handle);
+spotify_PLUGIN_DEF void spotify_PLUGIN_FUNC(spotify_plugin_close_v1)
+    (spotify_plugin_handle_t handle);
 
 /*
- * FUNCTION: openvpn_plugin_abort_v1
+ * FUNCTION: spotify_plugin_abort_v1
  *
  * REQUIRED: NO
  *
  * ARGUMENTS
  *
- * handle : the openvpn_plugin_handle_t value which was returned by
- *          openvpn_plugin_open.
+ * handle : the spotify_plugin_handle_t value which was returned by
+ *          spotify_plugin_open.
  *
- * Called when OpenVPN is in the process of aborting due to a fatal error.
+ * Called when spotify is in the process of aborting due to a fatal error.
  * Will only be called on an open context returned by a prior successful
- * openvpn_plugin_open callback.
+ * spotify_plugin_open callback.
  */
-OPENVPN_PLUGIN_DEF void OPENVPN_PLUGIN_FUNC(openvpn_plugin_abort_v1)
-    (openvpn_plugin_handle_t handle);
+spotify_PLUGIN_DEF void spotify_PLUGIN_FUNC(spotify_plugin_abort_v1)
+    (spotify_plugin_handle_t handle);
 
 /*
- * FUNCTION: openvpn_plugin_client_constructor_v1
+ * FUNCTION: spotify_plugin_client_constructor_v1
  *
  * Called to allocate a per-client memory region, which
- * is then passed to the openvpn_plugin_func_v2 function.
- * This function is called every time the OpenVPN server
+ * is then passed to the spotify_plugin_func_v2 function.
+ * This function is called every time the spotify server
  * constructs a client instance object, which normally
  * occurs when a session-initiating packet is received
  * by a new client, even before the client has authenticated.
  *
  * This function should allocate the private memory needed
- * by the plugin to track individual OpenVPN clients, and
+ * by the plugin to track individual spotify clients, and
  * return a void * to this memory region.
  *
  * REQUIRED: NO
  *
  * ARGUMENTS
  *
- * handle : the openvpn_plugin_handle_t value which was returned by
- *          openvpn_plugin_open.
+ * handle : the spotify_plugin_handle_t value which was returned by
+ *          spotify_plugin_open.
  *
  * RETURN VALUE
  *
  * void * pointer to plugin's private per-client memory region, or NULL
  * if no memory region is required.
  */
-OPENVPN_PLUGIN_DEF void *OPENVPN_PLUGIN_FUNC(openvpn_plugin_client_constructor_v1)
-    (openvpn_plugin_handle_t handle);
+spotify_PLUGIN_DEF void *spotify_PLUGIN_FUNC(spotify_plugin_client_constructor_v1)
+    (spotify_plugin_handle_t handle);
 
 /*
- * FUNCTION: openvpn_plugin_client_destructor_v1
+ * FUNCTION: spotify_plugin_client_destructor_v1
  *
  * This function is called on client instance object destruction.
  *
@@ -742,69 +742,69 @@ OPENVPN_PLUGIN_DEF void *OPENVPN_PLUGIN_FUNC(openvpn_plugin_client_constructor_v
  *
  * ARGUMENTS
  *
- * handle : the openvpn_plugin_handle_t value which was returned by
- *          openvpn_plugin_open.
+ * handle : the spotify_plugin_handle_t value which was returned by
+ *          spotify_plugin_open.
  *
  * per_client_context : the per-client context pointer which was returned by
- *        openvpn_plugin_client_constructor_v1, if defined.
+ *        spotify_plugin_client_constructor_v1, if defined.
  */
-OPENVPN_PLUGIN_DEF void OPENVPN_PLUGIN_FUNC(openvpn_plugin_client_destructor_v1)
-    (openvpn_plugin_handle_t handle, void *per_client_context);
+spotify_PLUGIN_DEF void spotify_PLUGIN_FUNC(spotify_plugin_client_destructor_v1)
+    (spotify_plugin_handle_t handle, void *per_client_context);
 
 /*
- * FUNCTION: openvpn_plugin_select_initialization_point_v1
+ * FUNCTION: spotify_plugin_select_initialization_point_v1
  *
- * Several different points exist in OpenVPN's initialization sequence where
- * the openvpn_plugin_open function can be called.  While the default is
- * OPENVPN_PLUGIN_INIT_PRE_DAEMON, this function can be used to select a
+ * Several different points exist in spotify's initialization sequence where
+ * the spotify_plugin_open function can be called.  While the default is
+ * spotify_PLUGIN_INIT_PRE_DAEMON, this function can be used to select a
  * different initialization point.  For example, if your plugin needs to
- * return configuration parameters to OpenVPN, use
- * OPENVPN_PLUGIN_INIT_PRE_CONFIG_PARSE.
+ * return configuration parameters to spotify, use
+ * spotify_PLUGIN_INIT_PRE_CONFIG_PARSE.
  *
  * REQUIRED: NO
  *
  * RETURN VALUE:
  *
- * An OPENVPN_PLUGIN_INIT_x value.
+ * An spotify_PLUGIN_INIT_x value.
  */
-#define OPENVPN_PLUGIN_INIT_PRE_CONFIG_PARSE 1
-#define OPENVPN_PLUGIN_INIT_PRE_DAEMON       2 /* default */
-#define OPENVPN_PLUGIN_INIT_POST_DAEMON      3
-#define OPENVPN_PLUGIN_INIT_POST_UID_CHANGE  4
+#define spotify_PLUGIN_INIT_PRE_CONFIG_PARSE 1
+#define spotify_PLUGIN_INIT_PRE_DAEMON       2 /* default */
+#define spotify_PLUGIN_INIT_POST_DAEMON      3
+#define spotify_PLUGIN_INIT_POST_UID_CHANGE  4
 
-OPENVPN_PLUGIN_DEF int OPENVPN_PLUGIN_FUNC(openvpn_plugin_select_initialization_point_v1)
+spotify_PLUGIN_DEF int spotify_PLUGIN_FUNC(spotify_plugin_select_initialization_point_v1)
     (void);
 
 /*
- * FUNCTION: openvpn_plugin_min_version_required_v1
+ * FUNCTION: spotify_plugin_min_version_required_v1
  *
- * This function is called by OpenVPN to query the minimum
+ * This function is called by spotify to query the minimum
  * plugin interface version number required by the plugin.
  *
  * REQUIRED: NO
  *
  * RETURN VALUE
  *
- * The minimum OpenVPN plugin interface version number necessary to support
+ * The minimum spotify plugin interface version number necessary to support
  * this plugin.
  */
-OPENVPN_PLUGIN_DEF int OPENVPN_PLUGIN_FUNC(openvpn_plugin_min_version_required_v1)
+spotify_PLUGIN_DEF int spotify_PLUGIN_FUNC(spotify_plugin_min_version_required_v1)
     (void);
 
 /*
  * Deprecated functions which are still supported for backward compatibility.
  */
 
-OPENVPN_PLUGIN_DEF openvpn_plugin_handle_t OPENVPN_PLUGIN_FUNC(openvpn_plugin_open_v1)
+spotify_PLUGIN_DEF spotify_plugin_handle_t spotify_PLUGIN_FUNC(spotify_plugin_open_v1)
     (unsigned int *type_mask,
     const char *argv[],
     const char *envp[]);
 
-OPENVPN_PLUGIN_DEF int OPENVPN_PLUGIN_FUNC(openvpn_plugin_func_v1)
-    (openvpn_plugin_handle_t handle, const int type, const char *argv[], const char *envp[]);
+spotify_PLUGIN_DEF int spotify_PLUGIN_FUNC(spotify_plugin_func_v1)
+    (spotify_plugin_handle_t handle, const int type, const char *argv[], const char *envp[]);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* OPENVPN_PLUGIN_H_ */
+#endif /* spotify_PLUGIN_H_ */

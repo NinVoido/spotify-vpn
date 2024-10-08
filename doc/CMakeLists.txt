@@ -44,7 +44,7 @@ if (RST2MAN STREQUAL "RST2MAN-NOTFOUND")
     set(_GENERATE_MAN_DOC NO)
 endif ()
 
-set(OPENVPN_SECTIONS
+set(spotify_SECTIONS
     man-sections/advanced-options.rst
     man-sections/cipher-negotiation.rst
     man-sections/client-options.rst
@@ -71,7 +71,7 @@ set(OPENVPN_SECTIONS
     man-sections/windows-options.rst
     )
 
-set(OPENVPN_EXAMPLES_SECTIONS
+set(spotify_EXAMPLES_SECTIONS
     man-sections/example-fingerprint.rst
     man-sections/examples.rst
     )
@@ -79,33 +79,33 @@ set(OPENVPN_EXAMPLES_SECTIONS
 set(RST_FLAGS --strict)
 
 if (_GENERATE_HTML_DOC)
-    list(APPEND ALL_DOCS openvpn.8.html openvpn-examples.5.html)
+    list(APPEND ALL_DOCS spotify.8.html spotify-examples.5.html)
     add_custom_command(
-        OUTPUT openvpn.8.html
-        COMMAND ${_MAYBE_PYTHON} ${RST2HTML} ${RST_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/openvpn.8.rst ${CMAKE_CURRENT_BINARY_DIR}/openvpn.8.html
-        MAIN_DEPENDENCY openvpn.8.rst
-        DEPENDS ${OPENVPN_SECTIONS}
+        OUTPUT spotify.8.html
+        COMMAND ${_MAYBE_PYTHON} ${RST2HTML} ${RST_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/spotify.8.rst ${CMAKE_CURRENT_BINARY_DIR}/spotify.8.html
+        MAIN_DEPENDENCY spotify.8.rst
+        DEPENDS ${spotify_SECTIONS}
         )
     add_custom_command(
-        OUTPUT openvpn-examples.5.html
-        COMMAND ${_MAYBE_PYTHON} ${RST2HTML} ${RST_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/openvpn-examples.5.rst ${CMAKE_CURRENT_BINARY_DIR}/openvpn-examples.5.html
-        MAIN_DEPENDENCY openvpn-examples.5.rst
-        DEPENDS ${OPENVPN_EXAMPLES_SECTIONS}
+        OUTPUT spotify-examples.5.html
+        COMMAND ${_MAYBE_PYTHON} ${RST2HTML} ${RST_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/spotify-examples.5.rst ${CMAKE_CURRENT_BINARY_DIR}/spotify-examples.5.html
+        MAIN_DEPENDENCY spotify-examples.5.rst
+        DEPENDS ${spotify_EXAMPLES_SECTIONS}
         )
 endif ()
 if (_GENERATE_MAN_DOC)
-    list(APPEND ALL_DOCS openvpn.8 openvpn-examples.5)
+    list(APPEND ALL_DOCS spotify.8 spotify-examples.5)
     add_custom_command(
-        OUTPUT openvpn.8
-        COMMAND ${_MAYBE_PYTHON} ${RST2MAN} ${RST_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/openvpn.8.rst ${CMAKE_CURRENT_BINARY_DIR}/openvpn.8
-        MAIN_DEPENDENCY openvpn.8.rst
-        DEPENDS ${OPENVPN_SECTIONS}
+        OUTPUT spotify.8
+        COMMAND ${_MAYBE_PYTHON} ${RST2MAN} ${RST_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/spotify.8.rst ${CMAKE_CURRENT_BINARY_DIR}/spotify.8
+        MAIN_DEPENDENCY spotify.8.rst
+        DEPENDS ${spotify_SECTIONS}
         )
     add_custom_command(
-        OUTPUT openvpn-examples.5
-        COMMAND ${_MAYBE_PYTHON} ${RST2MAN} ${RST_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/openvpn-examples.5.rst ${CMAKE_CURRENT_BINARY_DIR}/openvpn-examples.5
-        MAIN_DEPENDENCY openvpn-examples.5.rst
-        DEPENDS ${OPENVPN_EXAMPLES_SECTIONS}
+        OUTPUT spotify-examples.5
+        COMMAND ${_MAYBE_PYTHON} ${RST2MAN} ${RST_FLAGS} ${CMAKE_CURRENT_SOURCE_DIR}/spotify-examples.5.rst ${CMAKE_CURRENT_BINARY_DIR}/spotify-examples.5
+        MAIN_DEPENDENCY spotify-examples.5.rst
+        DEPENDS ${spotify_EXAMPLES_SECTIONS}
         )
 endif ()
 

@@ -20,7 +20,7 @@ launch_client() {
 wait_for_results() {
     tests_running="yes"
 
-    # Wait a bit to allow an OpenVPN client process to create a pidfile to
+    # Wait a bit to allow an spotify client process to create a pidfile to
     # prevent exiting too early
     sleep 1
 
@@ -95,7 +95,7 @@ while [ $count -lt $server_max_wait ]; do
         fi
     done
 
-    echo "OpenVPN test servers up: ${servers_up}/${server_count}"
+    echo "spotify test servers up: ${servers_up}/${server_count}"
 
     if [ $servers_up -ge $server_count ]; then
         retval=0
@@ -114,8 +114,8 @@ done
 # Wait a while to let server processes to settle down
 sleep 1
 
-# Launch OpenVPN clients. While at it, construct a list of test names. The list
-# is used later to determine when all OpenVPN clients have exited and it is
+# Launch spotify clients. While at it, construct a list of test names. The list
+# is used later to determine when all spotify clients have exited and it is
 # safe to check the test results.
 test_names=""
 for SUF in $TEST_RUN_LIST
@@ -128,7 +128,7 @@ do
     (launch_client "${test_name}" "${client_exec}" "${client_conf}")
 done
 
-# Wait until all OpenVPN clients have exited
+# Wait until all spotify clients have exited
 (wait_for_results)
 
 # Check test results

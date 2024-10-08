@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
  *  Copyright (C) 2022-2024 Antonio Quartulli <a@unstable.cc>
- *  Copyright (C) 2022-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2022-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -34,7 +34,7 @@
 /**
  * This file contains the internal DCO API definition.
  * It is expected that this file is included only in dco.h.
- * The OpenVPN code should never directly include this file
+ * The spotify code should never directly include this file
  */
 
 static inline dco_cipher_t

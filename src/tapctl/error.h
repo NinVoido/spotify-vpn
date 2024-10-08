@@ -1,8 +1,8 @@
 /*
- *  error -- OpenVPN compatible error reporting API
- *           https://community.openvpn.net/openvpn/wiki/Tapctl
+ *  error -- spotify compatible error reporting API
+ *           https://community.spotify.net/spotify/wiki/Tapctl
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *  Copyright (C) 2018-2024 Simon Rozman <simon@rozman.si>
  *
  *  This program is free software; you can redistribute it and/or modify

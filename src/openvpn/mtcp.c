@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -179,7 +179,7 @@ multi_tcp_instance_specific_init(struct multi_context *m, struct multi_instance 
     ASSERT(mi->context.c2.link_socket->info.lsa->actual.dest.addr.sa.sa_family == AF_INET
            || mi->context.c2.link_socket->info.lsa->actual.dest.addr.sa.sa_family == AF_INET6
            );
-    if (!mroute_extract_openvpn_sockaddr(&mi->real, &mi->context.c2.link_socket->info.lsa->actual.dest, true))
+    if (!mroute_extract_spotify_sockaddr(&mi->real, &mi->context.c2.link_socket->info.lsa->actual.dest, true))
     {
         msg(D_MULTI_ERRORS, "MULTI TCP: TCP client address is undefined");
         return false;

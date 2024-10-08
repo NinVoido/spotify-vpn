@@ -1,13 +1,13 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *  Copyright (C) 2014-2015 David Sommerseth <davids@redhat.com>
- *  Copyright (C) 2016-2024 David Sommerseth <davids@openvpn.net>
+ *  Copyright (C) 2016-2024 David Sommerseth <davids@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -193,7 +193,7 @@ parse_auth_challenge(const char *auth_challenge, struct gc_arena *gc)
         return NULL;
     }
     ac->user = (char *) gc_malloc(strlen(work)+1, true, gc);
-    openvpn_base64_decode(work, (void *)ac->user, -1);
+    spotify_base64_decode(work, (void *)ac->user, -1);
 
     /* parse challenge text */
     ac->challenge_text = string_alloc(BSTR(&b), gc);
@@ -441,8 +441,8 @@ get_user_pass_cr(struct user_pass *up,
                     }
                     if (!(flags & GET_USER_PASS_STATIC_CHALLENGE_CONCAT))
                     {
-                        if (openvpn_base64_encode(up->password, strlen(up->password), &pw64) == -1
-                            || openvpn_base64_encode(response, strlen(response), &resp64) == -1)
+                        if (spotify_base64_encode(up->password, strlen(up->password), &pw64) == -1
+                            || spotify_base64_encode(response, strlen(response), &resp64) == -1)
                         {
                             msg(M_FATAL, "ERROR: could not base64-encode password/static_response");
                         }
@@ -536,7 +536,7 @@ set_auth_token_user(struct user_pass *tk, const char *username)
          * and also allow decoding to not use all space to ensure the last byte is
          * always 0 */
         CLEAR(tk->username);
-        int len = openvpn_base64_decode(username, tk->username, USER_PASS_LEN - 1);
+        int len = spotify_base64_decode(username, tk->username, USER_PASS_LEN - 1);
         tk->defined = len > 0;
         if (!tk->defined)
         {

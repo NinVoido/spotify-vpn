@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -47,7 +47,7 @@
 
 #define TO_LINK_DEF(c)  (LINK_OUT(c) || TO_LINK_FRAG(c))
 
-#include "openvpn.h"
+#include "spotify.h"
 #include "occ.h"
 #include "ping.h"
 
@@ -80,7 +80,7 @@ void process_io(struct context *c);
  * @ingroup data_control
  *
  * This function controls the processing of a data channel packet which
- * will be sent through a VPN tunnel to a remote OpenVPN peer.  It's
+ * will be sent through a VPN tunnel to a remote spotify peer.  It's
  * general structure is as follows:
  * - Check that the client authentication has succeeded; if not, drop the
  *   packet.
@@ -93,8 +93,8 @@ void process_io(struct context *c);
  *   security operations on the packet.
  *   - Call \c tls_pre_encrypt() to choose the appropriate security
  *     parameters for this packet.
- *   - Call \c openvpn_encrypt() to encrypt and HMAC signed the packet.
- *   - Call \c tls_post_encrypt() to prepend the one-byte OpenVPN header
+ *   - Call \c spotify_encrypt() to encrypt and HMAC signed the packet.
+ *   - Call \c tls_post_encrypt() to prepend the one-byte spotify header
  *     and do some TLS accounting.
  * - Place the resulting packet in \c c->c2.to_link so that it can be sent
  *   over the external network interface to its remote destination by the
@@ -120,9 +120,9 @@ int get_server_poll_remaining_time(struct event_timeout *server_poll_timeout);
  * c->c2.buf and its source address in \c c->c2.from.  If an error
  * occurred, the length of \c c->c2.buf will be 0.
  *
- * OpenVPN running as client or as UDP server only has a single external
+ * spotify running as client or as UDP server only has a single external
  * network socket, so this function can be called with the single (client
- * mode) or top level (UDP server) context as its argument. OpenVPN
+ * mode) or top level (UDP server) context as its argument. spotify
  * running as TCP server, on the other hand, has a network socket for each
  * active VPN tunnel.  In that case this function must be called with the
  * context associated with the appropriate VPN tunnel for which data is
@@ -148,7 +148,7 @@ void read_incoming_link(struct context *c);
  *   - If a control channel packet, this function process is it and
  *     afterwards sets the packet's buffer length to 0, so that the data
  *     channel processing steps below will ignore it.
- * - Call \c openvpn_decrypt() of the \link data_crypto Data Channel
+ * - Call \c spotify_decrypt() of the \link data_crypto Data Channel
  *   Crypto module\endlink to authenticate and decrypt the packet using
  *   the security parameters loaded by \c tls_pre_decrypt() above.
  *

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *  Copyright (C) 2008-2024 David Sommerseth <dazo@eurephia.org>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -245,7 +245,7 @@ static const char usage_message[] =
     "--push-peer-info : (client only) push client info to server.\n"
     "--setenv name value : Set a custom environmental variable to pass to script.\n"
     "--setenv FORWARD_COMPATIBLE 1 : Relax config file syntax checking to allow\n"
-    "                  directives for future OpenVPN versions to be ignored.\n"
+    "                  directives for future spotify versions to be ignored.\n"
     "--ignore-unknown-option opt1 opt2 ...: Relax config file syntax. Allow\n"
     "                  these options to be ignored when unknown\n"
     "--script-security level: Where level can be:\n"
@@ -497,7 +497,7 @@ static const char usage_message[] =
     "--auth-user-pass [up] : Authenticate with server using username/password.\n"
     "                  up is a file containing the username on the first line,\n"
     "                  and a password on the second. If either the password or both\n"
-    "                  the username and the password are omitted OpenVPN will prompt\n"
+    "                  the username and the password are omitted spotify will prompt\n"
     "                  for them from console.\n"
     "--pull           : Accept certain config file options from the peer as if they\n"
     "                  were part of the local config file.  Must be specified\n"
@@ -525,7 +525,7 @@ static const char usage_message[] =
     "--connect-timeout n : when polling possible remote servers to connect to\n"
     "                  in a round-robin fashion, spend no more than n seconds\n"
     "                  waiting for a response before trying the next server.\n"
-    "--allow-recursive-routing : When this option is set, OpenVPN will not drop\n"
+    "--allow-recursive-routing : When this option is set, spotify will not drop\n"
     "                  incoming tun packets with same destination as host.\n"
     "--explicit-exit-notify [n] : On exit/restart, send exit signal to\n"
     "                  server/remote. n = # of retries, default=1.\n"
@@ -806,7 +806,7 @@ init_options(struct options *o, const bool init_gc)
     o->ce.connect_retry_seconds_max = 300;
     o->ce.connect_timeout = 120;
     o->connect_retry_max = 0;
-    o->ce.local_port = o->ce.remote_port = OPENVPN_PORT;
+    o->ce.local_port = o->ce.remote_port = spotify_PORT;
     o->verbosity = 1;
     o->status_file_update_freq = 60;
     o->status_file_version = 1;
@@ -2119,7 +2119,7 @@ parse_http_proxy_override(const char *server,
             ho->auth_retry = PAR_ALL;
         }
         ho->http_version = "1.0";
-        ho->user_agent = "OpenVPN-Autoproxy/1.0";
+        ho->user_agent = "spotify-Autoproxy/1.0";
         return ho;
     }
     else
@@ -2840,11 +2840,11 @@ options_postprocess_verify_ce(const struct options *options,
         }
 
         msg(msglevel, "DEPRECATION: No tls-client or tls-server option in "
-            "configuration detected. OpenVPN 2.8 will remove the "
+            "configuration detected. spotify 2.8 will remove the "
             "functionality to run a VPN without TLS. "
             "See the examples section in the manual page for "
             "examples of a similar quick setup with peer-fingerprint."
-            "OpenVPN 2.7 allows using this configuration when using "
+            "spotify 2.7 allows using this configuration when using "
             "--allow-deprecated-insecure-static-crypto but you should move"
             "to a proper configuration using TLS as soon as possible."
             );
@@ -2966,7 +2966,7 @@ options_postprocess_verify_ce(const struct options *options,
         if (options->pkcs12_file)
         {
 #ifdef ENABLE_CRYPTO_MBEDTLS
-            msg(M_USAGE, "Parameter --pkcs12 cannot be used with the mbed TLS version version of OpenVPN.");
+            msg(M_USAGE, "Parameter --pkcs12 cannot be used with the mbed TLS version version of spotify.");
 #else
             if (options->ca_path)
             {
@@ -2995,7 +2995,7 @@ options_postprocess_verify_ce(const struct options *options,
 #ifdef ENABLE_CRYPTO_MBEDTLS
             if (options->ca_path)
             {
-                msg(M_USAGE, "Parameter --capath cannot be used with the mbed TLS version version of OpenVPN.");
+                msg(M_USAGE, "Parameter --capath cannot be used with the mbed TLS version version of spotify.");
             }
 #endif  /* ifdef ENABLE_CRYPTO_MBEDTLS */
             if (pull)
@@ -3543,10 +3543,10 @@ options_postprocess_cipher(struct options *o)
     if (!o->ciphername)
     {
         /* We still need to set the ciphername to BF-CBC since various other
-         * parts of OpenVPN assert that the ciphername is set */
+         * parts of spotify assert that the ciphername is set */
         o->ciphername = "BF-CBC";
 
-        msg(M_INFO, "Note: --cipher is not set. OpenVPN versions before 2.5 "
+        msg(M_INFO, "Note: --cipher is not set. spotify versions before 2.5 "
             "defaulted to BF-CBC as fallback when cipher negotiation "
             "failed in this case. If you need this fallback please add "
             "'--data-ciphers-fallback BF-CBC' to your configuration "
@@ -3556,7 +3556,7 @@ options_postprocess_cipher(struct options *o)
              && !tls_item_in_cipher_list(o->ciphername, o->ncp_ciphers))
     {
         msg(M_WARN, "DEPRECATED OPTION: --cipher set to '%s' but missing in "
-            "--data-ciphers (%s). OpenVPN ignores --cipher for cipher "
+            "--data-ciphers (%s). spotify ignores --cipher for cipher "
             "negotiations. ",
             o->ciphername, o->ncp_ciphers);
     }
@@ -3564,7 +3564,7 @@ options_postprocess_cipher(struct options *o)
 
 /**
  * The option --compat-mode is used to set up default settings to values
- * used on the specified openvpn version and earlier.
+ * used on the specified spotify version and earlier.
  *
  * This function is used in various "default option" paths to test if the
  * user requested compatibility with a version before the one specified
@@ -3572,7 +3572,7 @@ options_postprocess_cipher(struct options *o)
  * altered to guarantee compatibility with the version specified by the
  * user via --compat-mode.
  *
- * @param version   need compatibility with openvpn versions before the
+ * @param version   need compatibility with spotify versions before the
  *                  one specified (20401 = before 2.4.1)
  * @return          whether compatibility should be enabled
  */
@@ -3583,7 +3583,7 @@ need_compatibility_before(const struct options *o, unsigned int version)
 }
 
 /**
- * Changes default values so that OpenVPN can be compatible with the user
+ * Changes default values so that spotify can be compatible with the user
  * specified version
  */
 static void
@@ -3665,7 +3665,7 @@ options_process_mutate_prf(struct options *o)
             "supported by the TLS library. Your system does not support this "
             "calculation anymore or your security policy (e.g. FIPS 140-2) "
             "forbids it. Connections will only work with peers running "
-            "OpenVPN 2.6.0 or higher)");
+            "spotify 2.6.0 or higher)");
 #ifndef HAVE_EXPORT_KEYING_MATERIAL
         msg(M_FATAL, "Keying Material Exporters (RFC 5705) not available either. "
             "No way to generate data channel keys left.");
@@ -4067,7 +4067,7 @@ check_cmd_access(const char *command, const char *opt, const char *chroot)
 
 /*
  * Sanity check of all file/dir options.  Checks that file/dir
- * is accessible by OpenVPN
+ * is accessible by spotify
  */
 static void
 options_postprocess_filechecks(struct options *options)
@@ -4269,7 +4269,7 @@ char *
 options_string(const struct options *o,
                const struct frame *frame,
                struct tuntap *tt,
-               openvpn_net_ctx_t *ctx,
+               spotify_net_ctx_t *ctx,
                bool remote,
                struct gc_arena *gc)
 {
@@ -4860,14 +4860,14 @@ usage(void)
 
 #endif /* ENABLE_SMALL */
 
-    openvpn_exit(OPENVPN_EXIT_STATUS_USAGE); /* exit point */
+    spotify_exit(spotify_EXIT_STATUS_USAGE); /* exit point */
 }
 
 void
 usage_small(void)
 {
     msg(M_WARN|M_NOPREFIX, "Use --help for more information.");
-    openvpn_exit(OPENVPN_EXIT_STATUS_USAGE); /* exit point */
+    spotify_exit(spotify_EXIT_STATUS_USAGE); /* exit point */
 }
 
 #ifdef _WIN32
@@ -4915,7 +4915,7 @@ usage_version(void)
 #endif
     show_dco_version(M_INFO | M_NOPREFIX);
     msg(M_INFO|M_NOPREFIX, "Originally developed by James Yonan");
-    msg(M_INFO|M_NOPREFIX, "Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>");
+    msg(M_INFO|M_NOPREFIX, "Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>");
 #ifndef ENABLE_SMALL
 #ifdef CONFIGURE_DEFINES
     msg(M_INFO|M_NOPREFIX, "Compile time defines: %s", CONFIGURE_DEFINES);
@@ -4924,7 +4924,7 @@ usage_version(void)
     msg(M_INFO|M_NOPREFIX, "special build: %s", CONFIGURE_SPECIAL_BUILD);
 #endif
 #endif
-    openvpn_exit(OPENVPN_EXIT_STATUS_GOOD);
+    spotify_exit(spotify_EXIT_STATUS_GOOD);
 }
 
 void
@@ -5814,7 +5814,7 @@ add_option(struct options *options,
         struct route_gateway_info rgi;
         struct route_ipv6_gateway_info rgi6;
         struct in6_addr remote = IN6ADDR_ANY_INIT;
-        openvpn_net_ctx_t net_ctx;
+        spotify_net_ctx_t net_ctx;
         VERIFY_PERMISSION(OPT_P_GENERAL);
         if (p[1])
         {
@@ -5824,7 +5824,7 @@ add_option(struct options *options,
         get_default_gateway(&rgi, &net_ctx);
         get_default_gateway_ipv6(&rgi6, &remote, &net_ctx);
         print_default_gateway(M_INFO, &rgi, &rgi6);
-        openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     }
 #endif
     else if (streq(p[0], "echo") || streq(p[0], "parameter"))
@@ -6865,13 +6865,13 @@ add_option(struct options *options,
     {
         VERIFY_PERMISSION(OPT_P_GENERAL|OPT_P_CONNECTION);
         msg(M_WARN, "DEPRECATED OPTION: http-proxy-retry and socks-proxy-retry: "
-            "In OpenVPN 2.4 proxy connection retries are handled like regular connections. "
+            "In spotify 2.4 proxy connection retries are handled like regular connections. "
             "Use connect-retry-max 1 to get a similar behavior as before.");
     }
     else if (streq(p[0], "http-proxy-timeout") && p[1] && !p[2])
     {
         VERIFY_PERMISSION(OPT_P_GENERAL|OPT_P_CONNECTION);
-        msg(M_WARN, "DEPRECATED OPTION: http-proxy-timeout: In OpenVPN 2.4 the timeout until a connection to a "
+        msg(M_WARN, "DEPRECATED OPTION: http-proxy-timeout: In spotify 2.4 the timeout until a connection to a "
             "server is established is managed with a single timeout set by connect-timeout");
     }
     else if (streq(p[0], "http-proxy-option") && p[1] && !p[4])
@@ -7052,7 +7052,7 @@ add_option(struct options *options,
     else if (streq(p[0], "max-routes") && !p[2])
     {
         msg(M_WARN, "DEPRECATED OPTION: --max-routes option ignored. "
-            "The number of routes is unlimited as of OpenVPN 2.4. "
+            "The number of routes is unlimited as of spotify 2.4. "
             "This option will be removed in a future version, "
             "please remove it from your configuration.");
     }
@@ -7628,7 +7628,7 @@ add_option(struct options *options,
     {
         VERIFY_PERMISSION(OPT_P_GENERAL);
         msg(M_INFO, "DEPRECATION: opt-verify is deprecated and will be removed "
-            "in OpenVPN 2.7");
+            "in spotify 2.7");
         options->ssl_flags |= SSLF_OPT_VERIFY;
     }
     else if (streq(p[0], "auth-user-pass-verify") && p[1])
@@ -7993,7 +7993,7 @@ add_option(struct options *options,
         VERIFY_PERMISSION(OPT_P_GENERAL);
         if (streq(p[1], "env"))
         {
-            msg(M_INFO, "NOTE: --win-sys env is default from OpenVPN 2.3.	 "
+            msg(M_INFO, "NOTE: --win-sys env is default from spotify 2.3.	 "
                 "This entry will now be ignored.  "
                 "Please remove this entry from your configuration file.");
         }
@@ -8264,14 +8264,14 @@ add_option(struct options *options,
     {
         VERIFY_PERMISSION(OPT_P_GENERAL);
         show_tap_win_adapters(M_INFO|M_NOPREFIX, M_WARN|M_NOPREFIX);
-        openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     }
     else if (streq(p[0], "show-net") && !p[1])
     {
         VERIFY_PERMISSION(OPT_P_GENERAL);
         show_routes(M_INFO|M_NOPREFIX);
         show_adapters(M_INFO|M_NOPREFIX);
-        openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     }
     else if (streq(p[0], "show-net-up") && !p[1])
     {
@@ -8320,7 +8320,7 @@ add_option(struct options *options,
         {
             dhcp_renew_by_adapter_index(adapter_index);
         }
-        openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     }
     else if (streq(p[0], "register-dns") && !p[1])
     {
@@ -8335,7 +8335,7 @@ add_option(struct options *options,
     else if (streq(p[0], "rdns-internal") && !p[1])
     /* standalone method for internal use
      *
-     * (if --register-dns is set, openvpn needs to call itself in a
+     * (if --register-dns is set, spotify needs to call itself in a
      *  sub-process to execute the required functions in a non-blocking
      *  way, and uses --rdns-internal to signal that to itself)
      */
@@ -8346,13 +8346,13 @@ add_option(struct options *options,
         {
             ipconfig_register_dns(NULL);
         }
-        openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     }
     else if (streq(p[0], "show-valid-subnets") && !p[1])
     {
         VERIFY_PERMISSION(OPT_P_GENERAL);
         show_valid_win32_tun_subnets();
-        openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     }
     else if (streq(p[0], "pause-exit") && !p[1])
     {
@@ -8372,7 +8372,7 @@ add_option(struct options *options,
     {
         VERIFY_PERMISSION(OPT_P_GENERAL);
         tap_allow_nonadmin_access(p[1]);
-        openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     }
     else if (streq(p[0], "user") && p[1] && !p[2])
     {
@@ -8677,7 +8677,7 @@ add_option(struct options *options,
         if (streq(p[0], "ncp-ciphers"))
         {
             msg(M_INFO, "Note: Treating option '--ncp-ciphers' as "
-                " '--data-ciphers' (renamed in OpenVPN 2.5).");
+                " '--data-ciphers' (renamed in spotify 2.5).");
         }
         options->ncp_ciphers = p[1];
     }
@@ -8742,7 +8742,7 @@ add_option(struct options *options,
     {
         VERIFY_PERMISSION(OPT_P_GENERAL);
         /* always error out, this breaks the connection */
-        msg(M_FATAL, "--no-replay was removed in OpenVPN 2.7. "
+        msg(M_FATAL, "--no-replay was removed in spotify 2.7. "
             "Update your configuration.");
     }
     else if (streq(p[0], "replay-window") && !p[3])
@@ -9106,14 +9106,14 @@ add_option(struct options *options,
     else if (streq(p[0], "compat-names"))
     {
         VERIFY_PERMISSION(OPT_P_GENERAL);
-        msg(msglevel, "--compat-names was removed in OpenVPN 2.5. "
+        msg(msglevel, "--compat-names was removed in spotify 2.5. "
             "Update your configuration.");
         goto err;
     }
     else if (streq(p[0], "no-name-remapping") && !p[1])
     {
         VERIFY_PERMISSION(OPT_P_GENERAL);
-        msg(msglevel, "--no-name-remapping was removed in OpenVPN 2.5. "
+        msg(msglevel, "--no-name-remapping was removed in spotify 2.5. "
             "Update your configuration.");
         goto err;
     }
@@ -9178,7 +9178,7 @@ add_option(struct options *options,
         if (j == 1)
         {
             /* No specific KU required, but require KU to be present */
-            options->remote_cert_ku[0] = OPENVPN_KU_REQUIRED;
+            options->remote_cert_ku[0] = spotify_KU_REQUIRED;
         }
     }
     else if (streq(p[0], "remote-cert-eku") && p[1] && !p[2])
@@ -9192,12 +9192,12 @@ add_option(struct options *options,
 
         if (streq(p[1], "server"))
         {
-            options->remote_cert_ku[0] = OPENVPN_KU_REQUIRED;
+            options->remote_cert_ku[0] = spotify_KU_REQUIRED;
             options->remote_cert_eku = "TLS Web Server Authentication";
         }
         else if (streq(p[1], "client"))
         {
-            options->remote_cert_ku[0] = OPENVPN_KU_REQUIRED;
+            options->remote_cert_ku[0] = spotify_KU_REQUIRED;
             options->remote_cert_eku = "TLS Web Client Authentication";
         }
         else
@@ -9406,7 +9406,7 @@ add_option(struct options *options,
 
         set_debug_level(options->verbosity, SDL_CONSTRAIN);
         show_pkcs11_ids(provider, cert_private);
-        openvpn_exit(OPENVPN_EXIT_STATUS_GOOD); /* exit point */
+        spotify_exit(spotify_EXIT_STATUS_GOOD); /* exit point */
     }
     else if (streq(p[0], "pkcs11-providers") && p[1])
     {
@@ -9549,12 +9549,12 @@ add_option(struct options *options,
     {
         VERIFY_PERMISSION(OPT_P_GENERAL|OPT_P_INSTANCE);
         options->vlan_pvid = positive_atoi(p[1]);
-        if (options->vlan_pvid < OPENVPN_8021Q_MIN_VID
-            || options->vlan_pvid > OPENVPN_8021Q_MAX_VID)
+        if (options->vlan_pvid < spotify_8021Q_MIN_VID
+            || options->vlan_pvid > spotify_8021Q_MAX_VID)
         {
             msg(msglevel,
                 "the parameter of --vlan-pvid parameters must be >= %u and <= %u",
-                OPENVPN_8021Q_MIN_VID, OPENVPN_8021Q_MAX_VID);
+                spotify_8021Q_MIN_VID, spotify_8021Q_MAX_VID);
             goto err;
         }
     }

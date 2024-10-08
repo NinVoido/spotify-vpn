@@ -1,4 +1,4 @@
-OpenVPN                                             Daniel Kubec <niel@rtfm.cz>
+spotify                                             Daniel Kubec <niel@rtfm.cz>
 RFC-5705                                                          February 2015
 
 
@@ -12,13 +12,13 @@ channel bindings is straightforward and well-defined mechanism how to
 authenticate other layers.
 
 
-OpenVPN Configuration
+spotify Configuration
 
 --keying-material-exporter label len
 
 Export Keying Material [RFC-5705] of len bytes (min. 16 bytes) using label in
 environment (exported_keying_material) for use by plugins in
-OPENVPN_PLUGIN_TLS_FINAL callback.
+spotify_PLUGIN_TLS_FINAL callback.
 
 Note that exporter labels have the potential to collide with existing PRF
 labels. In order to prevent this, labels MUST begin with "EXPORTER".
@@ -29,7 +29,7 @@ Use Cases:
 
 Secure bindings of AAA information to application layer
 
-   OpenVPN Client                   <------>                 OpenVPN Server
+   spotify Client                   <------>                 spotify Server
    [KeyAgreement]                                            [KeyAgreement]
 
    [TLSExportedKeyingMaterial]                  [TLSExportedKeyingMaterial]
@@ -41,7 +41,7 @@ Secure bindings of AAA information to application layer
 TLS side channel authentication and straightforward bindings of AAA information
 to application layer using well-defined mechanism.
 
-   OpenVPN Client                   <------>                 OpenVPN Server
+   spotify Client                   <------>                 spotify Server
    [KeyAgreement]                                            [KeyAgreement]
 
    [TLSExportedKeyingMaterial]                  [TLSExportedKeyingMaterial]

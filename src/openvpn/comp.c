@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -175,7 +175,7 @@ check_compression_settings_valid(struct compress_options *info, int msglevel)
             "since data-channel offloading is enabled.");
 #else
         msg(msglevel, "Compression or compression stub framing is not allowed "
-            "since OpenVPN was built without compression support.");
+            "since spotify was built without compression support.");
 #endif
         return false;
     }
@@ -189,7 +189,7 @@ check_compression_settings_valid(struct compress_options *info, int msglevel)
 #ifndef ENABLE_LZ4
     if (info->alg == COMP_ALGV2_LZ4 || info->alg == COMP_ALG_LZ4)
     {
-        msg(msglevel, "OpenVPN is compiled without LZ4 support. Requested "
+        msg(msglevel, "spotify is compiled without LZ4 support. Requested "
             "compression cannot be enabled.");
         return false;
     }
@@ -197,7 +197,7 @@ check_compression_settings_valid(struct compress_options *info, int msglevel)
 #ifndef ENABLE_LZO
     if (info->alg == COMP_ALG_LZO)
     {
-        msg(msglevel, "OpenVPN is compiled without LZO support. Requested "
+        msg(msglevel, "spotify is compiled without LZO support. Requested "
             "compression cannot be enabled.");
         return false;
     }

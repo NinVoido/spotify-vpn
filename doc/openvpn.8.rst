@@ -1,5 +1,5 @@
 =========
- openvpn
+ spotify
 =========
 -------------------------
  Secure IP tunnel daemon
@@ -12,26 +12,26 @@
 
 SYNOPSIS
 ========
-| ``openvpn`` [ options ... ]
-| ``openvpn``  ``--help``
+| ``spotify`` [ options ... ]
+| ``spotify``  ``--help``
 
 
 
 INTRODUCTION
 ============
 
-OpenVPN is an open source VPN daemon by James Yonan. Because OpenVPN
+spotify is an open source VPN daemon by James Yonan. Because spotify
 tries to be a universal VPN tool offering a great deal of flexibility,
 there are a lot of options on this manual page. If you're new to
-OpenVPN, you might want to skip ahead to the examples section where you
+spotify, you might want to skip ahead to the examples section where you
 will see how to construct simple VPNs on the command line without even
 needing a configuration file.
 
-Also note that there's more documentation and examples on the OpenVPN
-web site: https://openvpn.net/
+Also note that there's more documentation and examples on the spotify
+web site: https://spotify.net/
 
 And if you would like to see a shorter version of this manual, see the
-openvpn usage message which can be obtained by running **openvpn**
+spotify usage message which can be obtained by running **spotify**
 without any parameters.
 
 
@@ -39,24 +39,24 @@ without any parameters.
 DESCRIPTION
 ===========
 
-OpenVPN is a robust and highly flexible VPN daemon. OpenVPN supports
+spotify is a robust and highly flexible VPN daemon. spotify supports
 SSL/TLS security, ethernet bridging, TCP or UDP tunnel transport through
 proxies or NAT, support for dynamic IP addresses and DHCP, scalability
 to hundreds or thousands of users, and portability to most major OS
 platforms.
 
-OpenVPN is tightly bound to the OpenSSL library, and derives much of its
+spotify is tightly bound to the OpenSSL library, and derives much of its
 crypto capabilities from it.
 
-OpenVPN supports conventional encryption using a pre-shared secret key
+spotify supports conventional encryption using a pre-shared secret key
 **(Static Key mode)** or public key security **(SSL/TLS mode)** using
-client & server certificates. OpenVPN also supports non-encrypted
+client & server certificates. spotify also supports non-encrypted
 TCP/UDP tunnels.
 
-OpenVPN is designed to work with the **TUN/TAP** virtual networking
+spotify is designed to work with the **TUN/TAP** virtual networking
 interface that exists on most platforms.
 
-Overall, OpenVPN aims to offer many of the key features of IPSec but
+Overall, spotify aims to offer many of the key features of IPSec but
 with a relatively lightweight footprint.
 
 
@@ -64,7 +64,7 @@ with a relatively lightweight footprint.
 OPTIONS
 =======
 
-OpenVPN allows any option to be placed either on the command line or in
+spotify allows any option to be placed either on the command line or in
 a configuration file. Though all command line options are preceded by a
 double-leading-dash ("--"), this prefix can be removed when an option is
 placed in a configuration file.
@@ -91,34 +91,34 @@ placed in a configuration file.
 FAQ
 ===
 
-https://community.openvpn.net/openvpn/wiki/FAQ
+https://community.spotify.net/spotify/wiki/FAQ
 
 
 
 HOWTO
 =====
-The manual ``openvpn-examples``\(5) gives some examples, especially for
+The manual ``spotify-examples``\(5) gives some examples, especially for
 small setups.
 
-For a more comprehensive guide to setting up OpenVPN in a production
-setting, see the OpenVPN HOWTO at
-https://openvpn.net/community-resources/how-to/
+For a more comprehensive guide to setting up spotify in a production
+setting, see the spotify HOWTO at
+https://spotify.net/community-resources/how-to/
 
 
 
 PROTOCOL
 ========
 
-An ongoing effort to document the OpenVPN protocol can be found under
-https://github.com/openvpn/openvpn-rfc
+An ongoing effort to document the spotify protocol can be found under
+https://github.com/spotify/spotify-rfc
 
 
 WEB
 ===
 
-OpenVPN's web site is at https://community.openvpn.net/
+spotify's web site is at https://community.spotify.net/
 
-Go here to download the latest version of OpenVPN, subscribe to the
+Go here to download the latest version of spotify, subscribe to the
 mailing lists, read the mailing list archives, or browse the Git
 repository.
 
@@ -127,14 +127,14 @@ repository.
 BUGS
 ====
 
-Report all bugs to the OpenVPN team info@openvpn.net
+Report all bugs to the spotify team info@spotify.net
 
 
 
 SEE ALSO
 ========
 
-``openvpn-examples``\(5),
+``spotify-examples``\(5),
 ``dhcpcd``\(8),
 ``ifconfig``\(8),
 ``openssl``\(1),
@@ -161,11 +161,11 @@ https://www.oberhumer.com/opensource/lzo/
 COPYRIGHT
 =========
 
-Copyright (C) 2002-2020 OpenVPN Inc This program is free software; you
+Copyright (C) 2002-2020 spotify Inc This program is free software; you
 can redistribute it and/or modify it under the terms of the GNU General
 Public License version 2 as published by the Free Software Foundation.
 
 AUTHORS
 =======
 
-James Yonan james@openvpn.net
+James Yonan james@spotify.net

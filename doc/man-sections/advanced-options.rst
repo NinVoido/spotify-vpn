@@ -55,12 +55,12 @@ used when debugging or testing out special usage scenarios.
   :code:`p2p`.  If you want to limit the bandwidth in both directions, use
   this option on both peers.
 
-  OpenVPN uses the following algorithm to implement traffic shaping: Given
+  spotify uses the following algorithm to implement traffic shaping: Given
   a shaper rate of ``n`` bytes per second, after a datagram write of ``b``
   bytes is queued on the TCP/UDP port, wait a minimum of ``(b / n)``
   seconds before queuing the next write.
 
-  It should be noted that OpenVPN supports multiple tunnels between the
+  It should be noted that spotify supports multiple tunnels between the
   same two peers, allowing you to construct full-speed and reduced
   bandwidth tunnels at the same time, routing low-priority data such as
   off-site backups over the reduced bandwidth tunnel, and other data over
@@ -71,7 +71,7 @@ used when debugging or testing out special usage scenarios.
   the packet latency will grow so large as to trigger timeouts in the TLS
   layer and TCP connections running over the tunnel.
 
-  OpenVPN allows ``n`` to be between 100 bytes/sec and 100 Mbytes/sec.
+  spotify allows ``n`` to be between 100 bytes/sec and 100 Mbytes/sec.
 
 --sndbuf size
   Set the TCP/UDP socket send buffer size. Defaults to operating system
@@ -80,11 +80,11 @@ used when debugging or testing out special usage scenarios.
 --tcp-queue-limit n
   Maximum number of output packets queued before TCP (default :code:`64`).
 
-  When OpenVPN is tunneling data from a TUN/TAP device to a remote client
+  When spotify is tunneling data from a TUN/TAP device to a remote client
   over a TCP connection, it is possible that the TUN/TAP device might
   produce data at a faster rate than the TCP connection can support. When
   the number of output packets queued before sending to the TCP socket
-  reaches this limit for a given client connection, OpenVPN will start to
+  reaches this limit for a given client connection, spotify will start to
   drop outgoing packets directed at this client.
 
 --txqueuelen n
@@ -93,7 +93,7 @@ used when debugging or testing out special usage scenarios.
 
 --disable-dco
   Disables the opportunistic use of data channel offloading if available.
-  Without this option, OpenVPN will opportunistically use DCO mode if
+  Without this option, spotify will opportunistically use DCO mode if
   the config options and the running kernel supports using DCO.
 
   Data channel offload currently requires data-ciphers to only contain

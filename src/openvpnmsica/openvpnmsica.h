@@ -1,6 +1,6 @@
 /*
- *  openvpnmsica -- Custom Action DLL to provide OpenVPN-specific support to MSI packages
- *                  https://community.openvpn.net/openvpn/wiki/OpenVPNMSICA
+ *  spotifymsica -- Custom Action DLL to provide spotify-specific support to MSI packages
+ *                  https://community.spotify.net/spotify/wiki/spotifyMSICA
  *
  *  Copyright (C) 2018-2024 Simon Rozman <simon@rozman.si>
  *
@@ -36,7 +36,7 @@
 /**
  * Thread local storage data
  */
-struct openvpnmsica_thread_data
+struct spotifymsica_thread_data
 {
     MSIHANDLE hInstall; /** Handle to the installation session. */
 };
@@ -45,15 +45,15 @@ struct openvpnmsica_thread_data
 /**
  * MSI session handle thread local storage index
  */
-extern DWORD openvpnmsica_thread_data_idx;
+extern DWORD spotifymsica_thread_data_idx;
 
 
 /**
  * Set MSI session handle in thread local storage.
  */
-#define OPENVPNMSICA_SAVE_MSI_SESSION(hInstall) \
+#define spotifyMSICA_SAVE_MSI_SESSION(hInstall) \
     { \
-        struct openvpnmsica_thread_data *s = (struct openvpnmsica_thread_data *)TlsGetValue(openvpnmsica_thread_data_idx); \
+        struct spotifymsica_thread_data *s = (struct spotifymsica_thread_data *)TlsGetValue(spotifymsica_thread_data_idx); \
         s->hInstall = (hInstall); \
     }
 
@@ -77,7 +77,7 @@ extern "C" {
 /**
  * Determines Windows information:
  *
- * - Sets `OPENVPNSERVICE` MSI property to PID of OpenVPN Service if running, or its EXE path if
+ * - Sets `spotifySERVICE` MSI property to PID of spotify Service if running, or its EXE path if
  *   configured for auto-start.
  *
  * - Finds existing TAP-Windows6 adapters and set TAPWINDOWS6ADAPTERS and
@@ -102,7 +102,7 @@ FindSystemInfo(_In_ MSIHANDLE hInstall);
 
 
 /**
- * Find OpenVPN GUI window and send it a WM_CLOSE message.
+ * Find spotify GUI window and send it a WM_CLOSE message.
  *
  * @param hInstall      Handle to the installation provided to the DLL custom action
  *
@@ -110,12 +110,12 @@ FindSystemInfo(_In_ MSIHANDLE hInstall);
  *         See: https://msdn.microsoft.com/en-us/library/windows/desktop/aa368072.aspx
  */
 DLLEXP_DECL UINT __stdcall
-CloseOpenVPNGUI(_In_ MSIHANDLE hInstall);
+ClosespotifyGUI(_In_ MSIHANDLE hInstall);
 
 
 /**
- * Launches OpenVPN GUI. It's path is obtained by expanding the `[#bin.openvpn_gui.exe]`
- * therefore, its Id field in File table must be "bin.openvpn_gui.exe".
+ * Launches spotify GUI. It's path is obtained by expanding the `[#bin.spotify_gui.exe]`
+ * therefore, its Id field in File table must be "bin.spotify_gui.exe".
  *
  * @param hInstall      Handle to the installation provided to the DLL custom action
  *
@@ -123,7 +123,7 @@ CloseOpenVPNGUI(_In_ MSIHANDLE hInstall);
  *         See: https://msdn.microsoft.com/en-us/library/windows/desktop/aa368072.aspx
  */
 DLLEXP_DECL UINT __stdcall
-StartOpenVPNGUI(_In_ MSIHANDLE hInstall);
+StartspotifyGUI(_In_ MSIHANDLE hInstall);
 
 
 /**

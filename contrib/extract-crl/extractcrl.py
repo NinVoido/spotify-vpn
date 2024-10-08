@@ -4,10 +4,10 @@
 '''
 Helper script for CRL (certificate revocation list) file extraction
 to a directory containing files named as decimal serial numbers of
-the revoked certificates, to be used with OpenVPN CRL directory
+the revoked certificates, to be used with spotify CRL directory
 verify mode. To enable this mode, directory and 'dir' flag needs to
 be specified as parameters of '--crl-verify' option.
-For more information refer OpenVPN tls-options.rst.
+For more information refer spotify tls-options.rst.
 
 Usage example:
     extractcrl.py -f pem /path/to/crl.pem /path/to/outdir
@@ -106,7 +106,7 @@ def check_outdir(arg):
     raise argparse.ArgumentTypeError('No such directory: "{}"'.format(arg))
 
 def main():
-    parser = argparse.ArgumentParser(description='OpenVPN CRL extractor')
+    parser = argparse.ArgumentParser(description='spotify CRL extractor')
     parser.add_argument('-f', '--format',
         type=str.upper,
         default=FILETYPE_PEM, choices=[FILETYPE_PEM, FILETYPE_DER],

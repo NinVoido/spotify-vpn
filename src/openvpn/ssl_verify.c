@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -326,7 +326,7 @@ print_nsCertType(int type)
  * @param subject the peer's extracted common name
  */
 static result_t
-verify_peer_cert(const struct tls_options *opt, openvpn_x509_cert_t *peer_cert,
+verify_peer_cert(const struct tls_options *opt, spotify_x509_cert_t *peer_cert,
                  const char *subject, const char *common_name)
 {
     /* verify certificate nsCertType */
@@ -402,7 +402,7 @@ verify_peer_cert(const struct tls_options *opt, openvpn_x509_cert_t *peer_cert,
  * environment for later verification by scripts and plugins.
  */
 static void
-verify_cert_set_env(struct env_set *es, openvpn_x509_cert_t *peer_cert, int cert_depth,
+verify_cert_set_env(struct env_set *es, spotify_x509_cert_t *peer_cert, int cert_depth,
                     const char *subject, const char *common_name,
                     const struct x509_track *x509_track)
 {
@@ -463,7 +463,7 @@ verify_cert_set_env(struct env_set *es, openvpn_x509_cert_t *peer_cert, int cert
  * the filname
  */
 static bool
-verify_cert_cert_export_env(struct env_set *es, openvpn_x509_cert_t *peer_cert,
+verify_cert_cert_export_env(struct env_set *es, spotify_x509_cert_t *peer_cert,
                             const char *pem_export_fname)
 {
     /* export the path to the current certificate in pem file format */
@@ -487,20 +487,20 @@ verify_cert_cert_delete_env(struct env_set *es, const char *pem_export_fname)
  */
 static result_t
 verify_cert_call_plugin(const struct plugin_list *plugins, struct env_set *es,
-                        int cert_depth, openvpn_x509_cert_t *cert, char *subject)
+                        int cert_depth, spotify_x509_cert_t *cert, char *subject)
 {
-    if (plugin_defined(plugins, OPENVPN_PLUGIN_TLS_VERIFY))
+    if (plugin_defined(plugins, spotify_PLUGIN_TLS_VERIFY))
     {
         int ret;
         struct argv argv = argv_new();
 
         argv_printf(&argv, "%d %s", cert_depth, subject);
 
-        ret = plugin_call_ssl(plugins, OPENVPN_PLUGIN_TLS_VERIFY, &argv, NULL, es, cert_depth, cert);
+        ret = plugin_call_ssl(plugins, spotify_PLUGIN_TLS_VERIFY, &argv, NULL, es, cert_depth, cert);
 
         argv_free(&argv);
 
-        if (ret == OPENVPN_PLUGIN_FUNC_SUCCESS)
+        if (ret == spotify_PLUGIN_FUNC_SUCCESS)
         {
             msg(D_HANDSHAKE, "VERIFY PLUGIN OK: depth=%d, %s",
                 cert_depth, subject);
@@ -520,7 +520,7 @@ verify_cert_call_plugin(const struct plugin_list *plugins, struct env_set *es,
  */
 static result_t
 verify_cert_call_command(const char *verify_command, struct env_set *es,
-                         int cert_depth, openvpn_x509_cert_t *cert, char *subject)
+                         int cert_depth, spotify_x509_cert_t *cert, char *subject)
 {
     int ret;
     struct gc_arena gc = gc_new();
@@ -532,7 +532,7 @@ verify_cert_call_command(const char *verify_command, struct env_set *es,
     argv_printf_cat(&argv, "%d %s", cert_depth, subject);
 
     argv_msg_prefix(D_TLS_DEBUG, &argv, "TLS: executing verify command");
-    ret = openvpn_run_script(&argv, es, 0, "--tls-verify script");
+    ret = spotify_run_script(&argv, es, 0, "--tls-verify script");
 
     gc_free(&gc);
     argv_free(&argv);
@@ -553,7 +553,7 @@ verify_cert_call_command(const char *verify_command, struct env_set *es,
  * check peer cert against CRL directory
  */
 static result_t
-verify_check_crl_dir(const char *crl_dir, openvpn_x509_cert_t *cert,
+verify_check_crl_dir(const char *crl_dir, spotify_x509_cert_t *cert,
                      const char *subject, int cert_depth)
 {
     result_t ret = FAILURE;
@@ -595,7 +595,7 @@ cleanup:
 }
 
 result_t
-verify_cert(struct tls_session *session, openvpn_x509_cert_t *cert, int cert_depth)
+verify_cert(struct tls_session *session, spotify_x509_cert_t *cert, int cert_depth)
 {
     /* need to define these variables here so goto cleanup will always have
      * them defined */
@@ -1132,7 +1132,7 @@ update_key_auth_status(bool cached, struct key_state *ks)
 
 /**
  * The minimum times to have passed to update the cache. Older versions
- * of OpenVPN had code path that did not do any caching, so we start
+ * of spotify had code path that did not do any caching, so we start
  * with no caching (0) here as well to have the same super quick initial
  * reaction.
  */
@@ -1305,7 +1305,7 @@ verify_user_pass_script(struct tls_session *session, struct tls_multi *multi,
     struct gc_arena gc = gc_new();
     struct argv argv = argv_new();
     const char *tmp_file = "";
-    int retval = OPENVPN_PLUGIN_FUNC_ERROR;
+    int retval = spotify_PLUGIN_FUNC_ERROR;
     struct key_state *ks = &session->key[KS_PRIMARY];      /* primary key */
 
     /* Set environmental variables prior to calling script */
@@ -1346,36 +1346,36 @@ verify_user_pass_script(struct tls_session *session, struct tls_multi *multi,
     {
         msg(D_TLS_ERRORS, "TLS Auth Error (%s): "
             "could not create deferred auth control file", __func__);
-        retval = OPENVPN_PLUGIN_FUNC_ERROR;
+        retval = spotify_PLUGIN_FUNC_ERROR;
         goto error;
     }
 
     /* call command */
-    int script_ret = openvpn_run_script(&argv, session->opt->es, S_EXITCODE,
+    int script_ret = spotify_run_script(&argv, session->opt->es, S_EXITCODE,
                                         "--auth-user-pass-verify");
     switch (script_ret)
     {
         case 0:
-            retval = OPENVPN_PLUGIN_FUNC_SUCCESS;
+            retval = spotify_PLUGIN_FUNC_SUCCESS;
             break;
 
         case 2:
-            retval = OPENVPN_PLUGIN_FUNC_DEFERRED;
+            retval = spotify_PLUGIN_FUNC_DEFERRED;
             break;
 
         default:
             check_for_client_reason(multi, &ks->script_auth);
-            retval = OPENVPN_PLUGIN_FUNC_ERROR;
+            retval = spotify_PLUGIN_FUNC_ERROR;
             break;
     }
-    if (retval == OPENVPN_PLUGIN_FUNC_DEFERRED)
+    if (retval == spotify_PLUGIN_FUNC_DEFERRED)
     {
         /* Check if we the plugin has written the pending auth control
          * file and send the pending auth to the client */
         if (!key_state_check_auth_pending_file(&ks->script_auth,
                                                multi, session))
         {
-            retval = OPENVPN_PLUGIN_FUNC_ERROR;
+            retval = spotify_PLUGIN_FUNC_ERROR;
             key_state_rm_auth_control_files(&ks->script_auth);
         }
 
@@ -1409,7 +1409,7 @@ verify_crresponse_plugin(struct tls_multi *multi, const char *cr_response)
     struct tls_session *session = &multi->session[TM_ACTIVE];
     setenv_str(session->opt->es, "crresponse", cr_response);
 
-    plugin_call(session->opt->plugins, OPENVPN_PLUGIN_CLIENT_CRRESPONSE, NULL,
+    plugin_call(session->opt->plugins, spotify_PLUGIN_CLIENT_CRRESPONSE, NULL,
                 NULL, session->opt->es);
 
     setenv_del(session->opt->es, "crresponse");
@@ -1460,7 +1460,7 @@ verify_crresponse_script(struct tls_multi *multi, const char *cr_response)
     argv_printf_cat(&argv, "%s", tmp_file);
 
 
-    if (!openvpn_run_script(&argv, session->opt->es, 0, "--client-crresponse"))
+    if (!spotify_run_script(&argv, session->opt->es, 0, "--client-crresponse"))
     {
         tls_deauthenticate(multi);
     }
@@ -1476,7 +1476,7 @@ static int
 verify_user_pass_plugin(struct tls_session *session, struct tls_multi *multi,
                         const struct user_pass *up)
 {
-    int retval = OPENVPN_PLUGIN_FUNC_ERROR;
+    int retval = spotify_PLUGIN_FUNC_ERROR;
     struct key_state *ks = &session->key[KS_PRIMARY];      /* primary key */
 
     /* set password in private env space */
@@ -1491,24 +1491,24 @@ verify_user_pass_plugin(struct tls_session *session, struct tls_multi *multi,
     }
 
     /* call command */
-    retval = plugin_call(session->opt->plugins, OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY, NULL, NULL, session->opt->es);
+    retval = plugin_call(session->opt->plugins, spotify_PLUGIN_AUTH_USER_PASS_VERIFY, NULL, NULL, session->opt->es);
 
-    if (retval == OPENVPN_PLUGIN_FUNC_DEFERRED)
+    if (retval == spotify_PLUGIN_FUNC_DEFERRED)
     {
         /* Check if the plugin has written the pending auth control
          * file and send the pending auth to the client */
         if (!key_state_check_auth_pending_file(&ks->plugin_auth, multi, session))
         {
-            retval = OPENVPN_PLUGIN_FUNC_ERROR;
+            retval = spotify_PLUGIN_FUNC_ERROR;
         }
     }
 
-    if (retval == OPENVPN_PLUGIN_FUNC_ERROR)
+    if (retval == spotify_PLUGIN_FUNC_ERROR)
     {
         check_for_client_reason(multi, &ks->plugin_auth);
     }
 
-    if (retval != OPENVPN_PLUGIN_FUNC_DEFERRED)
+    if (retval != spotify_PLUGIN_FUNC_DEFERRED)
     {
         /* purge auth control filename (and file itself) for non-deferred returns */
         key_state_rm_auth_control_files(&ks->plugin_auth);
@@ -1662,13 +1662,13 @@ verify_user_pass(struct user_pass *up, struct tls_multi *multi,
         }
     }
 
-    int plugin_status = OPENVPN_PLUGIN_FUNC_SUCCESS;
-    int script_status = OPENVPN_PLUGIN_FUNC_SUCCESS;
+    int plugin_status = spotify_PLUGIN_FUNC_SUCCESS;
+    int script_status = spotify_PLUGIN_FUNC_SUCCESS;
     /* Set the environment variables used by all auth variants */
     if (!set_verify_user_pass_env(up, multi, session))
     {
         skip_auth = true;
-        plugin_status = OPENVPN_PLUGIN_FUNC_ERROR;
+        plugin_status = spotify_PLUGIN_FUNC_ERROR;
     }
 
     /* call plugin(s) and/or script */
@@ -1680,7 +1680,7 @@ verify_user_pass(struct user_pass *up, struct tls_multi *multi,
             man_def_auth = verify_user_pass_management(session, multi, up);
         }
 #endif
-        if (plugin_defined(session->opt->plugins, OPENVPN_PLUGIN_AUTH_USER_PASS_VERIFY))
+        if (plugin_defined(session->opt->plugins, spotify_PLUGIN_AUTH_USER_PASS_VERIFY))
         {
             plugin_status = verify_user_pass_plugin(session, multi, up);
         }
@@ -1698,15 +1698,15 @@ verify_user_pass(struct user_pass *up, struct tls_multi *multi,
         msg(D_TLS_ERRORS,
             "TLS Auth Error: --username-as-common name specified and username is longer than the maximum permitted Common Name length of %d characters",
             TLS_USERNAME_LEN);
-        plugin_status = OPENVPN_PLUGIN_FUNC_ERROR;
-        script_status = OPENVPN_PLUGIN_FUNC_ERROR;
+        plugin_status = spotify_PLUGIN_FUNC_ERROR;
+        script_status = spotify_PLUGIN_FUNC_ERROR;
     }
     /* auth succeeded? */
-    bool plugin_ok = plugin_status == OPENVPN_PLUGIN_FUNC_SUCCESS
-                     || plugin_status == OPENVPN_PLUGIN_FUNC_DEFERRED;
+    bool plugin_ok = plugin_status == spotify_PLUGIN_FUNC_SUCCESS
+                     || plugin_status == spotify_PLUGIN_FUNC_DEFERRED;
 
-    bool script_ok =  script_status == OPENVPN_PLUGIN_FUNC_SUCCESS
-                     || script_status ==  OPENVPN_PLUGIN_FUNC_DEFERRED;
+    bool script_ok =  script_status == spotify_PLUGIN_FUNC_SUCCESS
+                     || script_status ==  spotify_PLUGIN_FUNC_DEFERRED;
 
     if (script_ok && plugin_ok && tls_lock_username(multi, up->username)
 #ifdef ENABLE_MANAGEMENT
@@ -1715,8 +1715,8 @@ verify_user_pass(struct user_pass *up, struct tls_multi *multi,
         )
     {
         ks->authenticated = KS_AUTH_TRUE;
-        if (plugin_status == OPENVPN_PLUGIN_FUNC_DEFERRED
-            || script_status == OPENVPN_PLUGIN_FUNC_DEFERRED)
+        if (plugin_status == spotify_PLUGIN_FUNC_DEFERRED
+            || script_status == spotify_PLUGIN_FUNC_DEFERRED)
         {
             ks->authenticated = KS_AUTH_DEFERRED;
         }

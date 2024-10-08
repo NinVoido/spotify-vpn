@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -133,7 +133,7 @@ socks_username_password_auth(struct socks_proxy_info *p,
         char c;
 
         FD_ZERO(&reads);
-        openvpn_fd_set(sd, &reads);
+        spotify_fd_set(sd, &reads);
         tv.tv_sec = get_server_poll_remaining_time(server_poll_timeout);
         tv.tv_usec = 0;
 
@@ -220,7 +220,7 @@ socks_handshake(struct socks_proxy_info *p,
         char c;
 
         FD_ZERO(&reads);
-        openvpn_fd_set(sd, &reads);
+        spotify_fd_set(sd, &reads);
         tv.tv_sec = get_server_poll_remaining_time(server_poll_timeout);
         tv.tv_usec = 0;
 
@@ -305,7 +305,7 @@ socks_handshake(struct socks_proxy_info *p,
 
 static bool
 recv_socks_reply(socket_descriptor_t sd,
-                 struct openvpn_sockaddr *addr,
+                 struct spotify_sockaddr *addr,
                  struct event_timeout *server_poll_timeout,
                  volatile int *signal_received)
 {
@@ -330,7 +330,7 @@ recv_socks_reply(socket_descriptor_t sd,
         char c;
 
         FD_ZERO(&reads);
-        openvpn_fd_set(sd, &reads);
+        spotify_fd_set(sd, &reads);
         tv.tv_sec = get_server_poll_remaining_time(server_poll_timeout);
         tv.tv_usec = 0;
 
@@ -423,7 +423,7 @@ recv_socks_reply(socket_descriptor_t sd,
         memcpy(&addr->addr.in4.sin_port, buf + 8, sizeof(addr->addr.in4.sin_port));
         struct gc_arena gc = gc_new();
         msg(M_INFO, "SOCKS proxy wants us to send UDP to %s",
-            print_openvpn_sockaddr(addr, &gc));
+            print_spotify_sockaddr(addr, &gc));
         gc_free(&gc);
     }
 
@@ -454,8 +454,8 @@ port_from_servname(const char *servname)
 void
 establish_socks_proxy_passthru(struct socks_proxy_info *p,
                                socket_descriptor_t sd,  /* already open to proxy */
-                               const char *host,        /* openvpn server remote */
-                               const char *servname,    /* openvpn server port */
+                               const char *host,        /* spotify server remote */
+                               const char *servname,    /* spotify server port */
                                struct event_timeout *server_poll_timeout,
                                struct signal_info *sig_info)
 {
@@ -517,7 +517,7 @@ void
 establish_socks_proxy_udpassoc(struct socks_proxy_info *p,
                                socket_descriptor_t ctrl_sd,  /* already open to proxy */
                                socket_descriptor_t udp_sd,
-                               struct openvpn_sockaddr *relay_addr,
+                               struct spotify_sockaddr *relay_addr,
                                struct event_timeout *server_poll_timeout,
                                struct signal_info *sig_info)
 {

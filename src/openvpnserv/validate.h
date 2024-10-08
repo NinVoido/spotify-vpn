@@ -1,6 +1,6 @@
 
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -29,8 +29,8 @@
 
 /* Authorized groups who can use any options and config locations */
 #define SYSTEM_ADMIN_GROUP TEXT("Administrators")
-#define OVPN_ADMIN_GROUP TEXT("OpenVPN Administrators")
-/* The last one may be reset in registry: HKLM\Software\OpenVPN\ovpn_admin_group */
+#define OVPN_ADMIN_GROUP TEXT("spotify Administrators")
+/* The last one may be reset in registry: HKLM\Software\spotify\ovpn_admin_group */
 
 BOOL
 IsAuthorizedUser(PSID sid, const HANDLE token, const WCHAR *ovpn_admin_group);

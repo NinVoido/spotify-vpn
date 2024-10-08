@@ -1,12 +1,12 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -92,7 +92,7 @@ enum tls_auth_status
 tls_authentication_status(struct tls_multi *multi);
 
 /** Check whether the \a ks \c key_state has finished the key exchange part
- *  of the OpenVPN hand shake. This is that the key_method_2read/write
+ *  of the spotify hand shake. This is that the key_method_2read/write
  *  handshakes have been completed and certificate verification have
  *  been completed.
  *
@@ -191,7 +191,7 @@ void
 verify_crresponse_script(struct tls_multi *multi, const char *cr_response);
 
 /**
- * Call the plugin OPENVPN_PLUGIN_CLIENT_CRRESPONSE.
+ * Call the plugin spotify_PLUGIN_CLIENT_CRRESPONSE.
  *
  * As with the management interface calling the plugin is stateless in the sense
  * that it does not directly participate in the authentication but rather
@@ -231,7 +231,7 @@ struct x509_track
 #define NS_CERT_CHECK_CLIENT (1<<1)
 
 /** Require keyUsage to be present in cert (0xFFFF is an invalid KU value) */
-#define OPENVPN_KU_REQUIRED (0xFFFF)
+#define spotify_KU_REQUIRED (0xFFFF)
 
 /*
  * TODO: document

@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -37,9 +37,9 @@
 #include "tun.h"
 
 /*
- * OpenVPN's default port number as assigned by IANA.
+ * spotify's default port number as assigned by IANA.
  */
-#define OPENVPN_PORT "1194"
+#define spotify_PORT "1194"
 
 /*
  * Number of seconds that "resolv-retry infinite"
@@ -61,8 +61,8 @@ typedef uint16_t packet_size_type;
 /* convert a packet_size_type from network to host order */
 #define ntohps(x) ntohs(x)
 
-/* OpenVPN sockaddr struct */
-struct openvpn_sockaddr
+/* spotify sockaddr struct */
+struct spotify_sockaddr
 {
     /*int dummy;*/ /* add offset to force a bug if sa not explicitly dereferenced */
     union {
@@ -87,7 +87,7 @@ struct link_socket_actual
 {
     /*int dummy;*/ /* add offset to force a bug if dest not explicitly dereferenced */
 
-    struct openvpn_sockaddr dest;
+    struct spotify_sockaddr dest;
 #if ENABLE_IP_PKTINFO
     union {
 #if defined(HAVE_IN_PKTINFO) && defined(HAVE_IPI_SPEC_DST)
@@ -170,7 +170,7 @@ socket_set_buffers(socket_descriptor_t fd,
                    bool reduce_size);
 
 /*
- * This is the main socket structure used by OpenVPN.  The SOCKET_
+ * This is the main socket structure used by spotify.  The SOCKET_
  * defines try to abstract away our implementation differences between
  * using sockets on Posix vs. Win32.
  */
@@ -235,7 +235,7 @@ struct link_socket
     struct socks_proxy_info *socks_proxy;
     struct link_socket_actual socks_relay; /* Socks UDP relay address */
 
-    /* The OpenVPN server we will use the proxy to connect to */
+    /* The spotify server we will use the proxy to connect to */
     const char *proxy_dest_host;
     const char *proxy_dest_port;
 
@@ -268,7 +268,7 @@ struct link_socket
 
 #ifdef _WIN32
 
-#define openvpn_close_socket(s) closesocket(s)
+#define spotify_close_socket(s) closesocket(s)
 
 int socket_recv_queue(struct link_socket *sock, int maxsize);
 
@@ -317,7 +317,7 @@ SocketHandleSetInvalError(sockethandle_t sh)
 
 #else  /* ifdef _WIN32 */
 
-#define openvpn_close_socket(s) close(s)
+#define spotify_close_socket(s) close(s)
 
 #endif /* ifdef _WIN32 */
 
@@ -329,7 +329,7 @@ void socket_bind(socket_descriptor_t sd,
                  const char *prefix,
                  bool ipv6only);
 
-int openvpn_connect(socket_descriptor_t sd,
+int spotify_connect(socket_descriptor_t sd,
                     const struct sockaddr *remote,
                     int connect_timeout,
                     volatile int *signal_received);
@@ -362,7 +362,7 @@ const char *print_sockaddr_ex(const struct sockaddr *addr,
 
 static inline
 const char *
-print_openvpn_sockaddr_ex(const struct openvpn_sockaddr *addr,
+print_spotify_sockaddr_ex(const struct spotify_sockaddr *addr,
                           const char *separator,
                           const unsigned int flags,
                           struct gc_arena *gc)
@@ -372,7 +372,7 @@ print_openvpn_sockaddr_ex(const struct openvpn_sockaddr *addr,
 
 static inline
 const char *
-print_openvpn_sockaddr(const struct openvpn_sockaddr *addr,
+print_spotify_sockaddr(const struct spotify_sockaddr *addr,
                        struct gc_arena *gc)
 {
     return print_sockaddr_ex(&addr->addr.sa, ":", PS_SHOW_PORT, gc);
@@ -411,7 +411,7 @@ struct in6_addr add_in6_addr( struct in6_addr base, uint32_t add );
 #define SA_SET_IF_NONZERO (1<<1)
 void setenv_sockaddr(struct env_set *es,
                      const char *name_prefix,
-                     const struct openvpn_sockaddr *addr,
+                     const struct spotify_sockaddr *addr,
                      const unsigned int flags);
 
 void setenv_in_addr_t(struct env_set *es,
@@ -464,11 +464,11 @@ void link_socket_update_buffer_sizes(struct link_socket *ls, int rcvbuf, int snd
  * Low-level functions
  */
 
-/* return values of openvpn_inet_aton */
+/* return values of spotify_inet_aton */
 #define OIA_HOSTNAME   0
 #define OIA_IP         1
 #define OIA_ERROR     -1
-int openvpn_inet_aton(const char *dotted_quad, struct in_addr *addr);
+int spotify_inet_aton(const char *dotted_quad, struct in_addr *addr);
 
 /* integrity validation on pulled options */
 bool ip_addr_dotted_quad_safe(const char *dotted_quad);
@@ -546,7 +546,7 @@ in_addr_t getaddr(unsigned int flags,
 bool get_ipv6_addr(const char *hostname, struct in6_addr *network,
                    unsigned int *netbits, int msglevel);
 
-int openvpn_getaddrinfo(unsigned int flags,
+int spotify_getaddrinfo(unsigned int flags,
                         const char *hostname,
                         const char *servname,
                         int resolve_retry_seconds,
@@ -657,7 +657,7 @@ link_socket_connection_oriented(const struct link_socket *sock)
 }
 
 static inline bool
-addr_defined(const struct openvpn_sockaddr *addr)
+addr_defined(const struct spotify_sockaddr *addr)
 {
     if (!addr)
     {
@@ -728,7 +728,7 @@ link_socket_actual_defined(const struct link_socket_actual *act)
 }
 
 static inline bool
-addr_match(const struct openvpn_sockaddr *a1, const struct openvpn_sockaddr *a2)
+addr_match(const struct spotify_sockaddr *a1, const struct spotify_sockaddr *a2)
 {
     switch (a1->addr.sa.sa_family)
     {
@@ -743,7 +743,7 @@ addr_match(const struct openvpn_sockaddr *a1, const struct openvpn_sockaddr *a2)
 }
 
 static inline bool
-addrlist_match(const struct openvpn_sockaddr *a1, const struct addrinfo *addrlist)
+addrlist_match(const struct spotify_sockaddr *a1, const struct addrinfo *addrlist)
 {
     const struct addrinfo *curele;
     for (curele = addrlist; curele; curele = curele->ai_next)
@@ -772,7 +772,7 @@ addrlist_match(const struct openvpn_sockaddr *a1, const struct addrinfo *addrlis
 }
 
 static inline in_addr_t
-addr_host(const struct openvpn_sockaddr *addr)
+addr_host(const struct spotify_sockaddr *addr)
 {
     /*
      * "public" addr returned is checked against ifconfig for
@@ -788,7 +788,7 @@ addr_host(const struct openvpn_sockaddr *addr)
 
 
 static inline bool
-addrlist_port_match(const struct openvpn_sockaddr *a1, const struct addrinfo *a2)
+addrlist_port_match(const struct spotify_sockaddr *a1, const struct addrinfo *a2)
 {
     const struct addrinfo *curele;
     for (curele = a2; curele; curele = curele->ai_next)
@@ -823,7 +823,7 @@ addrlist_port_match(const struct openvpn_sockaddr *a1, const struct addrinfo *a2
 
 
 static inline bool
-addr_port_match(const struct openvpn_sockaddr *a1, const struct openvpn_sockaddr *a2)
+addr_port_match(const struct spotify_sockaddr *a1, const struct spotify_sockaddr *a2)
 {
     switch (a1->addr.sa.sa_family)
     {
@@ -840,8 +840,8 @@ addr_port_match(const struct openvpn_sockaddr *a1, const struct openvpn_sockaddr
 }
 
 static inline bool
-addr_match_proto(const struct openvpn_sockaddr *a1,
-                 const struct openvpn_sockaddr *a2,
+addr_match_proto(const struct spotify_sockaddr *a1,
+                 const struct spotify_sockaddr *a2,
                  const int proto)
 {
     return link_socket_proto_connection_oriented(proto)
@@ -851,7 +851,7 @@ addr_match_proto(const struct openvpn_sockaddr *a1,
 
 
 static inline bool
-addrlist_match_proto(const struct openvpn_sockaddr *a1,
+addrlist_match_proto(const struct spotify_sockaddr *a1,
                      struct addrinfo *addr_list,
                      const int proto)
 {
@@ -861,7 +861,7 @@ addrlist_match_proto(const struct openvpn_sockaddr *a1,
 }
 
 static inline void
-addr_zero_host(struct openvpn_sockaddr *addr)
+addr_zero_host(struct spotify_sockaddr *addr)
 {
     switch (addr->addr.sa.sa_family)
     {
@@ -934,7 +934,7 @@ socket_connection_reset(const struct link_socket *sock, int status)
         }
         else if (status < 0)
         {
-            const int err = openvpn_errno();
+            const int err = spotify_errno();
 #ifdef _WIN32
             return err == WSAECONNRESET || err == WSAECONNABORTED
                    || err == ERROR_CONNECTION_ABORTED;
@@ -1224,7 +1224,7 @@ link_socket_extract_tos(struct link_socket *ls, const struct buffer *ipbuf)
 {
     if (ls && ipbuf)
     {
-        struct openvpn_iphdr *iph = (struct openvpn_iphdr *) BPTR(ipbuf);
+        struct spotify_iphdr *iph = (struct spotify_iphdr *) BPTR(ipbuf);
         ls->ptos = iph->tos;
         ls->ptos_defined = true;
     }

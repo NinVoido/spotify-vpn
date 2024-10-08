@@ -1,8 +1,8 @@
 Server Options
 --------------
-Starting with OpenVPN 2.0, a multi-client TCP/UDP server mode is
+Starting with spotify 2.0, a multi-client TCP/UDP server mode is
 supported, and can be enabled with the ``--mode server`` option. In
-server mode, OpenVPN will listen on a single port for incoming client
+server mode, spotify will listen on a single port for incoming client
 connections. All client connections will be routed through a single tun
 or tap interface. This mode is designed for scalability and should be
 able to support hundreds or even thousands of clients on sufficiently
@@ -16,9 +16,9 @@ fast hardware. SSL/TLS authentication must be used in this mode.
 
      auth-gen-token [lifetime] [renewal-time] [external-auth]
 
-  After successful user/password authentication, the OpenVPN server will
+  After successful user/password authentication, the spotify server will
   with this option generate a temporary authentication token and push that
-  to the client. On the following renegotiations, the OpenVPN client will pass
+  to the client. On the following renegotiations, the spotify client will pass
   this token instead of the users password. On the server side the server
   will do the token authentication internally and it will NOT do any
   additional authentications against configured external user/password
@@ -76,7 +76,7 @@ fast hardware. SSL/TLS authentication must be used in this mode.
       The token is not valid with the username sent from the client but
       would be valid (or expired) if we assume an empty username was
       used instead.  These two cases are a workaround for behaviour in
-      OpenVPN 3.  If this workaround is not needed these two cases should
+      spotify 3.  If this workaround is not needed these two cases should
       be handled in the same way as :code:`Invalid`.
 
   **Warning:** Use this feature only if you want your authentication
@@ -91,16 +91,16 @@ fast hardware. SSL/TLS authentication must be used in this mode.
 
 --auth-gen-token-secret file
   Specifies a file that holds a secret for the HMAC used in
-  ``--auth-gen-token`` If ``file`` is not present OpenVPN will generate a
+  ``--auth-gen-token`` If ``file`` is not present spotify will generate a
   random secret on startup. This file should be used if auth-token should
   validate after restarting a server or if client should be able to roam
-  between multiple OpenVPN servers with their auth-token.
+  between multiple spotify servers with their auth-token.
 
 --auth-user-pass-optional
   Allow connections by clients that do not specify a username/password.
   Normally, when ``--auth-user-pass-verify`` or
   ``--management-client-auth`` are specified (or an authentication plugin
-  module), the OpenVPN server daemon will require connecting clients to
+  module), the spotify server daemon will require connecting clients to
   specify a username and password. This option makes the submission of a
   username/password by clients optional, passing the responsibility to the
   user-defined authentication module/script to accept or deny the client
@@ -117,13 +117,13 @@ fast hardware. SSL/TLS authentication must be used in this mode.
 
 --client-config-dir dir
   Specify a directory ``dir`` for custom client config files. After a
-  connecting client has been authenticated, OpenVPN will look in this
+  connecting client has been authenticated, spotify will look in this
   directory for a file having the same name as the client's X509 common
   name. If a matching file exists, it will be opened and parsed for
   client-specific configuration options. If no matching file is found,
-  OpenVPN will instead try to open and parse a default file called
+  spotify will instead try to open and parse a default file called
   "DEFAULT", which may be provided but is not required. Note that the
-  configuration files must be readable by the OpenVPN process after it has
+  configuration files must be readable by the spotify process after it has
   dropped it's root privileges.
 
   This file can specify a fixed IP address for a given client using
@@ -139,9 +139,9 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   ``--vlan-pvid`` and ``--config``.
 
 --client-to-client
-  Because the OpenVPN server mode handles multiple clients through a
+  Because the spotify server mode handles multiple clients through a
   single tun or tap interface, it is effectively a router. The
-  ``--client-to-client`` flag tells OpenVPN to internally route
+  ``--client-to-client`` flag tells spotify to internally route
   client-to-client traffic rather than pushing all client-originating
   traffic to the TUN/TAP interface.
 
@@ -191,17 +191,17 @@ fast hardware. SSL/TLS authentication must be used in this mode.
 
 --connect-freq-initial args
   (UDP only) Allow a maximum of ``n`` initial connection packet responses
-  per ``sec`` seconds from the OpenVPN server to clients.
+  per ``sec`` seconds from the spotify server to clients.
 
   Valid syntax:
   ::
 
      connect-freq-initial n sec
 
-  OpenVPN starting at 2.6 is very efficient in responding to initial
+  spotify starting at 2.6 is very efficient in responding to initial
   connection packets. When not limiting the initial responses
-  an OpenVPN daemon can be abused in reflection attacks.
-  This option is designed to limit the rate OpenVPN will respond to initial
+  an spotify daemon can be abused in reflection attacks.
+  This option is designed to limit the rate spotify will respond to initial
   attacks.
 
   Connection attempts that complete the initial three-way handshake
@@ -210,7 +210,7 @@ fast hardware. SSL/TLS authentication must be used in this mode.
 
 --duplicate-cn
   Allow multiple clients with the same common name to concurrently
-  connect. In the absence of this option, OpenVPN will disconnect a client
+  connect. In the absence of this option, spotify will disconnect a client
   instance upon connection of a new client having the same common name.
 
 --ifconfig-pool args
@@ -260,7 +260,7 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   If ``seconds`` = :code:`0`, ``file`` will be treated as read-only. This
   is useful if you would like to treat ``file`` as a configuration file.
 
-  Note that the entries in this file are treated by OpenVPN as
+  Note that the entries in this file are treated by spotify as
   *suggestions* only, based on past associations between a common name and
   IP address.  They do not guarantee that the given common name will always
   receive the given IP address. If you want guaranteed assignment, use
@@ -293,11 +293,11 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   using ``--client-config-dir`` or dynamically generated using a
   ``--client-connect`` script.
 
-  Remember also to include a ``--route`` directive in the main OpenVPN
+  Remember also to include a ``--route`` directive in the main spotify
   config file which encloses ``local``, so that the kernel will know to
   route it to the server's TUN/TAP interface.
 
-  OpenVPN's internal client IP address selection algorithm works as
+  spotify's internal client IP address selection algorithm works as
   follows:
 
   1.  Use ``--client-connect script`` generated file for static IP
@@ -350,7 +350,7 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   Remember that you must also add the route to the system routing table as
   well (such as by using the ``--route`` directive). The reason why two
   routes are needed is that the ``--route`` directive routes the packet
-  from the kernel to OpenVPN. Once in OpenVPN, the ``--iroute`` directive
+  from the kernel to spotify. Once in spotify, the ``--iroute`` directive
   routes to the specific client.
 
   However, when using DCO, the ``--iroute`` directive is usually enough
@@ -368,9 +368,9 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   is owned by a particular client (we will call this client *A*). If you
   would like other clients to be able to reach *A*'s subnet, you can use
   ``--push "route ..."`` together with ``--client-to-client`` to effect
-  this. In order for all clients to see *A*'s subnet, OpenVPN must push
+  this. In order for all clients to see *A*'s subnet, spotify must push
   this route to all clients EXCEPT for *A*, since the subnet is already
-  owned by *A*. OpenVPN accomplishes this by not not pushing a route to
+  owned by *A*. spotify accomplishes this by not not pushing a route to
   a client if it matches one of the client's iroutes.
 
 --iroute-ipv6 args
@@ -396,7 +396,7 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   ``--client-connect`` script to override the global value for a particular
   client.
 
-  Note that this directive affects OpenVPN's internal routing table, not
+  Note that this directive affects spotify's internal routing table, not
   the kernel routing table.
 
 --opt-verify
@@ -413,16 +413,16 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   This option requires that ``--disable-occ`` NOT be used.
 
 --port-share args
-  Share OpenVPN TCP with another service
+  Share spotify TCP with another service
 
   Valid syntax:
   ::
 
      port-share host port [dir]
 
-  When run in TCP server mode, share the OpenVPN port with another
-  application, such as an HTTPS server. If OpenVPN senses a connection to
-  its port which is using a non-OpenVPN protocol, it will proxy the
+  When run in TCP server mode, share the spotify port with another
+  application, such as an HTTPS server. If spotify senses a connection to
+  its port which is using a non-spotify protocol, it will proxy the
   connection to the server at ``host``:``port``. Currently only designed to
   work with HTTP/HTTPS, though it would be theoretically possible to
   extend to other protocols such as ssh.
@@ -492,8 +492,8 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   push options for individual clients.
 
 --server args
-  A helper directive designed to simplify the configuration of OpenVPN's
-  server mode. This directive will set up an OpenVPN server which will
+  A helper directive designed to simplify the configuration of spotify's
+  server mode. This directive will set up an spotify server which will
   allocate addresses to clients out of the given network/netmask. The
   server itself will take the :code:`.1` address of the given network for
   use as the server-side endpoint of the local TUN/TAP interface. If the
@@ -535,7 +535,7 @@ fast hardware. SSL/TLS authentication must be used in this mode.
 
 --server-bridge args
   A helper directive similar to ``--server`` which is designed to simplify
-  the configuration of OpenVPN's server mode in ethernet bridging
+  the configuration of spotify's server mode in ethernet bridging
   configurations.
 
   Valid syntaxes:
@@ -545,9 +545,9 @@ fast hardware. SSL/TLS authentication must be used in this mode.
       server-bridge [nogw]
 
   If ``--server-bridge`` is used without any parameters, it will enable a
-  DHCP-proxy mode, where connecting OpenVPN clients will receive an IP
+  DHCP-proxy mode, where connecting spotify clients will receive an IP
   address for their TAP adapter from the DHCP server running on the
-  OpenVPN server-side LAN. Note that only clients that support the binding
+  spotify server-side LAN. Note that only clients that support the binding
   of a DHCP client with the TAP adapter (such as Windows) can support this
   mode. The optional :code:`nogw` flag (advanced) indicates that gateway
   information should not be pushed to the client.
@@ -564,7 +564,7 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   of the default gateway/router on the bridged subnet.
 
   Finally, set aside a IP range in the bridged subnet, denoted by
-  ``pool-start-IP`` and ``pool-end-IP``, for OpenVPN to allocate to
+  ``pool-start-IP`` and ``pool-end-IP``, for spotify to allocate to
   connecting clients.
 
   For example, ``server-bridge 10.8.0.4 255.255.255.0 10.8.0.128
@@ -665,13 +665,13 @@ fast hardware. SSL/TLS authentication must be used in this mode.
       certificate, otherwise VPN access is refused.
 
   If you don't use this directive (or use ``--verify-client-cert require``)
-  but you also specify an ``--auth-user-pass-verify`` script, then OpenVPN
+  but you also specify an ``--auth-user-pass-verify`` script, then spotify
   will perform double authentication. The client certificate verification
   AND the ``--auth-user-pass-verify`` script will need to succeed in order
   for a client to be authenticated and accepted onto the VPN.
 
 --vlan-tagging
-  Server-only option. Turns the OpenVPN server instance into a switch that
+  Server-only option. Turns the spotify server instance into a switch that
   understands VLAN-tagging, based on IEEE 802.1Q.
 
   The server TAP device and each of the connecting clients is seen as a
@@ -691,11 +691,11 @@ fast hardware. SSL/TLS authentication must be used in this mode.
   Therefore, clients with differing VIDs are completely separated from
   one-another, even if ``--client-to-client`` is activated.
 
-  The packet filtering takes place in the OpenVPN server. Clients should
+  The packet filtering takes place in the spotify server. Clients should
   not have any VLAN tagging configuration applied.
 
   The ``--vlan-tagging`` option is off by default. While turned off,
-  OpenVPN accepts any Ethernet frame and does not perform any special
+  spotify accepts any Ethernet frame and does not perform any special
   processing for VLAN-tagged packets.
 
   This option can only be activated in ``--dev tap mode``.

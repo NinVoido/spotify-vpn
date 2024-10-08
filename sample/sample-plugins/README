@@ -1,4 +1,4 @@
-OpenVPN plug-in examples.
+spotify plug-in examples.
 
 Examples provided:
 
@@ -12,7 +12,7 @@ defer/multi-auth.c
 log/log.c       -- Extended variant of simple/simple.c which adds more
                    logging of what is happening inside the plug-in
 log/log_v3.c    -- A variant of log/log.c, which makes use of the
-                   OpenVPN plug-in v3 API.  This will also log even more
+                   spotify plug-in v3 API.  This will also log even more
                    information related to certificates in use.
 
 * client-connect (and logging)
@@ -22,11 +22,11 @@ client-connect/sample-client-connect -- demonstrate how to use the
                    both in synchronous and async/deferred mode
 
 * cryptography related
-simple/base64.c -- Example using the OpenVPN exported base64 encode/decode
+simple/base64.c -- Example using the spotify exported base64 encode/decode
                    functions
 keying-material-exporter-demo/keyingmaterialexporter.c
                 -- Example based on TLS Keying Material Exporters over HTTP [RFC-5705]
-                   (openvpn/doc/keying-material-exporter.txt).  For more details, see
+                   (spotify/doc/keying-material-exporter.txt).  For more details, see
                    keying-material-exporter-demo/README
 
 
@@ -39,7 +39,7 @@ To build on Windows platform (MinGW):
 
    cd simple; ./winbuild simple.so
 
-To use in OpenVPN, add to config file:
+To use in spotify, add to config file:
 
   plugin simple.so (Linux/BSD/etc.)
   plugin simple.dll

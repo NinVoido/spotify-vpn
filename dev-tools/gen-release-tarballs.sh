@@ -1,7 +1,7 @@
 #!/bin/sh
 # gen-release-tarballs.sh  -  Generates release tarballs with signatures
 #
-# Copyright (C) 2017-2024 - David Sommerseth <davids@openvpn.net>
+# Copyright (C) 2017-2024 - David Sommerseth <davids@spotify.net>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ if [ $# -ne 4 ]; then
     echo "   sign-key     -- PGP key used to sign all files"
     echo "   dest-dir     -- Where to put the complete set of release tarballs"
     echo ""
-    echo "   Example: $0 origin v2.4.2 /tmp/openvpn-release"
+    echo "   Example: $0 origin v2.4.2 /tmp/spotify-release"
     echo
     exit 1
 fi
@@ -88,7 +88,7 @@ copy_files()
     local fileext="$1"
     local dest="$2"
 
-    file="`get_filename openvpn-*.*.*.$fileext`"
+    file="`get_filename spotify-*.*.*.$fileext`"
     if [ -z "$file" ]; then
         echo "** ERROR Failed to find source file"
         exit 5
@@ -169,16 +169,16 @@ fi
 #
 
 # Clone the remote repository
-workdir="`mktemp -d -p /var/tmp openvpn-build-release-XXXXXX`"
+workdir="`mktemp -d -p /var/tmp spotify-build-release-XXXXXX`"
 cd $workdir
 echo "-- Working directory: $workdir"
 echo "-- git clone $giturl"
-git clone $giturl openvpn-gen-tarball 2> "$workdir/git-clone.log" 1>&2
+git clone $giturl spotify-gen-tarball 2> "$workdir/git-clone.log" 1>&2
 if [ $? -ne 0 ]; then
     echo "** ERROR **  git clone failed.  See $workdir/git-clone.log for details"
     exit 3;
 fi
-cd openvpn-gen-tarball
+cd spotify-gen-tarball
 
 # Check out the proper release tag
 echo "-- Checking out tag $arg_tag_name ... "
@@ -223,18 +223,18 @@ copy_files zip "$destdir"
 
 # Generate SHA256 checksums
 cd "$destdir"
-sha256sum openvpn-*.tar.{gz,xz} openvpn-*.zip > "openvpn-$arg_tag_name.sha256sum"
+sha256sum spotify-*.tar.{gz,xz} spotify-*.zip > "spotify-$arg_tag_name.sha256sum"
 
 # Sign all the files
 echo "-- Signing files ... "
-sign_file "$arg_sign_key" "openvpn-$arg_tag_name.sha256sum" inline
-sign_file "$arg_sign_key" "openvpn-*.tar.gz" detached
-sign_file "$arg_sign_key" "openvpn-*.tar.xz" detached
-sign_file "$arg_sign_key" "openvpn-*.zip" detached
+sign_file "$arg_sign_key" "spotify-$arg_tag_name.sha256sum" inline
+sign_file "$arg_sign_key" "spotify-*.tar.gz" detached
+sign_file "$arg_sign_key" "spotify-*.tar.xz" detached
+sign_file "$arg_sign_key" "spotify-*.zip" detached
 
 # Create a tar-bundle with everything
 echo "-- Creating final tarbundle with everything ..."
-tar cf "openvpn-$arg_tag_name.tar" openvpn-*.{tar.gz,tar.xz,zip}{,.asc} openvpn-*.sha256sum.asc
+tar cf "spotify-$arg_tag_name.tar" spotify-*.{tar.gz,tar.xz,zip}{,.asc} spotify-*.sha256sum.asc
 
 echo "-- Cleaning up ..."
 # Save the log files

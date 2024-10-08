@@ -12,28 +12,28 @@ jobs:
     steps:
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y uncrustify
-      - name: Checkout OpenVPN
+      - name: Checkout spotify
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
-          path: openvpn
+          path: spotify
       - name: Show uncrustify version
         run: uncrustify --version
       - name: Run uncrustify
         run: ./dev-tools/reformat-all.sh
-        working-directory: openvpn
+        working-directory: spotify
       - name: Check for changes
         run: git diff --output=uncrustify-changes.patch
-        working-directory: openvpn
+        working-directory: spotify
       - name: Show changes on standard output
         run: git diff
-        working-directory: openvpn
+        working-directory: spotify
       - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
         with:
           name: uncrustify-changes.patch
-          path: 'openvpn/uncrustify-changes.patch'
+          path: 'spotify/uncrustify-changes.patch'
       - name: Set job status
         run: test ! -s uncrustify-changes.patch
-        working-directory: openvpn
+        working-directory: spotify
 
   mingw:
     strategy:
@@ -48,7 +48,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y mingw-w64 unzip cmake ninja-build build-essential wget python3-docutils man2html-base
-      - name: Checkout OpenVPN
+      - name: Checkout spotify
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Restore from cache and install vcpkg
@@ -66,7 +66,7 @@ jobs:
 
       - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
         with:
-          name: openvpn-mingw-${{ matrix.arch }}
+          name: spotify-mingw-${{ matrix.arch }}
           path: |
             ${{ github.workspace }}/out/build/mingw/${{ matrix.arch }}/Debug/*.exe
             ${{ github.workspace }}/out/build/mingw/${{ matrix.arch }}/Debug/*.dll
@@ -74,7 +74,7 @@ jobs:
 
       - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
         with:
-          name: openvpn-mingw-${{ matrix.arch }}-tests
+          name: spotify-mingw-${{ matrix.arch }}-tests
           path: |
             ${{ github.workspace }}/out/build/mingw/${{ matrix.arch }}/Debug/test_*.exe
             ${{ github.workspace }}/out/build/mingw/${{ matrix.arch }}/Debug/*.dll
@@ -90,17 +90,17 @@ jobs:
     runs-on: windows-latest
     name: "mingw unittest ${{ matrix.test }} - ${{ matrix.arch }} - OSSL"
     steps:
-      - name: Checkout OpenVPN
+      - name: Checkout spotify
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: Retrieve mingw unittest
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
-          name: openvpn-mingw-${{ matrix.arch }}-tests
+          name: spotify-mingw-${{ matrix.arch }}-tests
           path: unittests
       - name: Run ${{ matrix.test }} unit test
         run: ./unittests/test_${{ matrix.test }}.exe
         env:
-          srcdir: "${{ github.workspace }}/tests/unit_tests/openvpn"
+          srcdir: "${{ github.workspace }}/tests/unit_tests/spotify"
 
   ubuntu:
     strategy:
@@ -164,7 +164,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y liblzo2-dev libpam0g-dev liblz4-dev libcap-ng-dev libnl-genl-3-dev linux-libc-dev man2html libcmocka-dev python3-docutils libtool automake autoconf ${SSLPKG} ${PKCS11PKG}
-      - name: Checkout OpenVPN
+      - name: Checkout spotify
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: autoconf
         run: autoreconf -fvi
@@ -194,7 +194,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y liblzo2-dev libpam0g-dev liblz4-dev libcap-ng-dev libnl-genl-3-dev linux-libc-dev man2html clang libcmocka-dev python3-docutils libtool automake autoconf libmbedtls-dev
-      - name: Checkout OpenVPN
+      - name: Checkout spotify
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: autoconf
         run: autoreconf -fvi
@@ -255,7 +255,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: brew install openssl@1.1 openssl@3 lzo lz4 man2html cmocka libtool automake autoconf libressl
-      - name: Checkout OpenVPN
+      - name: Checkout spotify
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: autoconf
         run: autoreconf -fvi
@@ -310,7 +310,7 @@ jobs:
 
       - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
         with:
-          name: openvpn-msvc-${{ matrix.arch }}
+          name: spotify-msvc-${{ matrix.arch }}
           path: |
             ${{ github.workspace }}/out/**/*.exe
             ${{ github.workspace }}/out/**/*.dll
@@ -368,7 +368,7 @@ jobs:
         working-directory: libressl
       - name: "ldconfig"
         run: sudo ldconfig
-      - name: Checkout OpenVPN
+      - name: Checkout spotify
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: autoconf
         run: autoreconf -fvi
@@ -423,7 +423,7 @@ jobs:
       - name: "mbedtls: make install"
         run: sudo make install DESTDIR=/usr
         working-directory: mbedtls
-      - name: Checkout OpenVPN
+      - name: Checkout spotify
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - name: autoconf
         run: autoreconf -fvi

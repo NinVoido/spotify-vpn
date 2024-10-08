@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -151,12 +151,12 @@ add_client_nat_to_option_list(struct client_nat_option_list *dest,
 
 #if 0
 static void
-print_checksum(struct openvpn_iphdr *iph, const char *prefix)
+print_checksum(struct spotify_iphdr *iph, const char *prefix)
 {
     uint16_t *sptr;
     unsigned int sum = 0;
     int i = 0;
-    for (sptr = (uint16_t *)iph; (uint8_t *)sptr < (uint8_t *)iph + sizeof(struct openvpn_iphdr); sptr++)
+    for (sptr = (uint16_t *)iph; (uint8_t *)sptr < (uint8_t *)iph + sizeof(struct spotify_iphdr); sptr++)
     {
         i += 1;
         sum += *sptr;
@@ -166,7 +166,7 @@ print_checksum(struct openvpn_iphdr *iph, const char *prefix)
 #endif
 
 static void
-print_pkt(struct openvpn_iphdr *iph, const char *prefix, const int direction, const int msglevel)
+print_pkt(struct spotify_iphdr *iph, const char *prefix, const int direction, const int msglevel)
 {
     struct gc_arena gc = gc_new();
 
@@ -258,16 +258,16 @@ client_nat_transform(const struct client_nat_option_list *list,
 
         ADJUST_CHECKSUM(accumulate, h->ip.check);
 
-        if (h->ip.protocol == OPENVPN_IPPROTO_TCP)
+        if (h->ip.protocol == spotify_IPPROTO_TCP)
         {
-            if (BLEN(ipbuf) >= sizeof(struct openvpn_iphdr) + sizeof(struct openvpn_tcphdr))
+            if (BLEN(ipbuf) >= sizeof(struct spotify_iphdr) + sizeof(struct spotify_tcphdr))
             {
                 ADJUST_CHECKSUM(accumulate, h->u.tcp.check);
             }
         }
-        else if (h->ip.protocol == OPENVPN_IPPROTO_UDP)
+        else if (h->ip.protocol == spotify_IPPROTO_UDP)
         {
-            if (BLEN(ipbuf) >= sizeof(struct openvpn_iphdr) + sizeof(struct openvpn_udphdr))
+            if (BLEN(ipbuf) >= sizeof(struct spotify_iphdr) + sizeof(struct spotify_udphdr))
             {
                 ADJUST_CHECKSUM(accumulate, h->u.udp.check);
             }

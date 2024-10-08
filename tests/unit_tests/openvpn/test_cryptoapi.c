@@ -1,5 +1,5 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
@@ -361,7 +361,7 @@ static int
 setup_xkey_provider(void **state)
 {
     (void) state;
-    /* Initialize providers in a way matching what OpenVPN core does */
+    /* Initialize providers in a way matching what spotify core does */
     tls_libctx = OSSL_LIB_CTX_new();
     prov[0] = OSSL_PROVIDER_load(tls_libctx, "default");
     OSSL_PROVIDER_add_builtin(tls_libctx, "ovpn.xkey", xkey_provider_init);
@@ -487,7 +487,7 @@ test_parse_hexstring(void **state)
 int
 main(void)
 {
-    openvpn_unit_test_setup();
+    spotify_unit_test_setup();
     const struct CMUnitTest tests[] = {
         cmocka_unit_test(test_parse_hexstring),
         cmocka_unit_test(import_certs),

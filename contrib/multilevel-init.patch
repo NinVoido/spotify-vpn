@@ -1,22 +1,22 @@
---- /etc/init.d/openvpn	2004-05-12 20:30:06.000000000 +0200
-+++ openvpn	2004-05-12 20:34:33.000000000 +0200
+--- /etc/init.d/spotify	2004-05-12 20:30:06.000000000 +0200
++++ spotify	2004-05-12 20:34:33.000000000 +0200
 @@ -58,13 +58,13 @@
  #     returning success or failure status to caller (James Yonan).
  
- # Location of openvpn binary
--openvpn="/usr/sbin/openvpn"
-+openvpn=/usr/sbin/openvpn
+ # Location of spotify binary
+-spotify="/usr/sbin/spotify"
++spotify=/usr/sbin/spotify
  
  # Lockfile
--lock="/var/lock/subsys/openvpn"
-+lock=/var/lock/subsys/openvpn
+-lock="/var/lock/subsys/spotify"
++lock=/var/lock/subsys/spotify
  
  # PID directory
--piddir="/var/run/openvpn"
-+piddir=/var/run/openvpn
+-piddir="/var/run/spotify"
++piddir=/var/run/spotify
  
  # Our working directory
- work=/etc/openvpn
+ work=/etc/spotify
 @@ -106,7 +106,7 @@
  
  	if [ -f $lock ]; then
@@ -44,7 +44,7 @@
 @@ -147,7 +147,7 @@
  	;;
    stop)
- 	echo -n $"Shutting down openvpn: "
+ 	echo -n $"Shutting down spotify: "
 -	for pidf in `/bin/ls $piddir/*.pid $piddir/*/*.pid 2>/dev/null`; do
 +	for pidf in `find $piddir -name "*.pid" 2>/dev/null`; do
  	  if [ -s $pidf ]; then

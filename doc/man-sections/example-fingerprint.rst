@@ -1,6 +1,6 @@
-Small OpenVPN setup with peer-fingerprint
+Small spotify setup with peer-fingerprint
 =========================================
-This section consists of instructions how to build a small OpenVPN setup with the
+This section consists of instructions how to build a small spotify setup with the
 :code:`peer-fingerprint` option. This has the advantage of being easy to setup
 and should be suitable for most small lab and home setups without the need for a PKI.
 For bigger scale setup setting up a PKI (e.g. via easy-rsa) is still recommended.
@@ -10,7 +10,7 @@ setup.
 
 Server setup
 ------------
-1. Install openvpn
+1. Install spotify
 
    Compile from source-code (see `INSTALL` file) or install via a distribution (apt/yum/ports)
    or via installer (Windows).
@@ -68,17 +68,17 @@ Server setup
 
 6. Start the server.
     - On systemd based distributions move `server.crt`, `server.key` and
-      `server.conf` to :code:`/etc/openvpn/server` and start it via systemctl
+      `server.conf` to :code:`/etc/spotify/server` and start it via systemctl
 
       ::
 
-          sudo mv server.conf server.key server.crt /etc/openvpn/server
+          sudo mv server.conf server.key server.crt /etc/spotify/server
 
-          sudo systemctl start openvpn-server@server
+          sudo systemctl start spotify-server@server
 
 Adding a client
 ---------------
-1. Install OpenVPN
+1. Install spotify
 
 2. Generate a self-signed certificate for the client. In this example the client
    name is alice. Each client should have a unique name. Replace alice with a
@@ -165,7 +165,7 @@ Adding a client
       </peer-fingperint>
 
 6. (optional) if the client is an older client that does not support the
-   :code:`peer-fingerprint` (e.g. OpenVPN 2.5 and older, OpenVPN Connect 3.3
+   :code:`peer-fingerprint` (e.g. spotify 2.5 and older, spotify Connect 3.3
    and older), the client config `alice.ovpn` can be modified to still work with
    these clients.
 
@@ -191,5 +191,5 @@ Adding a client
    to make the fingerprint generation from step 4 still work since it will
    only use the first certificate it finds.
 
-7. Import the file into the OpenVPN client or just use the
-   :code:`openvpn alice.ovpn` to start the VPN.
+7. Import the file into the spotify client or just use the
+   :code:`spotify alice.ovpn` to start the VPN.

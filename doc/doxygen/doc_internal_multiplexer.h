@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@
  * The Internal Multiplexer is the link between the virtual tun/tap
  * network interface and the \link data_control Data Channel Control
  * module\endlink.  It reads packets from the virtual network interface,
- * determines for which remote OpenVPN peer they are destined, and then
+ * determines for which remote spotify peer they are destined, and then
  * passes the packets on to the Data Channel Control module together with
  * information about their destination VPN tunnel instance.
  *

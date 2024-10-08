@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -61,7 +61,7 @@ extern time_t now_usec;
 void update_now_usec(struct timeval *tv);
 
 static inline int
-openvpn_gettimeofday(struct timeval *tv, void *tz)
+spotify_gettimeofday(struct timeval *tv, void *tz)
 {
     const int status = gettimeofday(tv, tz);
     if (!status)
@@ -79,7 +79,7 @@ update_time(void)
 #ifdef _WIN32
     /* on _WIN32, gettimeofday is faster than time(NULL) */
     struct timeval tv;
-    openvpn_gettimeofday(&tv, NULL);
+    spotify_gettimeofday(&tv, NULL);
 #else
     update_now(time(NULL));
     now_usec = 0;
@@ -87,7 +87,7 @@ update_time(void)
 }
 
 static inline time_t
-openvpn_time(time_t *t)
+spotify_time(time_t *t)
 {
     update_time();
     if (t)

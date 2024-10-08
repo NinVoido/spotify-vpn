@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -31,18 +31,18 @@
  * @defgroup control_tls Control Channel TLS module
  *
  * This module provides secure encapsulation of control channel messages
- * exchanged between OpenVPN peers.
+ * exchanged between spotify peers.
  *
  * The Control Channel TLS module uses the Transport Layer Security (TLS)
  * protocol to provide an encrypted communication channel between the
- * local OpenVPN process and a remote peer.  This protocol simultaneously
+ * local spotify process and a remote peer.  This protocol simultaneously
  * offers certificate-based authentication of the communicating parties.
  *
  * @par This module's roles
  * The Control Channel TLS module is essential for the security of any
- * OpenVPN-based system.  On the one hand, it performs the security
+ * spotify-based system.  On the one hand, it performs the security
  * operations necessary to protect control channel messages exchanged
- * between OpenVPN peers.  On the other hand, before the control and data
+ * between spotify peers.  On the other hand, before the control and data
  * channels are even setup, it controls the exchange of certificates and
  * verification of the remote's identity during negotiation of VPN
  * tunnels.
@@ -68,7 +68,7 @@
  *
  * @par Packet processing functions
  * This object behaves somewhat like a black box with a ciphertext and a
- * plaintext I/O port. Its interaction with OpenVPN's control channel
+ * plaintext I/O port. Its interaction with spotify's control channel
  * during operation takes place within the \c tls_process() function of
  * the \link control_processor Control Channel Processor\endlink.  The
  * following functions are available for processing packets:

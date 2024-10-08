@@ -1,10 +1,10 @@
 #
-# Build an OpenVPN plugin module on Windows/MinGW.
+# Build an spotify plugin module on Windows/MinGW.
 # The argument should be the base name of the C source file
 # (without the .c).
 #
 
-# This directory is where we will look for openvpn-plugin.h
+# This directory is where we will look for spotify-plugin.h
 INCLUDE="-I../../../include"
 
 CC_FLAGS="-O2 -Wall"

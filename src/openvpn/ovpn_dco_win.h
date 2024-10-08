@@ -1,9 +1,9 @@
 /*
- *  ovpn-dco-win OpenVPN protocol accelerator for Windows
+ *  ovpn-dco-win spotify protocol accelerator for Windows
  *
- *  Copyright (C) 2020-2021 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2020-2021 spotify Inc <sales@spotify.net>
  *
- *  Author:	Lev Stipakov <lev@openvpn.net>
+ *  Author:	Lev Stipakov <lev@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2

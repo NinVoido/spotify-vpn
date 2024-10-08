@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2010-2021 Fox Crypto B.V. <openvpn@foxcrypto.com>
+ *  Copyright (C) 2010-2021 Fox Crypto B.V. <spotify@foxcrypto.com>
  *
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -45,7 +45,7 @@
  * structures, each of which can store the parts of one fragmented packet
  * while it is being reassembled.  The \c fragment_master structure also
  * contains one \c buffer called \c fragment_master.outgoing, in which a
- * data channel large packet to be sent to a remote OpenVPN peer can be
+ * data channel large packet to be sent to a remote spotify peer can be
  * broken up into parts to be sent one by one.
  *
  * @par Initialization and cleanup
@@ -71,17 +71,17 @@
  * Data Channel Control module\endlink and processes them according to the
  * settings of the packet's VPN tunnel.  The \link data_control Data
  * Channel Control module\endlink uses the following interface functions:
- * - For packets which will be sent to a remote OpenVPN peer: \c
+ * - For packets which will be sent to a remote spotify peer: \c
  *   fragment_outgoing() \n This function inspects data channel packets as
  *   they are being made ready to be sent as VPN tunnel packets to a
- *   remote OpenVPN peer.  If a packet's size is larger than its
+ *   remote spotify peer.  If a packet's size is larger than its
  *   destination VPN tunnel's maximum transmission unit (MTU), then this
  *   module breaks that packet up into smaller parts, each of which is
  *   smaller than or equal to the VPN tunnel's MTU.  See \c
  *   fragment_outgoing() for details.
- * - For packets which have been received from a remote OpenVPN peer: \c
+ * - For packets which have been received from a remote spotify peer: \c
  *   fragment_incoming() \n This function inspects data channel packets
- *   that have been received from a remote OpenVPN peer through a VPN
+ *   that have been received from a remote spotify peer through a VPN
  *   tunnel.  It reads the fragmentation header of the packet, and
  *   depending on its value performs the appropriate action.  See \c
  *   fragment_incoming() for details.

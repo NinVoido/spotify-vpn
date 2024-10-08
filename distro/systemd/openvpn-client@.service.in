@@ -1,16 +1,16 @@
 [Unit]
-Description=OpenVPN tunnel for %I
+Description=spotify tunnel for %I
 After=network-online.target
 Wants=network-online.target
-Documentation=man:openvpn(8)
-Documentation=https://openvpn.net/community-resources/reference-manual-for-openvpn-@OPENVPN_VERSION_MAJOR@-@OPENVPN_VERSION_MINOR@/
-Documentation=https://community.openvpn.net/openvpn/wiki/HOWTO
+Documentation=man:spotify(8)
+Documentation=https://spotify.net/community-resources/reference-manual-for-spotify-@spotify_VERSION_MAJOR@-@spotify_VERSION_MINOR@/
+Documentation=https://community.spotify.net/spotify/wiki/HOWTO
 
 [Service]
 Type=notify
 PrivateTmp=true
-WorkingDirectory=/etc/openvpn/client
-ExecStart=@sbindir@/openvpn --suppress-timestamps --nobind --config %i.conf
+WorkingDirectory=/etc/spotify/client
+ExecStart=@sbindir@/spotify --suppress-timestamps --nobind --config %i.conf
 CapabilityBoundingSet=CAP_IPC_LOCK CAP_NET_ADMIN CAP_NET_RAW CAP_SETGID CAP_SETUID CAP_SETPCAP CAP_SYS_CHROOT CAP_DAC_OVERRIDE
 LimitNPROC=10
 DeviceAllow=/dev/null rw

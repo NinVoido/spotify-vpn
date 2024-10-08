@@ -10,7 +10,7 @@ By enacpulating the ``--remote`` option and related options within
 ``<connection>`` and ``</connection>``, these options are handled as a
 group.
 
-An OpenVPN client will try each connection profile sequentially until it
+An spotify client will try each connection profile sequentially until it
 achieves a successful connection.
 
 ``--remote-random`` can be used to initially "scramble" the connection
@@ -50,7 +50,7 @@ that also fails, then try connecting through an HTTP proxy at
 192.168.0.8:8080 to 198.19.34.56:443 using TCP. Finally, try to connect
 through the same proxy to a server at 198.19.36.99:443 using TCP.
 
-The following OpenVPN options may be used inside of a ``<connection>``
+The following spotify options may be used inside of a ``<connection>``
 block:
 
 ``bind``, ``connect-retry``, ``connect-retry-max``, ``connect-timeout``,

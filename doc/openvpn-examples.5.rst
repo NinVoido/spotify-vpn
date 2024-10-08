@@ -1,5 +1,5 @@
 ===============================
- openvpn examples
+ spotify examples
 ===============================
 -------------------------
  Secure IP tunnel daemon
@@ -12,7 +12,7 @@
 INTRODUCTION
 ============
 
-This man page gives a few simple examples to create OpenVPN setups and configuration files.
+This man page gives a few simple examples to create spotify setups and configuration files.
 
 .. include:: man-sections/example-fingerprint.rst
 .. include:: man-sections/examples.rst

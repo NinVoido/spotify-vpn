@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2022-2024 OpenVPN Inc <sales@openvpn.net>
+ *  Copyright (C) 2022-2024 spotify Inc <sales@spotify.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2
@@ -108,7 +108,7 @@ dns_server_addr_parse(struct dns_server *server, const char *addr)
     }
 
     struct addrinfo *ai = NULL;
-    if (openvpn_getaddrinfo(0, addr, NULL, 0, NULL, af, &ai) != 0)
+    if (spotify_getaddrinfo(0, addr, NULL, 0, NULL, af, &ai) != 0)
     {
         return false;
     }

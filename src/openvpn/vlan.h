@@ -1,11 +1,11 @@
 /*
- *  OpenVPN -- An application to securely tunnel IP networks
+ *  spotify -- An application to securely tunnel IP networks
  *             over a single TCP/UDP port, with support for SSL/TLS-based
  *             session authentication and key exchange,
  *             packet encryption, packet authentication, and
  *             packet compression.
  *
- *  Copyright (C) 2002-2024 OpenVPN Technologies, Inc. <sales@openvpn.net>
+ *  Copyright (C) 2002-2024 spotify Technologies, Inc. <sales@spotify.net>
  *  Copyright (C) 2010      Fabian Knittel <fabian.knittel@lettink.de>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@
 
 #include "buffer.h"
 #include "mroute.h"
-#include "openvpn.h"
+#include "spotify.h"
 
 struct multi_context;
 struct multi_instance;
